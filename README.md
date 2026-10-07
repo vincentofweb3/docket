@@ -77,16 +77,17 @@ docket/
 
 ### Status
 
-**Deployed to Studionet** at `0xb1a3778a3B11E0eD000bB24DF06108caDfd7729B` (deployed code is
-byte-identical to `contracts/docket.py`). Lint passes, 29/29 direct tests pass, and the
-Studionet integration suite is **5 passed, 1 skipped, exit 0** against real validator consensus.
-Two complete public lifecycles are recorded, including a disputed docket settled by AI
-adjudication (verdict `reject`, score 10, three specific unmet criteria).
+**Deployed to Studionet** at `0xb1a3778a3B11E0eD000bB24DF06108caDfd7729B`
+([explorer](https://explorer-studio.genlayer.com/address/0xb1a3778a3B11E0eD000bB24DF06108caDfd7729B)).
+Deployed code is byte-identical to `contracts/docket.py`. Lint passes, 29/29 direct tests pass,
+and the Studionet integration suite is **5 passed, 1 skipped, exit 0** against real validator
+consensus. Two complete public lifecycles are on record: one settled by client acceptance, one
+disputed and adjudicated by AI validator consensus to `reject` / score 10 with three specific
+unmet criteria. All nine transaction hashes and their explorer links are listed in
+[`evidence/studionet-deployment-2026-10-07.txt`](evidence/studionet-deployment-2026-10-07.txt).
 
 Consolidated gate status and every open issue:
 [`evidence/quality-gates-2026-10-07.md`](evidence/quality-gates-2026-10-07.md).
-Deployment record with explorer links:
-[`evidence/studionet-deployment-2026-10-07.txt`](evidence/studionet-deployment-2026-10-07.txt).
 
 Two limitations to understand before making any claim about this deployment:
 
@@ -98,7 +99,8 @@ Two limitations to understand before making any claim about this deployment:
 - **Appeals cannot be exercised on Studionet** — the appeal RPCs do not exist there, so the
   appeal test skips with a stated reason.
 
-Still missing for a Builder Points submission: a public GitHub repository and a frontend demo.
+Repository: <https://github.com/vincentofweb3/docket>. Still missing for a Builder Points
+submission: a frontend demo.
 
 ## Quick start (for the agent picking this up)
 

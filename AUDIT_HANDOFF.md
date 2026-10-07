@@ -160,20 +160,19 @@ Do not claim submission evidence until public links resolve outside the operator
 1. Recompute the contract SHA-256 and read this file, `CLAUDE.md`, `docs/07`, and `docs/09`.
 2. Rebuild the toolchain per "Resume Procedure" and confirm
    `GENVM_VERSION=v0.3.0-rc7 genvm-lint check contracts/docket.py --json` reports `ok: true`.
-3. Initialize the public GitHub repository — this is the single hardest submission blocker, since
-   the Builder "Intelligent Contracts" contribution type requires a `github-repo` URL and file
-   uploads are disabled. Commit source, docs, and the 2026-10-07 evidence files.
-4. Scaffold the frontend from `design/` against the deployed address
-   `0xb1a3778a3B11E0eD000bB24DF06108caDfd7729B`. The deployment/schema prerequisite is now met.
-   Read calls must wrap addresses (see the `CalldataAddress` note above).
-5. Deploy to Bradbury and re-verify the two things Studionet cannot demonstrate: that a payout
+3. Scaffold the frontend from `design/` against the deployed address
+   `0xb1a3778a3B11E0eD000bB24DF06108caDfd7729B`. This is now the main submission blocker,
+   since the public repository (<https://github.com/vincentofweb3/docket>) exists and the
+   contribution type also wants a demo link. Read calls must wrap addresses (see the
+   `CalldataAddress` note above).
+4. Deploy to Bradbury and re-verify the two things Studionet cannot demonstrate: that a payout
    actually credits the recipient EOA, and that the appeal flow works. Both are required before
    any claim about real money moving or about appeals.
-6. Ask the GenLayer team about the Studionet payout behaviour recorded in
+5. Ask the GenLayer team about the Studionet payout behaviour recorded in
    `evidence/integration-studionet-2026-10-07.txt` — whether it is intended.
-7. Re-run the security/submission checklists against the final source and the live portal process
+6. Re-run the security/submission checklists against the final source and the live portal process
    immediately before submitting.
-8. Do not submit Points evidence until the repository, explorer links, test log, and frontend
+7. Do not submit Points evidence until the repository, explorer links, test log, and frontend
    demo URL are all independently reachable from outside the operator's account.
 
 ## Audit Boundaries

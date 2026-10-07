@@ -25,8 +25,8 @@ treat this as a pre-flight checklist, not a suggestion.
 
 | Evidence | Where it comes from | Status |
 |---|---|---|
-| Public source repository URL | GitHub, pushed and public | **BLOCKED — no public repository exists.** This is now the single hardest blocker |
-| README rendered on the repo's default branch, matching this project's `README.md` | Same repo | BLOCKED — follows from the repository |
+| Public source repository URL | GitHub, pushed and public | **EVIDENCED — <https://github.com/vincentofweb3/docket>** (public, pushed 2026-10-07) |
+| README rendered on the repo's default branch, matching this project's `README.md` | Same repo | **EVIDENCED — <https://github.com/vincentofweb3/docket>**, default branch `master` |
 | Deployed contract address on a named GenLayer network | `genlayer-js deployContract` on Studionet | **EVIDENCED — `0xb1a3778a3B11E0eD000bB24DF06108caDfd7729B`**, deployed code byte-identical to `contracts/docket.py`. See [`evidence/studionet-deployment-2026-10-07.txt`](../evidence/studionet-deployment-2026-10-07.txt) |
 | Explorer link for that contract address | Studionet explorer | **EVIDENCED — <https://explorer-studio.genlayer.com/address/0xb1a3778a3B11E0eD000bB24DF06108caDfd7729B>** |
 | At least one finalized on-chain transaction demonstrating the full lifecycle, and ideally one disputed → resolved | Explorer transaction links | **EVIDENCED — two complete lifecycles (9 transactions, all status=FINALIZED).** Fast path settled `FULL`/100; a disputed docket was adjudicated by AI validator consensus to `REJECT`/10 with three specific unmet criteria. All hashes and per-tx explorer links are listed in the deployment evidence file |
