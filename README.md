@@ -99,8 +99,23 @@ Two limitations to understand before making any claim about this deployment:
 - **Appeals cannot be exercised on Studionet** — the appeal RPCs do not exist there, so the
   appeal test skips with a stated reason.
 
-Repository: <https://github.com/vincentofweb3/docket>. Still missing for a Builder Points
-submission: a frontend demo.
+Repository: <https://github.com/vincentofweb3/docket>.
+
+## Deploying the frontend
+
+The app lives in `frontend/`, so **Root Directory must be `frontend`** — deploying from the repo
+root fails, because the root `package.json` only holds the contract deploy scripts and has no
+Next.js app.
+
+On Vercel: import the repo, set Root Directory to `frontend`, and add
+
+```
+NEXT_PUBLIC_GENLAYER_NETWORK=studionet
+NEXT_PUBLIC_DOCKET_CONTRACT_ADDRESS=0xb1a3778a3B11E0eD000bB24DF06108caDfd7729B
+```
+
+See [`frontend/README.md`](frontend/README.md) for the full screen/API map and the network
+capability notes.
 
 ## Quick start (for the agent picking this up)
 
