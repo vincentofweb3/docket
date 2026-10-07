@@ -27,3 +27,29 @@ Demo data seeded on-chain (scripts/deploy/seed-demo.mjs):
   https://explorer-studio.genlayer.com/tx/0xced7f3f38d85a6002e431698ed15e6fc21affaebd00dc74280364e8e52f9a352
   https://explorer-studio.genlayer.com/tx/0x4c83a5624490ec6528a38c40611307ce6b8b638011f083f199468e7c10e554f4
   https://explorer-studio.genlayer.com/tx/0xd7a052aea046dbf4220307925e7964f05562cf43c41b73b3ba406d57f3ece116
+
+--------------------------------------------------------------------------------
+Bradbury capability probe — 2026-10-07
+--------------------------------------------------------------------------------
+
+Bradbury RPC (chainId 4221, eth_chainId -> 0x107d) is reachable and the network is NOT
+gasless, so a funded account is required before Docket can be deployed there.
+
+Appeal infrastructure is deployed and answering, unlike Studionet:
+  0xbb8C35AA878D09b9830aFF9e5aAC6492BFbd5471  appealsContract        1159 bytes, answers
+  0xF205868bf5db79d2162843742D18D0900A9E462a  feeManagerContract     1159 bytes, answers
+  0x7134D05af13A14c0b66Fe129fb930b1d0C420e33  roundsStorageContract  1159 bytes, answers
+  canAppeal(bytes32)    -> responds (reverted only on wrong arg shape)
+  getRoundNumber(bytes32) -> responds
+
+So appealSupport is "present" on Bradbury (infrastructure exists, not yet exercised
+end-to-end) versus "absent" on Studionet (RPCs return -32601).
+
+BLOCKED: deployer 0x81840a3450BeCf32672fd95d0278279f2a3EF486 holds 0 GEN on Bradbury.
+The faucet at https://testnet-faucet.genlayer.foundation/ is gated behind a Cloudflare
+Turnstile token (POST /api/claim rejects a missing turnstileToken), so it requires a browser
+and an operator. No attempt was made to bypass it.
+
+Also fixed: frontend/src/lib/config.ts had guessed Bradbury's chainId (61999) and RPC host
+(bradbury.genlayer.com) wrong. Corrected to 4221 / rpc-bradbury.genlayer.com from the
+genlayer-js chain definition, verified live.

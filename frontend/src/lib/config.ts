@@ -26,8 +26,17 @@ export type NetworkConfig = {
    * evidence/integration-studionet-2026-10-07.txt.
    */
   creditsEoaPayouts: boolean;
-  /** Whether the network exposes appeal primitives at all. Verified false on Studionet. */
-  supportsAppeals: boolean;
+  /**
+   * Appeal capability, in three states, because "works" and "absent" are not the only options:
+   *  - "absent":  the network exposes no appeal RPCs at all. Verified on Studionet, where
+   *               gen_appealTransaction / gen_getAppealCharge / gen_canAppeal all return -32601
+   *               and the SDK chain definition nulls the appeal contracts.
+   *  - "present": the appeal contracts are deployed and answer eth_call, but no appeal has been
+   *               driven end-to-end. Verified on Bradbury 2026-10-07: appealsContract,
+   *               feeManagerContract and roundsStorageContract each hold code and respond.
+   *  - "working": an appeal has actually been observed to succeed.
+   */
+  appealSupport: "absent" | "present" | "working";
 };
 
 const NETWORKS: Record<NetworkId, NetworkConfig> = {
@@ -39,19 +48,25 @@ const NETWORKS: Record<NetworkId, NetworkConfig> = {
     explorerTxUrl: (h) => `https://explorer-studio.genlayer.com/tx/${h}`,
     explorerAddressUrl: (a) => `https://explorer-studio.genlayer.com/address/${a}`,
     creditsEoaPayouts: false,
-    supportsAppeals: false,
+    appealSupport: "absent",
   },
   "testnet-bradbury": {
     id: "testnet-bradbury",
     label: "GenLayer Testnet Bradbury",
-    chainId: 61999,
-    rpcUrl: "https://bradbury.genlayer.com/api",
+    // chainId and rpc taken from genlayer-js's testnetBradbury chain definition and verified
+    // live on 2026-10-07 (eth_chainId -> 0x107d = 4221). An earlier draft here guessed both wrong.
+    chainId: 4221,
+    rpcUrl: "https://rpc-bradbury.genlayer.com",
     explorerTxUrl: (h) => `https://explorer-bradbury.genlayer.com/tx/${h}`,
     explorerAddressUrl: (a) => `https://explorer-bradbury.genlayer.com/address/${a}`,
-    // UNVERIFIED. Both were false on Studionet and have not been checked on Bradbury.
-    // Kept false so the UI never promises a payout or appeal until someone verifies it.
+    // Both still UNVERIFIED end-to-end: no Bradbury deployment exists yet, because deploying
+    // needs testnet GEN and the faucet is Turnstile-gated. Kept false so the UI cannot promise a
+    // payout or an appeal that has not actually been observed. Flip these only after watching a
+    // worker balance rise, or a real appeal succeed, on Bradbury.
     creditsEoaPayouts: false,
-    supportsAppeals: false,
+    // Contracts are deployed and answer eth_call (verified 2026-10-07), but no appeal has been
+    // driven end-to-end because there is no funded Bradbury account to deploy with yet.
+    appealSupport: "present",
   },
   localnet: {
     id: "localnet",
@@ -61,7 +76,7 @@ const NETWORKS: Record<NetworkId, NetworkConfig> = {
     explorerTxUrl: (h) => `http://127.0.0.1:4000/tx/${h}`,
     explorerAddressUrl: (a) => `http://127.0.0.1:4000/address/${a}`,
     creditsEoaPayouts: true,
-    supportsAppeals: true,
+    appealSupport: "working",
   },
 };
 

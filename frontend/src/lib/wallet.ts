@@ -71,19 +71,42 @@ export async function currentAccount(): Promise<string | null> {
  * sets the appeal/fee/rounds contracts to null. Reported honestly rather than shown as a
  * button that cannot work.
  */
-export function appealSupportNote(): { supported: boolean; message: string } {
-  if (!network.supportsAppeals) {
+export function appealSupportNote(): {
+  support: "absent" | "present" | "working";
+  supported: boolean;
+  message: string;
+} {
+  const support = network.appealSupport;
+
+  if (support === "absent") {
     return {
+      support,
       supported: false,
       message:
         `Appeals are not available on ${network.label}. The network exposes no appeal ` +
         "primitives (gen_appealTransaction, gen_getAppealCharge and gen_canAppeal all return " +
         "Method not found), and an appeal must be funded with the charge those calls return — " +
-        "which this SDK version does not implement. This is a network limitation, not a " +
-        "Docket limitation.",
+        "which this SDK version does not implement. This is a network limitation, not a Docket " +
+        "limitation.",
     };
   }
+
+  if (support === "present") {
+    return {
+      support,
+      // Not offered as a one-click action: submitting an appeal needs the charge quoted at the
+      // moment of submission, which this SDK version cannot read.
+      supported: false,
+      message:
+        `${network.label} has the appeal infrastructure deployed — the appeals, fee-manager ` +
+        "and rounds-storage contracts all respond to calls — but no appeal has been driven " +
+        "end-to-end against Docket yet. An appeal also has to be funded with the charge " +
+        "quoted immediately before submission, so the bond is never hardcoded here.",
+    };
+  }
+
   return {
+    support,
     supported: true,
     message:
       "Appeals are a native GenLayer transaction-level action. Quote the current appeal " +

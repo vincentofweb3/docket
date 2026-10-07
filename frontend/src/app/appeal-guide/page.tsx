@@ -59,7 +59,11 @@ export default function AppealGuidePage() {
           </>
         ) : (
           <div className="capability-note">
-            <strong>Appeals cannot be submitted on {network.label}</strong>
+            <strong>
+              {appeal.support === "present"
+                ? `Appeal infrastructure is deployed on ${network.label}, but no appeal has been completed here`
+                : `Appeals cannot be submitted on ${network.label}`}
+            </strong>
             {appeal.message}
           </div>
         )}

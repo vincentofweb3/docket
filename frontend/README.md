@@ -107,5 +107,24 @@ completeness.
   `gen_canAppeal` all return -32601, and this SDK version does not implement the documented
   `getAppealCharge` API. `/appeal-guide` explains the mechanism and reports the gap rather than
   wiring a button to an RPC that does not exist.
+
+## Network support
+
+Bradbury (`https://rpc-bradbury.genlayer.com`, chainId 4221) is reachable and **is** usable, with
+two differences from Studionet:
+
+- **Appeals exist there.** `appealsContract`, `feeManagerContract` and `roundsStorageContract`
+  are all deployed and answer `eth_call` (verified 2026-10-07). `config.ts` models this as a
+  three-state `appealSupport`: `"absent"` (Studionet), `"present"` (Bradbury — contracts
+  deployed but no appeal driven end-to-end yet), `"working"` (an appeal actually succeeded).
+  The appeal guide renders each state differently instead of collapsing them.
+- **It is not gasless.** `0x81840a3450BeCf32672fd95d0278279f2a3EF486` holds 0 GEN there, and the
+  faucet at <https://testnet-faucet.genlayer.foundation/> is gated behind Cloudflare Turnstile,
+  so claiming needs a browser. Deploying to Bradbury therefore needs an operator to fund the
+  account first.
+
+`config.ts` still lists `creditsEoaPayouts: false` for Bradbury. That flag is deliberately
+conservative: it has not been observed to credit a worker balance there, so the UI will not claim
+it until someone watches one rise.
 - **Write paths are untested end-to-end** — they need a GenLayer Snap, which cannot be automated
   here. Everything read-only is verified against the live deployment.
