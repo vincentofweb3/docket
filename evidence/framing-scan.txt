@@ -1,0 +1,14 @@
+Framing scan (2026-08-25)
+
+Command scope: contracts, design, README.md, docs, frontend, tests.
+No text claims a Docket verdict is legally binding. The legal-language matches are explicit
+disclaimers in docs/02-genlayer-fit-checklist.md and design/index.html.
+
+Prediction-market vocabulary appears only in explicit non-goal/disclaimer copy:
+- README.md:13
+- docs/01-product-vision.md:52
+- docs/10-roadmap.md:37
+- design/index.html:265,275
+
+Contract methods, errors, and lifecycle labels use docket, scope of work, deliverable,
+evidence, verdict, adjudication, and escrow terminology.

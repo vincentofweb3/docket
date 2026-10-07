@@ -1,0 +1,42 @@
+INFO:     Started server process [9294]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:4000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:46182 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46186 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46194 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46200 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46202 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46218 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46220 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46234 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46236 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46244 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46258 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46268 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46274 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46288 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46302 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46306 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46318 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46320 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46322 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46326 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46334 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46344 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46358 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46366 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46380 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46388 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46402 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46414 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46426 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46430 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46444 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46458 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37932 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37942 - "POST /api HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [9294]

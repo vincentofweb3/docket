@@ -1,0 +1,44 @@
+[
+  {
+    "label": "start",
+    "client": 0,
+    "worker": 0,
+    "contract": 0
+  },
+  {
+    "label": "after create",
+    "client": 0,
+    "worker": 0,
+    "contract": 1000
+  },
+  {
+    "label": "after submit",
+    "client": 0,
+    "worker": 0,
+    "contract": 1000
+  },
+  {
+    "label": "immediately",
+    "client": 0,
+    "worker": 0,
+    "contract": 1000
+  },
+  {
+    "label": "+10s",
+    "client": 0,
+    "worker": 0,
+    "contract": 1000
+  },
+  {
+    "label": "+20s",
+    "client": 0,
+    "worker": 0,
+    "contract": 0
+  },
+  {
+    "label": "+40s",
+    "client": 0,
+    "worker": 0,
+    "contract": 0
+  }
+]

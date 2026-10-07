@@ -1,0 +1,8 @@
+Prompt-injection guidance evidence (fetched 2026-08-25)
+
+Source: https://docs.genlayer.com/developers/intelligent-contracts/security-and-best-practices/prompt-injection
+The live full-documentation export states: restrict inputs, restrict outputs, simplify/secure
+contract logic, and consider human-in-the-loop review for critical decisions. Docket's evidence
+is in contracts/docket.py:334-353 (tag-delimited prompt and fixed JSON shape) and :384-404
+(bounded fetch, status/body validation, one retry). The LLM verdict is additionally checked by
+the custom validator before deterministic escrow settlement.

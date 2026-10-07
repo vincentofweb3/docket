@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Docket — The Register</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EEEDE7; --ink:#181B22; --ledger:#1F3A5F; --verdict-gold:#B8862E;
+    --evidence-teal:#2B6E62; --line:#D6D2C7; --danger:#9C3B2E;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;}
+  header{border-bottom:1px solid var(--line);padding:22px 48px;display:flex;justify-content:space-between;align-items:center;}
+  .wordmark{font-family:'IBM Plex Serif',serif;font-weight:600;font-size:22px;letter-spacing:-0.01em;}
+  .wordmark span{color:var(--ledger);}
+  nav a{color:var(--ink);text-decoration:none;font-size:14px;margin-left:28px;}
+  nav a:hover{text-decoration:underline;text-decoration-color:var(--ledger);}
+  .cta{background:var(--ledger);color:var(--paper);padding:9px 18px;border-radius:4px;font-size:14px;font-weight:500;}
+  .hero{padding:72px 48px 56px;max-width:920px;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.08em;color:var(--ledger);text-transform:uppercase;}
+  h1{font-family:'IBM Plex Serif',serif;font-weight:600;font-size:44px;line-height:1.15;margin:14px 0 18px;max-width:14ch;}
+  .lede{font-size:17px;line-height:1.6;color:#3a3d45;max-width:60ch;}
+  .hero-actions{margin-top:28px;display:flex;gap:14px;}
+  .btn{padding:12px 22px;border-radius:4px;font-size:14px;font-weight:500;text-decoration:none;display:inline-block;}
+  .btn-primary{background:var(--ledger);color:var(--paper);}
+  .btn-ghost{border:1px solid var(--ink);color:var(--ink);}
+  section.register{padding:0 48px 80px;}
+  .register-head{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:4px;}
+  .register-head h2{font-family:'IBM Plex Serif',serif;font-size:20px;font-weight:600;margin:0;}
+  .register-head .count{font-family:'IBM Plex Mono',monospace;font-size:13px;color:#6b6e76;}
+  .row{display:grid;grid-template-columns:110px 1fr 160px 130px 120px;gap:20px;align-items:center;padding:20px 0;border-bottom:1px solid var(--line);}
+  .row:hover{background:rgba(31,58,95,0.03);}
+  .docket-id{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ledger);font-weight:500;}
+  .row-title{font-size:15px;font-weight:500;margin:0 0 4px;}
+  .row-sub{font-size:13px;color:#6b6e76;max-width:52ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .amount{font-family:'IBM Plex Mono',monospace;font-size:14px;text-align:right;}
+  .deadline{font-family:'IBM Plex Mono',monospace;font-size:13px;color:#6b6e76;}
+  .status-chip{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.04em;text-transform:uppercase;padding:4px 9px;border-radius:3px;display:inline-block;width:fit-content;justify-self:start;}
+  .status-open{background:rgba(43,110,98,0.12);color:var(--evidence-teal);}
+  footer{padding:32px 48px;border-top:1px solid var(--line);font-size:12px;color:#6b6e76;display:flex;justify-content:space-between;}
+</style>
+</head>
+<body>
+<header>
+  <div class="wordmark">Docket<span>.</span></div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="landing.html">The Register</a>
+    <a href="create-docket.html">Post a Docket</a>
+    <a href="submit-deliverable.html">My Claims</a>
+    <a class="cta" href="create-docket.html">Post work &rarr;</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="eyebrow">Deliverable escrow &middot; GenLayer</div>
+  <h1>Every job has a scope. Docket settles whether it was met.</h1>
+  <p class="lede">Escrow the payment, write the scope of work in plain language, and let
+  decentralized AI-validator consensus — not a platform, not either party — decide whether
+  the job was done. Built for freelance work, DAO milestones, and agent-to-agent
+  commerce.</p>
+  <div class="hero-actions">
+    <a class="btn btn-primary" href="create-docket.html">Post a docket</a>
+    <a class="btn btn-ghost" href="submit-deliverable.html">Browse open work</a>
+  </div>
+</section>
+
+<section class="register">
+  <div class="register-head">
+    <h2>Open Register</h2>
+    <span class="count">14 open &middot; 212 resolved &middot; 96.2% settled without dispute</span>
+  </div>
+
+  <div class="row">
+    <div class="docket-id">DKT-0431</div>
+    <div>
+      <p class="row-title">Ship a Farcaster frame for docket status lookup</p>
+      <p class="row-sub">Frame must query get_docket and render status, deadline, and amount for any docket id.</p>
+    </div>
+    <div class="status-chip status-open">Open</div>
+    <div class="amount">420 GEN</div>
+    <div class="deadline">closes in 3d</div>
+  </div>
+
+  <div class="row">
+    <div class="docket-id">DKT-0430</div>
+    <div>
+      <p class="row-title">Audit and patch a TreeMap iteration bug in a testnet indexer</p>
+      <p class="row-sub">Repro steps and failing test included. Fix must pass the linked CI suite.</p>
+    </div>
+    <div class="status-chip status-open">Open</div>
+    <div class="amount">1,150 GEN</div>
+    <div class="deadline">closes in 6d</div>
+  </div>
+
+  <div class="row">
+    <div class="docket-id">DKT-0429</div>
+    <div>
+      <p class="row-title">Write 6 explainer diagrams for Optimistic Democracy onboarding</p>
+      <p class="row-sub">SVG only, no brand assets, must match the acceptance criteria's accessibility notes.</p>
+    </div>
+    <div class="status-chip status-open">Open</div>
+    <div class="amount">300 GEN</div>
+    <div class="deadline">closes in 1d</div>
+  </div>
+
+  <div class="row">
+    <div class="docket-id">DKT-0428</div>
+    <div>
+      <p class="row-title">Autonomous agent: monitor a mempool feed and post daily digest</p>
+      <p class="row-sub">Deliverable is a running public endpoint, not a one-off file — see docket for uptime criteria.</p>
+    </div>
+    <div class="status-chip status-open">Open</div>
+    <div class="amount">2,000 GEN</div>
+    <div class="deadline">closes in 9d</div>
+  </div>
+</section>
+
+<footer>
+  <span>Docket is an independent open-source project built on GenLayer. It is not a legal
+  arbitrator — see the docket terms before posting or claiming work.</span>
+  <span>docs · github · discord</span>
+</footer>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "docket-deploy-scripts",
+  "private": true,
+  "type": "module",
+  "description": "Reproducible Studionet deploy + verification scripts for the Docket Intelligent Contract.",
+  "scripts": {
+    "deploy": "node scripts/deploy/deploy.mjs",
+    "verify": "node scripts/deploy/verify.mjs"
+  },
+  "dependencies": {
+    "genlayer-js": "1.1.8"
+  }
+}

@@ -1,0 +1,8 @@
+Dependency-pin check (2026-08-25)
+
+Pinned contract runner:
+py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6
+
+The hash is present in the live https://docs.genlayer.com/full-documentation.txt fetched on
+2026-08-25. genvm-lint also reported that runner 1zr6nqk597d97kg0dyxg0shhrykx5v02zjgnyrajapy4wlqvfvwh is newer.
+The documented pin was retained rather than changing deployment semantics from a lint notice.

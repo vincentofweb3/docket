@@ -1,0 +1,15 @@
+Studionet availability check
+Timestamp (UTC): 2026-08-26T04:39:10Z
+Endpoint: https://studio.genlayer.com/api
+
+Command:
+curl -fsS --max-time 10 https://studio.genlayer.com/api
+
+Complete raw output:
+/bin/bash: line 1: /tmp/docket-studionet-health.2: No such file or directory
+studio_endpoint_exit=6
+response_bytes=0
+curl: (6) Could not resolve host: studio.genlayer.com
+
+Classification: DNS/transport failure. The required integration command was not run because
+the endpoint availability pre-check was not stable.

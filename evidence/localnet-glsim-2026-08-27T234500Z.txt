@@ -1,0 +1,205 @@
+INFO:     Started server process [8679]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:4000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:43174 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36072 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36082 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36090 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36106 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36120 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36122 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36136 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36144 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36150 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36160 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36162 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36166 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36176 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36182 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36186 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36200 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36208 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36212 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36228 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36242 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36252 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36268 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36280 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36282 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36292 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36308 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36320 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36332 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36348 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36358 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36374 - "POST /api HTTP/1.1" 200 OK
+[PostMessage] enqueueing None to Address("0x4249eb790D1070D5536BCE30Ec0E0c7a8CaC2B8B")
+INFO:     127.0.0.1:36386 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36398 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36408 - "POST /api HTTP/1.1" 200 OK
+Traceback (most recent call last):
+  File "/tmp/docket-site/lib/python3.12/site-packages/glsim/server.py", line 1265, in _handle_single
+    result = handler(state, engine, params)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/docket-site/lib/python3.12/site-packages/glsim/server.py", line 817, in _rpc_gen_call
+    result_bytes = encode_calldata_result(result)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/docket-site/lib/python3.12/site-packages/glsim/tx_decoder.py", line 250, in encode_calldata_result
+    return calldata.encode(value)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/docket-site/lib/python3.12/site-packages/genlayer_py/abi/calldata/encoder.py", line 80, in encode
+    impl(x)
+  File "/tmp/docket-site/lib/python3.12/site-packages/genlayer_py/abi/calldata/encoder.py", line 76, in impl
+    impl_dict(dataclasses.asdict(b))
+  File "/tmp/docket-site/lib/python3.12/site-packages/genlayer_py/abi/calldata/encoder.py", line 35, in impl_dict
+    impl(b[k])
+  File "/tmp/docket-site/lib/python3.12/site-packages/genlayer_py/abi/calldata/encoder.py", line 78, in impl
+    raise GenLayerError(f"invalid type {type(b)}")
+genlayer_py.exceptions.GenLayerError: invalid type <class 'genlayer.py.types.Address'>
+INFO:     127.0.0.1:36418 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36434 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36436 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36448 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36454 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36462 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36472 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36480 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36482 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36488 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36500 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36508 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36522 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36532 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36538 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36548 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36556 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36558 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36566 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36578 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36594 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36596 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36600 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36606 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36614 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36618 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36634 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36646 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36656 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36668 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36684 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36692 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36698 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36712 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36728 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36736 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36744 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36752 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36754 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36760 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36768 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36784 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36792 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36796 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36806 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36822 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36830 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36846 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36854 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36868 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36876 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36884 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36890 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36902 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36904 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36908 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36924 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36928 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36942 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36946 - "POST /api HTTP/1.1" 200 OK
+[PostMessage] enqueueing None to Address("0x8c79eFd1bd9111d23a95DEeA1aee78b9fdFAA261")
+INFO:     127.0.0.1:36948 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36950 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36964 - "POST /api HTTP/1.1" 200 OK
+Traceback (most recent call last):
+  File "/tmp/docket-site/lib/python3.12/site-packages/glsim/server.py", line 1265, in _handle_single
+    result = handler(state, engine, params)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/docket-site/lib/python3.12/site-packages/glsim/server.py", line 817, in _rpc_gen_call
+    result_bytes = encode_calldata_result(result)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/docket-site/lib/python3.12/site-packages/glsim/tx_decoder.py", line 250, in encode_calldata_result
+    return calldata.encode(value)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/docket-site/lib/python3.12/site-packages/genlayer_py/abi/calldata/encoder.py", line 80, in encode
+    impl(x)
+  File "/tmp/docket-site/lib/python3.12/site-packages/genlayer_py/abi/calldata/encoder.py", line 76, in impl
+    impl_dict(dataclasses.asdict(b))
+  File "/tmp/docket-site/lib/python3.12/site-packages/genlayer_py/abi/calldata/encoder.py", line 35, in impl_dict
+    impl(b[k])
+  File "/tmp/docket-site/lib/python3.12/site-packages/genlayer_py/abi/calldata/encoder.py", line 78, in impl
+    raise GenLayerError(f"invalid type {type(b)}")
+genlayer_py.exceptions.GenLayerError: invalid type <class 'genlayer.py.types.Address'>
+INFO:     127.0.0.1:36976 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36980 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36988 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36994 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36996 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36998 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37014 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37016 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37026 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37032 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37038 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37046 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37060 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37062 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37072 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37074 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37088 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37098 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37110 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37112 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37120 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37128 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37132 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37142 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37148 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37158 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37172 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37186 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37188 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37204 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37216 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37224 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37234 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37242 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37258 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37266 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37282 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37298 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37308 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37324 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37330 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37334 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37336 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37340 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37356 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40848 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40852 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40862 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40874 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40876 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40882 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40894 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40906 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40922 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40938 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40940 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40950 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40962 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40976 - "POST /api HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [8679]

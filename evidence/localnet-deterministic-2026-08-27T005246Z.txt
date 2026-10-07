@@ -1,0 +1,27 @@
+WARNING: File `gltest.config.yaml` not found in the current directory, using default config, create a `gltest.config.yaml` file to manage multiple networks
+INFO: Clearing artifacts directory: artifacts
+INFO: Using the following configuration:
+INFO:   RPC URL: http://127.0.0.1:4000/api
+INFO:   Selected Network: localnet
+INFO:   Available networks: ['localnet', 'studionet', 'testnet_asimov', 'testnet_bradbury']
+INFO:   Selected chain type: localnet
+INFO:   Available chains: localnet, studionet, testnet_asimov, testnet_bradbury
+INFO:   Contracts directory: contracts
+INFO:   Artifacts directory: artifacts
+INFO:   Environment: .env
+INFO:   Default wait interval: 3000 ms
+INFO:   Default wait retries: 50
+INFO:   Leader only mode: False
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0 -- /tmp/docket-site/bin/python
+cachedir: .pytest_cache
+rootdir: /home/vincent/projects/docket
+plugins: genlayer-test-0.29.2, anyio-4.14.2
+collecting ... collected 4 items
+
+tests/integration/test_docket_integration.py::TestFullLifecycleFastPath::test_deploy_create_claim_submit_accept_settles_correct_balances PASSED
+tests/integration/test_docket_integration.py::TestFullLifecycleDisputed::test_dispute_with_unreachable_evidence_resolves_toward_reject PASSED
+tests/integration/test_docket_integration.py::TestExpiryAgainstRealBlockTime::test_refund_expired_after_real_deadline_passes PASSED
+tests/integration/test_docket_integration.py::TestDeploymentSanity::test_deployed_schema_matches_contract_spec PASSED
+
+============================== 4 passed in 11.37s ==============================

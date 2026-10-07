@@ -1,0 +1,50 @@
+Localnet/GLSim integration status (2026-08-27T01:07:32Z)
+
+Docker status:
+- Docker Desktop is installed on the Windows host, but WSL integration is disabled.
+- `docker --version` reports: The command 'docker' could not be found in this WSL 2 distro.
+- Standalone GLSim from cached genlayer-test 0.29.2 sources was used at /tmp/docket-site.
+
+Quality gates run in order:
+1. Lint PASS: ok=true, 9 methods.
+   Raw output: evidence/lint-localnet-rerun-2026-08-27T005246Z.json
+2. Direct tests PASS: 29 passed.
+   Raw output: evidence/direct-tests-localnet-rerun-2026-08-27T005246Z.txt
+3. Localnet integration PARTIAL/BLOCKED: 4 passed, 2 failed.
+   Raw output: evidence/localnet-integration-2026-08-27T010044Z.txt
+   GLSim output: evidence/localnet-glsim-2026-08-27T010044Z.txt
+
+Passing Localnet cases:
+- TestFullLifecycleFastPath::test_deploy_create_claim_submit_accept_settles_correct_balances
+- TestFullLifecycleDisputed::test_dispute_with_unreachable_evidence_resolves_toward_reject
+- TestExpiryAgainstRealBlockTime::test_refund_expired_after_real_deadline_passes
+- TestDeploymentSanity::test_deployed_schema_matches_contract_spec
+
+Blocked Localnet cases:
+- TestFullLifecycleDisputed::test_dispute_with_real_public_evidence_resolves_via_consensus
+- TestAppealFlow::test_accepted_verdict_can_be_appealed_within_finality_window
+
+Failure classification:
+- External LLM-provider authentication failure.
+- GLSim reached https://api.openai.com/v1/chat/completions and received HTTP 401 Unauthorized
+  for both blocked cases. GLSim then returned its error string to the contract; the contract
+  correctly rejected that non-JSON response with LLM_ERROR_MALFORMED_VERDICT.
+- Contract logic was not weakened or changed to hide the provider failure.
+
+Temporary runtime compatibility work under /tmp/docket-site only:
+- propagate pytest's exit code from the gltest launcher;
+- propagate payable user value to gl.message.value;
+- encode GenVM Address values returned by contract reads;
+- refresh legacy message_raw datetime for each transaction;
+- account for Localnet escrow deposits and emitted value transfers.
+
+Next manual step:
+1. Configure a valid OpenAI API key in the shell that starts GLSim:
+   export OPENAI_API_KEY='<valid-key>'
+2. Start GLSim:
+   /tmp/docket-site/bin/glsim --validators 3 --no-browser --verbose
+3. Rerun exactly:
+   PYTHONPATH=/tmp/docket-site /tmp/docket-site/bin/gltest --network localnet tests/integration/ -v -s
+
+This is Localnet simulator evidence only. It is not a public Studionet deployment, public
+contract address, explorer link, or GenLayer submission artifact.

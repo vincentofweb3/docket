@@ -1,0 +1,70 @@
+Studionet integration suite — final result (2026-10-07)
+
+Command:
+  gltest --network studionet tests/integration/ -v -s
+Result: 5 passed, 1 skipped in 413.18s  (exit 0)
+
+PASSED:
+  TestFullLifecycleFastPath::test_deploy_create_claim_submit_accept_settles_correct_balances
+  TestFullLifecycleDisputed::test_dispute_with_real_public_evidence_resolves_via_consensus
+  TestFullLifecycleDisputed::test_dispute_with_unreachable_evidence_resolves_toward_reject
+  TestExpiryAgainstRealBlockTime::test_refund_expired_after_real_deadline_passes
+  TestDeploymentSanity::test_deployed_schema_matches_contract_spec
+
+SKIPPED (with an explicit reason, not silently):
+  TestAppealFlow::test_accepted_verdict_can_be_appealed_within_finality_window
+    The network exposes no appeal primitives: `gen_appealTransaction`,
+    `gen_getAppealCharge` and `gen_canAppeal` all return -32601 Method not found, and the
+    genlayer-js 1.1.8 studionet chain definition sets appealsContract / feeManagerContract /
+    roundsStorageContract to null. Appeals must also be funded with the charge from
+    `getAppealCharge`, an API that genlayer-js 1.1.8 and genlayer-py 0.16.3 do not implement,
+    so `value=0` can never satisfy an appeal charge. This test cannot pass on Studionet.
+
+Previously-blocked cases now green:
+  The two Localnet cases that failed on 2026-08-27 with an OpenAI HTTP 401 now pass here,
+  because Studionet validators supply their own LLM providers. No operator key is needed.
+
+--------------------------------------------------------------------------------
+FUND-SAFETY FINDING — read before claiming escrow pays out on Studionet
+--------------------------------------------------------------------------------
+
+Tracked at every step of a real fast-path settlement (raw data in
+studionet-fund-trace-2026-10-07.json):
+
+  start            client=0  worker=0  contract=0
+  after create     client=0  worker=0  contract=1000
+  after submit     client=0  worker=0  contract=1000
+  immediately      client=0  worker=0  contract=1000
+  +10s             client=0  worker=0  contract=1000
+  +20s             client=0  worker=0  contract=0
+  +40s             client=0  worker=0  contract=0
+
+The escrow leaves the contract (correct, and this is what the test asserts), but the worker
+EOA is never credited.
+
+Root cause, confirmed rather than inferred: `accept_deliverable` emits an external message
+to the worker's chain-layer address. The resulting child transaction is
+  0xa919c47c6872ed1c778cc1752e1c3cd2078d348bb0702cb0a05c6efc50fdde1d
+with to=0xF309CEfDcC8F24e8d880a43e7cf34Ae48add50F4, value=1000, status=FINALIZED (7),
+leader execution_result=ERROR, votes={} — no validator voted. Per the docs, "If the child
+transaction fails, the value is not automatically returned to the sender", and "Studio:
+Balances are simulated in a local database. There is no EVM layer or ghost contracts in
+Studio." An Intelligent Contract transfer to a chain-layer address therefore has nowhere to
+land on Studionet.
+
+Related observation: the client account also shows a 0 balance after paying 1000 in, so
+account-level GEN conservation cannot be demonstrated on this network at all. The contract's
+own `_assert_escrow_conserved` invariant is intact and the deployed contract settles to 0x0,
+so this is a network/EOA-layer limitation, not Docket escrow logic.
+
+Consequence for the test suite: the worker-credit assertion is gated behind
+`_eoa_credit_supported`, with the notice printed on the run so it is never mistaken for a
+pass. Contract-side escrow conservation is still asserted unconditionally.
+
+CONSEQUENCE FOR CLAIMS: on Studionet, Docket demonstrates that adjudication and escrow
+*accounting* are correct and consensus-final. It does NOT demonstrate that GEN reaches a
+recipient's wallet. Any submission or demo must say so explicitly. Re-verify on Bradbury
+before claiming real payouts, and remove the network from NETWORKS_WITHOUT_EOA_CREDIT only
+after observing a credited balance there.
+
+NOT CLAIMED: no public repository, no frontend demo, no Bradbury deployment.

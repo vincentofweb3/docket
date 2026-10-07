@@ -1,0 +1,8 @@
+Schema verification (2026-08-25)
+
+RPC method: gen_getContractSchemaForCode
+Endpoint: https://studio.genlayer.com/api
+Result: SCHEMA_MATCH against docs/04-contract-spec.md and evidence/studionet-schema.json.
+The artifact is generated from the current compact contracts/docket.py source. It is not a
+deployed-address schema; `genlayer schema <address>` remains blocked until Studionet deployment
+and consensus state can be read reliably.

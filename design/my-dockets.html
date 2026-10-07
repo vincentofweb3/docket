@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Docket — My Dockets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EEEDE7; --ink:#181B22; --ledger:#1F3A5F; --verdict-gold:#B8862E;
+    --evidence-teal:#2B6E62; --line:#D6D2C7; --danger:#9C3B2E;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;}
+  header{border-bottom:1px solid var(--line);padding:22px 48px;display:flex;justify-content:space-between;align-items:center;}
+  .wordmark{font-family:'IBM Plex Serif',serif;font-weight:600;font-size:22px;}
+  .wordmark span{color:var(--ledger);}
+  nav a{color:#6b6e76;text-decoration:none;font-size:14px;margin-left:28px;}
+  nav a.active{color:var(--ink);font-weight:500;}
+
+  main{max-width:980px;margin:0 auto;padding:44px 24px 100px;}
+  .page-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:8px;}
+  h1{font-family:'IBM Plex Serif',serif;font-weight:600;font-size:28px;margin:0;}
+  .addr-chip{font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6b6e76;background:#fff;border:1px solid var(--line);padding:6px 12px;border-radius:4px;}
+
+  .role-tabs{display:flex;gap:0;border-bottom:2px solid var(--ink);margin:28px 0 0;}
+  .role-tab{padding:12px 4px;margin-right:32px;font-size:14.5px;font-weight:500;color:#6b6e76;border-bottom:3px solid transparent;margin-bottom:-2px;cursor:pointer;background:none;border-left:none;border-right:none;border-top:none;font-family:inherit;}
+  .role-tab.active{color:var(--ink);border-bottom-color:var(--ledger);}
+  .role-tab .count{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#a2a4aa;margin-left:6px;}
+  .role-tab.active .count{color:var(--ledger);}
+
+  .status-filters{display:flex;gap:8px;margin:22px 0 6px;}
+  .filter-chip{font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.03em;padding:6px 12px;border-radius:14px;border:1px solid var(--line);background:#fff;color:#6b6e76;cursor:pointer;}
+  .filter-chip.active{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+
+  .row{display:grid;grid-template-columns:100px 1fr 140px 130px 150px;gap:18px;align-items:center;padding:20px 0;border-bottom:1px solid var(--line);}
+  .docket-id{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ledger);}
+  .row-title{font-size:14.5px;font-weight:500;margin:0;}
+  .amount{font-family:'IBM Plex Mono',monospace;font-size:13.5px;text-align:right;}
+  .status-chip{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:0.04em;text-transform:uppercase;padding:4px 9px;border-radius:3px;display:inline-block;width:fit-content;}
+  .status-open{background:rgba(43,110,98,0.12);color:var(--evidence-teal);}
+  .status-claimed{background:rgba(31,58,95,0.1);color:var(--ledger);}
+  .status-submitted{background:rgba(31,58,95,0.1);color:var(--ledger);}
+  .status-adjudicating{background:rgba(184,134,46,0.14);color:var(--verdict-gold);}
+  .status-closed{background:#eee;color:#6b6e76;}
+  .row-action{font-size:12.5px;font-weight:600;color:var(--ledger);text-decoration:none;text-align:right;}
+
+  .empty{padding:70px 20px;text-align:center;border:1px dashed var(--line);border-radius:8px;margin-top:20px;}
+  .empty h3{font-family:'IBM Plex Serif',serif;font-size:18px;margin:0 0 8px;}
+  .empty p{font-size:13.5px;color:#6b6e76;max-width:40ch;margin:0 auto 20px;}
+  .empty a{background:var(--ledger);color:var(--paper);padding:10px 18px;border-radius:4px;font-size:13.5px;font-weight:500;text-decoration:none;}
+</style>
+</head>
+<body>
+<header>
+  <div class="wordmark">Docket<span>.</span></div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="landing.html">The Register</a>
+    <a href="my-dockets.html" class="active">My Dockets</a>
+  </nav>
+</header>
+
+<main>
+  <div class="page-head">
+    <h1>My Dockets</h1>
+    <span class="addr-chip">0x9F2a…c14e</span>
+  </div>
+
+  <div class="role-tabs">
+    <button class="role-tab active" onclick="showRole('client')">As client<span class="count">3</span></button>
+    <button class="role-tab" onclick="showRole('worker')">As worker<span class="count">2</span></button>
+  </div>
+
+  <div class="status-filters">
+    <span class="filter-chip active">All</span>
+    <span class="filter-chip">Needs your action</span>
+    <span class="filter-chip">In progress</span>
+    <span class="filter-chip">Closed</span>
+  </div>
+
+  <div id="client-view">
+    <div class="row">
+      <div class="docket-id">DKT-0430</div>
+      <p class="row-title">Audit and patch a TreeMap iteration bug</p>
+      <span class="status-chip status-open">Open</span>
+      <div class="amount">1,150 GEN</div>
+      <a class="row-action" href="docket-detail.html">View &rarr;</a>
+    </div>
+    <div class="row">
+      <div class="docket-id">DKT-0417</div>
+      <p class="row-title">Ship 6 explainer diagrams for onboarding</p>
+      <span class="status-chip status-adjudicating">Adjudicating</span>
+      <div class="amount">1,000 GEN</div>
+      <a class="row-action" href="adjudicating.html">View &rarr;</a>
+    </div>
+    <div class="row">
+      <div class="docket-id">DKT-0398</div>
+      <p class="row-title">Design system audit for the Studio landing page</p>
+      <span class="status-chip status-submitted" style="background:rgba(184,134,46,0.14);color:var(--verdict-gold);">Needs review</span>
+      <div class="amount">600 GEN</div>
+      <a class="row-action" href="submit-deliverable.html">Review &rarr;</a>
+    </div>
+  </div>
+
+  <div id="worker-view" style="display:none;">
+    <div class="row">
+      <div class="docket-id">DKT-0402</div>
+      <p class="row-title">Write integration tests for the staking wizard CLI</p>
+      <span class="status-chip status-claimed">Claimed</span>
+      <div class="amount">480 GEN</div>
+      <a class="row-action" href="submit-deliverable.html">Submit &rarr;</a>
+    </div>
+    <div class="row">
+      <div class="docket-id">DKT-0361</div>
+      <p class="row-title">Fetch-Github-Profile example contract cleanup</p>
+      <span class="status-chip status-closed">Closed &middot; full</span>
+      <div class="amount">250 GEN</div>
+      <a class="row-action" href="adjudication-result.html">View &rarr;</a>
+    </div>
+  </div>
+
+  <!-- empty-state reference, hidden by default: shown when a filtered view has 0 rows -->
+  <div class="empty" style="display:none;" id="empty-example">
+    <h3>Nothing here yet</h3>
+    <p>Dockets you post or claim will show up here, split by whether you're the client
+    or the worker on each one.</p>
+    <a href="create-docket.html">Post your first docket</a>
+  </div>
+</main>
+
+<script>
+  function showRole(role){
+    document.getElementById('client-view').style.display = role === 'client' ? 'block' : 'none';
+    document.getElementById('worker-view').style.display = role === 'worker' ? 'block' : 'none';
+    document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+  }
+</script>
+</body>
+</html>

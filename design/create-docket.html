@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Docket — Post a Docket</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EEEDE7; --ink:#181B22; --ledger:#1F3A5F; --verdict-gold:#B8862E;
+    --evidence-teal:#2B6E62; --line:#D6D2C7; --danger:#9C3B2E;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;}
+  header{border-bottom:1px solid var(--line);padding:22px 48px;display:flex;justify-content:space-between;align-items:center;}
+  .wordmark{font-family:'IBM Plex Serif',serif;font-weight:600;font-size:22px;}
+  .wordmark span{color:var(--ledger);}
+  nav a{color:#6b6e76;text-decoration:none;font-size:14px;margin-left:28px;}
+  nav a.active{color:var(--ink);font-weight:500;}
+  main{max-width:760px;margin:0 auto;padding:56px 24px 100px;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.08em;color:var(--ledger);text-transform:uppercase;}
+  h1{font-family:'IBM Plex Serif',serif;font-weight:600;font-size:32px;margin:12px 0 8px;}
+  .sub{color:#6b6e76;font-size:15px;margin-bottom:36px;max-width:56ch;}
+  fieldset{border:none;padding:0;margin:0 0 30px;}
+  label{display:block;font-size:13px;font-weight:600;margin-bottom:8px;}
+  .hint{font-size:12px;color:#6b6e76;font-weight:400;margin-top:6px;}
+  textarea,input{width:100%;font-family:'IBM Plex Sans',sans-serif;font-size:14px;padding:12px 14px;border:1px solid var(--line);border-radius:4px;background:#fff;color:var(--ink);}
+  textarea{min-height:110px;resize:vertical;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .amount-input{position:relative;}
+  .amount-input input{padding-right:56px;}
+  .amount-input .unit{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-family:'IBM Plex Mono',monospace;font-size:13px;color:#6b6e76;}
+  .divider{border-top:1px solid var(--line);margin:36px 0;}
+  .threshold-preview{background:#fff;border:1px solid var(--line);border-radius:6px;padding:18px 20px;font-size:13px;color:#3a3d45;margin-top:10px;}
+  .threshold-preview strong{color:var(--ledger);}
+  .summary{background:#fff;border:1px solid var(--line);border-radius:6px;padding:22px 24px;margin-bottom:28px;}
+  .summary-row{display:flex;justify-content:space-between;font-size:13px;padding:7px 0;border-bottom:1px solid var(--line);}
+  .summary-row:last-child{border:none;}
+  .summary-row .k{color:#6b6e76;}
+  .summary-row .v{font-family:'IBM Plex Mono',monospace;}
+  .btn{padding:14px 26px;border-radius:4px;font-size:14px;font-weight:600;border:none;cursor:pointer;}
+  .btn-primary{background:var(--ledger);color:var(--paper);}
+  .btn-primary:hover{background:#183050;}
+  .note{font-size:12px;color:#6b6e76;margin-top:14px;max-width:56ch;}
+</style>
+</head>
+<body>
+<header>
+  <div class="wordmark">Docket<span>.</span></div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="landing.html">The Register</a>
+    <a href="create-docket.html" class="active">Post a Docket</a>
+    <a href="submit-deliverable.html">My Claims</a>
+  </nav>
+</header>
+
+<main>
+  <div class="eyebrow">New docket &middot; step 1 of 1</div>
+  <h1>Escrow the payment, write the scope</h1>
+  <p class="sub">This becomes the record validators will adjudicate against if the
+  deliverable is ever disputed — write the scope of work like you mean it to be read by
+  someone who has never spoken to you.</p>
+
+  <fieldset>
+    <label for="sow">Scope of Work</label>
+    <textarea id="sow" placeholder="Describe exactly what needs to be delivered. Be specific about format, scope, and what's out of bounds."></textarea>
+    <p class="hint">Plain language. This is what validators read if the deliverable is disputed — vague scope produces vague verdicts.</p>
+  </fieldset>
+
+  <fieldset>
+    <label for="criteria">Acceptance Criteria</label>
+    <textarea id="criteria" placeholder="List the specific, checkable conditions a delivery must meet. One per line works best."></textarea>
+    <p class="hint">Structured criteria (a checklist) are compared more reliably than open prose — see the docket terms.</p>
+  </fieldset>
+
+  <div class="row2">
+    <fieldset>
+      <label for="amount">Escrow amount</label>
+      <div class="amount-input"><input id="amount" type="text" value="420" /><span class="unit">GEN</span></div>
+    </fieldset>
+    <fieldset>
+      <label for="deadline">Deadline</label>
+      <input id="deadline" type="text" value="2026-09-12  18:00 UTC" />
+    </fieldset>
+  </div>
+
+  <fieldset>
+    <label for="threshold">Minimum acceptance score</label>
+    <input id="threshold" type="range" min="0" max="100" value="50" />
+    <div class="threshold-preview">
+      A disputed deliverable scoring <strong>below 50/100</strong> settles as a full refund
+      to you. At or above 50, payment releases to the worker <strong>proportional to
+      score</strong> — e.g. a score of 70 pays 70% of escrow, refunds the remaining 30%.
+    </div>
+  </fieldset>
+
+  <div class="divider"></div>
+
+  <div class="summary">
+    <div class="summary-row"><span class="k">Escrow locked on submit</span><span class="v">420 GEN</span></div>
+    <div class="summary-row"><span class="k">Network</span><span class="v">bradbury</span></div>
+    <div class="summary-row"><span class="k">Docket id</span><span class="v">assigned on-chain</span></div>
+  </div>
+
+  <button class="btn btn-primary">Post docket &amp; lock escrow</button>
+  <p class="note">This posts a transaction to the Docket contract. Funds stay in escrow
+  until the deliverable is accepted, disputed and resolved, or the deadline passes
+  unclaimed/unsubmitted.</p>
+</main>
+</body>
+</html>

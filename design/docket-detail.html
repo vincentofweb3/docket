@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Docket — DKT-0430</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EEEDE7; --ink:#181B22; --ledger:#1F3A5F; --verdict-gold:#B8862E;
+    --evidence-teal:#2B6E62; --line:#D6D2C7; --danger:#9C3B2E;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;}
+  header{border-bottom:1px solid var(--line);padding:22px 48px;display:flex;justify-content:space-between;align-items:center;}
+  .wordmark{font-family:'IBM Plex Serif',serif;font-weight:600;font-size:22px;}
+  .wordmark span{color:var(--ledger);}
+  nav a{color:#6b6e76;text-decoration:none;font-size:14px;margin-left:28px;}
+  nav a.active{color:var(--ink);font-weight:500;}
+
+  main{max-width:900px;margin:0 auto;padding:44px 24px 100px;display:grid;grid-template-columns:1.6fr 1fr;gap:36px;}
+  .breadcrumb{font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6b6e76;grid-column:1/-1;margin-bottom:6px;}
+  .breadcrumb a{color:var(--ledger);text-decoration:none;}
+
+  .case-header{grid-column:1/-1;display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid var(--ink);padding-bottom:18px;margin-bottom:8px;}
+  .docket-id{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ledger);}
+  h1{font-family:'IBM Plex Serif',serif;font-weight:600;font-size:27px;margin:8px 0 0;max-width:34ch;}
+  .status-chip{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.04em;text-transform:uppercase;padding:5px 10px;border-radius:3px;background:rgba(43,110,98,0.12);color:var(--evidence-teal);height:fit-content;}
+
+  .col-main .panel{background:#fff;border:1px solid var(--line);border-radius:6px;padding:24px 26px;margin-bottom:22px;}
+  .col-main .panel h2{font-family:'IBM Plex Serif',serif;font-size:16px;font-weight:600;margin:0 0 12px;}
+  .col-main .panel p{font-size:14px;line-height:1.65;color:#3a3d45;margin:0;}
+  .criteria-list{margin:6px 0 0;padding-left:18px;font-size:14px;color:#3a3d45;line-height:1.85;}
+
+  .col-side .panel{background:#fff;border:1px solid var(--line);border-radius:6px;padding:22px 24px;margin-bottom:20px;}
+  .side-row{display:flex;justify-content:space-between;font-size:13px;padding:9px 0;border-bottom:1px solid var(--line);}
+  .side-row:last-child{border:none;}
+  .side-row .k{color:#6b6e76;}
+  .side-row .v{font-family:'IBM Plex Mono',monospace;}
+  .side-row .v.big{font-family:'IBM Plex Serif',serif;font-size:17px;color:var(--ledger);font-weight:600;}
+
+  .btn{width:100%;padding:14px 20px;border-radius:4px;font-size:14px;font-weight:600;border:none;cursor:pointer;text-align:center;margin-top:4px;}
+  .btn-primary{background:var(--ledger);color:var(--paper);}
+  .btn-primary:hover{background:#183050;}
+  .btn-note{font-size:11.5px;color:#6b6e76;margin-top:10px;line-height:1.5;}
+
+  .client-card{display:flex;align-items:center;gap:10px;font-size:13px;}
+  .avatar{width:30px;height:30px;border-radius:50%;background:var(--paper);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ledger);}
+  .client-card .addr{font-family:'IBM Plex Mono',monospace;color:#3a3d45;}
+  .client-card .rep{font-size:11.5px;color:#6b6e76;}
+
+  .timeline{font-size:12.5px;}
+  .tl-item{display:flex;gap:10px;padding:8px 0;}
+  .tl-dot{width:8px;height:8px;border-radius:50%;background:var(--evidence-teal);margin-top:5px;flex-shrink:0;}
+  .tl-dot.pending{background:var(--line);}
+  .tl-item .tl-label{color:#3a3d45;}
+  .tl-item .tl-time{color:#a2a4aa;margin-left:auto;font-family:'IBM Plex Mono',monospace;}
+</style>
+</head>
+<body>
+<header>
+  <div class="wordmark">Docket<span>.</span></div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="landing.html" class="active">The Register</a>
+    <a href="my-dockets.html">My Dockets</a>
+  </nav>
+</header>
+
+<main>
+  <div class="breadcrumb"><a href="landing.html">The Register</a> / DKT-0430</div>
+
+  <div class="case-header">
+    <div>
+      <div class="docket-id">DKT-0430</div>
+      <h1>Audit and patch a TreeMap iteration bug in a testnet indexer</h1>
+    </div>
+    <span class="status-chip">Open &middot; unclaimed</span>
+  </div>
+
+  <div class="col-main">
+    <div class="panel">
+      <h2>Scope of Work</h2>
+      <p>Our testnet indexer occasionally returns stale docket counts when iterating a
+      TreeMap under concurrent writes. Reproduce the bug against the linked failing test,
+      identify the root cause, and submit a patch as a pull request against the repo's
+      default branch. The fix should not introduce new lint warnings and must pass the
+      existing CI suite.</p>
+    </div>
+    <div class="panel">
+      <h2>Acceptance criteria</h2>
+      <ul class="criteria-list">
+        <li>Root cause identified and explained in a linked writeup or PR description</li>
+        <li>Patch submitted as a PR against the linked repo's default branch</li>
+        <li>Linked CI suite passes on the PR</li>
+        <li>No new lint warnings introduced</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h2>Reference material</h2>
+      <p>Failing test and repro steps: <a href="#" style="color:var(--evidence-teal);">github.com/example/testnet-indexer/issues/88</a></p>
+    </div>
+  </div>
+
+  <div class="col-side">
+    <div class="panel">
+      <div class="side-row"><span class="k">Escrow</span><span class="v big">1,150 GEN</span></div>
+      <div class="side-row"><span class="k">Acceptance threshold</span><span class="v">50 / 100</span></div>
+      <div class="side-row"><span class="k">Deadline</span><span class="v">6d 14h remaining</span></div>
+      <div class="side-row"><span class="k">Network</span><span class="v">bradbury</span></div>
+      <button class="btn btn-primary">Claim this docket</button>
+      <p class="btn-note">Claiming assigns you as the worker and starts the deadline
+      clock on submission. You can't un-claim once other workers see it's taken.</p>
+    </div>
+
+    <div class="panel">
+      <h2 style="font-family:'IBM Plex Serif',serif;font-size:14px;margin:0 0 12px;">Posted by</h2>
+      <div class="client-card">
+        <div class="avatar">0x9F</div>
+        <div>
+          <div class="addr">0x9F2a…c14e</div>
+          <div class="rep">14 dockets posted &middot; 92% resolved without dispute</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2 style="font-family:'IBM Plex Serif',serif;font-size:14px;margin:0 0 6px;">Timeline</h2>
+      <div class="timeline">
+        <div class="tl-item"><span class="tl-dot"></span><span class="tl-label">Docket posted, escrow locked</span><span class="tl-time">3d ago</span></div>
+        <div class="tl-item"><span class="tl-dot pending"></span><span class="tl-label">Claimed by a worker</span><span class="tl-time">—</span></div>
+        <div class="tl-item"><span class="tl-dot pending"></span><span class="tl-label">Deliverable submitted</span><span class="tl-time">—</span></div>
+        <div class="tl-item"><span class="tl-dot pending"></span><span class="tl-label">Accepted or resolved</span><span class="tl-time">—</span></div>
+      </div>
+    </div>
+  </div>
+</main>
+</body>
+</html>

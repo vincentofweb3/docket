@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Docket — Adjudicating DKT-0417</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EEEDE7; --ink:#181B22; --ledger:#1F3A5F; --verdict-gold:#B8862E;
+    --evidence-teal:#2B6E62; --line:#D6D2C7; --danger:#9C3B2E;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;}
+  header{border-bottom:1px solid var(--line);padding:22px 48px;display:flex;justify-content:space-between;align-items:center;}
+  .wordmark{font-family:'IBM Plex Serif',serif;font-weight:600;font-size:22px;}
+  .wordmark span{color:var(--ledger);}
+  nav a{color:#6b6e76;text-decoration:none;font-size:14px;margin-left:28px;}
+
+  main{max-width:680px;margin:0 auto;padding:56px 24px 100px;}
+  .docket-id{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ledger);text-align:center;display:block;}
+  h1{font-family:'IBM Plex Serif',serif;font-weight:600;font-size:25px;margin:10px 0 10px;text-align:center;}
+  .sub{color:#6b6e76;font-size:14px;text-align:center;max-width:48ch;margin:0 auto 44px;}
+
+  .stage-track{position:relative;padding-left:36px;margin-bottom:38px;}
+  .stage-track::before{content:"";position:absolute;left:9px;top:8px;bottom:8px;width:2px;background:var(--line);}
+  .stage{position:relative;padding-bottom:30px;}
+  .stage:last-child{padding-bottom:0;}
+  .stage-dot{position:absolute;left:-36px;top:2px;width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;}
+  .stage.done .stage-dot{border-color:var(--evidence-teal);background:var(--evidence-teal);}
+  .stage.active .stage-dot{border-color:var(--verdict-gold);}
+  .stage.active .stage-dot::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--verdict-gold);animation:pulse 1.4s ease-in-out infinite;}
+  .stage.done .stage-dot::after{content:"✓";color:#fff;font-size:11px;font-weight:700;}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.7);}}
+  @media (prefers-reduced-motion: reduce){.stage.active .stage-dot::after{animation:none;}}
+  .stage-name{font-size:14.5px;font-weight:600;margin:0 0 3px;}
+  .stage.pending .stage-name{color:#a2a4aa;}
+  .stage-desc{font-size:12.5px;color:#6b6e76;line-height:1.55;max-width:46ch;}
+  .stage-time{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#a2a4aa;margin-top:4px;}
+
+  .panel{background:#fff;border:1px solid var(--line);border-radius:6px;padding:20px 22px;margin-bottom:16px;}
+  .panel .k{font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.04em;color:#6b6e76;margin-bottom:6px;}
+  .panel p{font-size:13.5px;color:#3a3d45;line-height:1.6;margin:0;}
+
+  .appeal-note{text-align:center;font-size:12.5px;color:#6b6e76;margin-top:30px;}
+  .appeal-note a{color:var(--ledger);font-weight:500;}
+</style>
+</head>
+<body>
+<header>
+  <div class="wordmark">Docket<span>.</span></div>
+  <nav><a href="index.html">Home</a> <a href="my-dockets.html">My Dockets</a></nav>
+</header>
+
+<main>
+  <span class="docket-id">DKT-0417</span>
+  <h1>Validators are adjudicating this dispute</h1>
+  <p class="sub">This isn't stuck. GenLayer's Optimistic Democracy consensus takes a real
+  amount of time — validators are independently fetching the same evidence and running
+  their own evaluation before voting.</p>
+
+  <div class="stage-track">
+    <div class="stage done">
+      <div class="stage-dot"></div>
+      <div class="stage-name">Pending</div>
+      <div class="stage-desc">Dispute transaction received by the network.</div>
+      <div class="stage-time">2 min ago</div>
+    </div>
+    <div class="stage done">
+      <div class="stage-dot"></div>
+      <div class="stage-name">Proposing</div>
+      <div class="stage-desc">A leader validator was selected and proposed a verdict.</div>
+      <div class="stage-time">1 min ago</div>
+    </div>
+    <div class="stage active">
+      <div class="stage-dot"></div>
+      <div class="stage-name">Committing &amp; revealing</div>
+      <div class="stage-desc">Other validators are independently fetching the linked
+      evidence, running their own evaluation, and voting on whether it matches the
+      leader's proposed verdict.</div>
+      <div class="stage-time">4 of 5 votes in</div>
+    </div>
+    <div class="stage pending">
+      <div class="stage-dot"></div>
+      <div class="stage-name">Accepted</div>
+      <div class="stage-desc">Once a majority agrees, the verdict is provisionally
+      accepted and enters the appeal window.</div>
+    </div>
+    <div class="stage pending">
+      <div class="stage-dot"></div>
+      <div class="stage-name">Finalized</div>
+      <div class="stage-desc">After the appeal window closes with no challenge, escrow
+      settles automatically per the verdict.</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="k">What validators are evaluating</div>
+    <p>The Scope of Work, the acceptance criteria, and 3 public evidence links submitted
+    with this deliverable — see the docket record for the full text.</p>
+  </div>
+
+  <p class="appeal-note">Once accepted, either party can appeal within the finality
+  window before it becomes permanent. <a href="appeal.html">Learn how appeals work &rarr;</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,26 @@
+Studionet deployment/integration blocker (2026-08-25)
+
+The integration suite was run once after lint and direct tests passed. Every case failed while
+the client was calling https://studio.genlayer.com/api. The provider raised TLS errors
+SSLV3_ALERT_BAD_RECORD_MAC and DECRYPTION_FAILED_OR_BAD_RECORD_MAC during eth_getTransactionByHash
+or eth_estimateGas. The contract was therefore not confirmed deployed at a usable address.
+
+Earlier transaction envelope observed while diagnosing source-size deployment:
+0x1b866ff540703803c2de10bfb9e52494eece59bd05790f6bcf243b574156edcc
+Its EVM receipt status was 0x1, but consensus/deployment state and a Docket contract address
+could not be read reliably. It is retained only as failed-deployment debugging evidence and
+must not be presented as a successful Docket deployment or submission link.
+
+Next command after the endpoint is stable:
+PYTHONPATH=/tmp/docket-site /tmp/docket-site/bin/gltest --network studionet tests/integration/ -v -s
+
+The one consolidated retry in this pass failed all six cases earlier at DNS resolution:
+`socket.gaierror: [Errno -2] Name or service not known` for `studio.genlayer.com`.
+
+Availability recheck (2026-08-26T04:39:10Z): DNS/transport failure. `curl` exited 6 with
+`Could not resolve host: studio.genlayer.com`; the exact integration command was therefore
+not run. Complete raw output: `evidence/studionet-availability-2026-08-26T043910Z.txt`.
+
+Availability recheck (2026-08-26T22:53:50Z): DNS resolution timed out after 10014 ms.
+`curl` exited 28; integration and deployment were not started. Complete raw output:
+`evidence/studionet-availability-2026-08-26T225350Z.txt`.

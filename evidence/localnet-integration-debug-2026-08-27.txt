@@ -1,0 +1,61 @@
+WARNING: File `gltest.config.yaml` not found in the current directory, using default config, create a `gltest.config.yaml` file to manage multiple networks
+INFO: Clearing artifacts directory: artifacts
+INFO: Using the following configuration:
+INFO:   RPC URL: http://127.0.0.1:4000/api
+INFO:   Selected Network: localnet
+INFO:   Available networks: ['localnet', 'studionet', 'testnet_asimov', 'testnet_bradbury']
+INFO:   Selected chain type: localnet
+INFO:   Available chains: localnet, studionet, testnet_asimov, testnet_bradbury
+INFO:   Contracts directory: contracts
+INFO:   Artifacts directory: artifacts
+INFO:   Environment: .env
+INFO:   Default wait interval: 3000 ms
+INFO:   Default wait retries: 50
+INFO:   Leader only mode: False
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0 -- /tmp/docket-site/bin/python
+cachedir: .pytest_cache
+rootdir: /home/vincent/projects/docket
+plugins: genlayer-test-0.29.2, anyio-4.14.2
+collecting ... collected 1 item
+
+tests/integration/test_docket_integration.py::TestFullLifecycleFastPath::test_deploy_create_claim_submit_accept_settles_correct_balances RECEIPT_DEBUG {'hash': '0x0000000000000000000000000000000000000000000000000000000000000002', 'status': 7, 'from_address': '0x19ec1d0237e2a1192b18712e49d7326c6860deeb', 'to_address': '0xfd4055470acaf7ac53f3073ddb8b1656d15b4565', 'type': 2, 'nonce': 0, 'value': 1000, 'fee_value': 0, 'valid_until': None, 'salt_nonce': None, 'fees_distribution': None, 'message_allocations_count': 0, 'gaslimit': 0, 'created_at': '2026-08-26T23:42:35.592929+00:00', 'data': {'calldata': {'readable': '{"args":["Prepare a standards report","- Include the relevant published standard",5000,1787791355],"method":"create_docket"}'}}, 'consensus_data': {'votes': {'0x0000000000000000000000000000000000000000': 'agree', '0x0000000000000000000000000000000000000001': 'agree', '0x0000000000000000000000000000000000000002': 'agree'}, 'leader_receipt': [{'execution_result': 'ERROR', 'genvm_result': {'stdout': '', 'stderr': "UserError(message='EXPECTED_ZERO_VALUE')"}, 'mode': 'leader', 'vote': None, 'node_config': {'address': '0x0000000000000000000000000000000000000000', 'provider': 'glsim', 'model': 'direct', 'config': {}, 'plugin': 'glsim', 'plugin_config': {}, 'stake': 1}, 'calldata': {'readable': '{"args":["Prepare a standards report","- Include the relevant published standard",5000,1787791355],"method":"create_docket"}'}, 'eq_outputs': {}, 'result': {'status': 'rollback', 'payload': "UserError(message='EXPECTED_ZERO_VALUE')"}}], 'validators': [{'execution_result': 'ERROR', 'genvm_result': {'stdout': '', 'stderr': "UserError(message='EXPECTED_ZERO_VALUE')"}, 'mode': 'validator', 'vote': 'agree', 'node_config': {'address': '0x0000000000000000000000000000000000000000', 'provider': 'glsim', 'model': 'direct', 'config': {}, 'plugin': 'glsim', 'plugin_config': {}, 'stake': 1}}, {'execution_result': 'ERROR', 'genvm_result': {'stdout': '', 'stderr': "UserError(message='EXPECTED_ZERO_VALUE')"}, 'mode': 'validator', 'vote': 'agree', 'node_config': {'address': '0x0000000000000000000000000000000000000001', 'provider': 'glsim', 'model': 'direct', 'config': {}, 'plugin': 'glsim', 'plugin_config': {}, 'stake': 1}}, {'execution_result': 'ERROR', 'genvm_result': {'stdout': '', 'stderr': "UserError(message='EXPECTED_ZERO_VALUE')"}, 'mode': 'validator', 'vote': 'agree', 'node_config': {'address': '0x0000000000000000000000000000000000000002', 'provider': 'glsim', 'model': 'direct', 'config': {}, 'plugin': 'glsim', 'plugin_config': {}, 'stake': 1}}]}, 'status_name': 'FINALIZED'}
+FAILED
+
+=================================== FAILURES ===================================
+_ TestFullLifecycleFastPath.test_deploy_create_claim_submit_accept_settles_correct_balances _
+
+self = <test_docket_integration.TestFullLifecycleFastPath object at 0x7fc85f804710>
+gl_client = <genlayer_py.client.genlayer_client.GenLayerClient object at 0x7fc860dd2ff0>
+default_account = <eth_account.signers.local.LocalAccount object at 0x7fc860210aa0>
+accounts = [<eth_account.signers.local.LocalAccount object at 0x7fc860dd0650>, <eth_account.signers.local.LocalAccount object at ...s.local.LocalAccount object at 0x7fc85f804f50>, <eth_account.signers.local.LocalAccount object at 0x7fc85f8052b0>, ...]
+
+    def test_deploy_create_claim_submit_accept_settles_correct_balances(
+        self, gl_client, default_account, accounts
+    ):
+        client, worker = default_account, accounts[1]
+        contract = _deploy(default_account)
+>       _create_claim_submit(contract, client, worker)
+
+tests/integration/test_docket_integration.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_docket_integration.py:77: in _create_claim_submit
+    _assert_ok(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+receipt = {'hash': '0x0000000000000000000000000000000000000000000000000000000000000002', 'status': 7, 'from_address': '0x19ec1d0237e2a1192b18712e49d7326c6860deeb', 'to_address': '0xfd4055470acaf7ac53f3073ddb8b1656d15b4565', ...}
+
+    def _assert_ok(receipt):
+        if not tx_execution_succeeded(receipt):
+            print("RECEIPT_DEBUG", repr(receipt), flush=True)
+>       assert tx_execution_succeeded(receipt), receipt
+E       AssertionError: {'hash': '0x0000000000000000000000000000000000000000000000000000000000000002', 'status': 7, 'from_address': '0x19ec1d0237e2a1192b18712e49d7326c6860deeb', 'to_address': '0xfd4055470acaf7ac53f3073ddb8b1656d15b4565', ...}
+E       assert False
+E        +  where False = tx_execution_succeeded({'hash': '0x0000000000000000000000000000000000000000000000000000000000000002', 'status': 7, 'from_address': '0x19ec1d0237e2a1192b18712e49d7326c6860deeb', 'to_address': '0xfd4055470acaf7ac53f3073ddb8b1656d15b4565', 'type': 2, 'nonce': 0, 'value': 1000, 'fee_value': 0, 'valid_until': None, 'salt_nonce': None, 'fees_distribution': None, 'message_allocations_count': 0, 'gaslimit': 0, 'created_at': '2026-08-26T23:42:35.592929+00:00', 'data': {'calldata': {'readable': '{"args":["Prepare a standards report","- Include the relevant published standard",5000,1787791355],"method":"create_docket"}'}}, 'consensus_data': {'votes': {'0x0000000000000000000000000000000000000000': 'agree', '0x0000000000000000000000000000000000000001': 'agree', '0x0000000000000000000000000000000000000002': 'agree'}, 'leader_receipt': [{'execution_result': 'ERROR', 'genvm_result': {'stdout': '', 'stderr': "UserError(message='EXPECTED_ZERO_VALUE')"}, 'mode': 'leader', 'vote': None, 'node_config': {'address': '0x0000000000000000000000000000000000000000', 'provider': 'glsim', 'model': 'direct', 'config': {}, 'plugin': 'glsim', 'plugin_config': {}, 'stake': 1}, 'calldata': {'readable': '{"args":["Prepare a standards report","- Include the relevant published standard",5000,1787791355],"method":"create_docket"}'}, 'eq_outputs': {}, 'result': {'status': 'rollback', 'payload': "UserError(message='EXPECTED_ZERO_VALUE')"}}], 'validators': [{'execution_result': 'ERROR', 'genvm_result': {'stdout': '', 'stderr': "UserError(message='EXPECTED_ZERO_VALUE')"}, 'mode': 'validator', 'vote': 'agree', 'node_config': {'address': '0x0000000000000000000000000000000000000000', 'provider': 'glsim', 'model': 'direct', 'config': {}, 'plugin': 'glsim', 'plugin_config': {}, 'stake': 1}}, {'execution_result': 'ERROR', 'genvm_result': {'stdout': '', 'stderr': "UserError(message='EXPECTED_ZERO_VALUE')"}, 'mode': 'validator', 'vote': 'agree', 'node_config': {'address': '0x0000000000000000000000000000000000000001', 'provider': 'glsim', 'model': 'direct', 'config': {}, 'plugin': 'glsim', 'plugin_config': {}, 'stake': 1}}, {'execution_result': 'ERROR', 'genvm_result': {'stdout': '', 'stderr': "UserError(message='EXPECTED_ZERO_VALUE')"}, 'mode': 'validator', 'vote': 'agree', 'node_config': {'address': '0x0000000000000000000000000000000000000002', 'provider': 'glsim', 'model': 'direct', 'config': {}, 'plugin': 'glsim', 'plugin_config': {}, 'stake': 1}}]}, 'status_name': 'FINALIZED'})
+
+tests/integration/test_docket_integration.py:46: AssertionError
+=========================== short test summary info ============================
+FAILED tests/integration/test_docket_integration.py::TestFullLifecycleFastPath::test_deploy_create_claim_submit_accept_settles_correct_balances - AssertionError: {'hash': '0x0000000000000000000000000000000000000000000000000000000000000002', 'status': 7, 'from_address': '0x19ec1d0237e2a1192b18712e49d7326c6860deeb', 'to_address': '0xfd4055470acaf7ac53f3073ddb8b1656d15b4565', ...}
+assert False
+ +  where False = tx_execution_succeeded({'hash': '0x0000000000000000000000000000000000000000000000000000000000000002', 'status': 7, 'from_address': '0x19ec1d0237e2a1192b18712e49d7326c6860deeb', 'to_address': '0xfd4055470acaf7ac53f3073ddb8b1656d15b4565', 'type': 2, 'nonce': 0, 'value': 1000, 'fee_value': 0, 'valid_until': None, 'salt_nonce': None, 'fees_distribution': None, 'message_allocations_count': 0, 'gaslimit': 0, 'created_at': '2026-08-26T23:42:35.592929+00:00', 'data': {'calldata': {'readable': '{"args":["Prepare a standards report","- Include the relevant published standard",5000,1787791355],"method":"create_docket"}'}}, 'consensus_data': {'votes': {'0x0000000000000000000000000000000000000000': 'agree', '0x0000000000000000000000000000000000000001': 'agree', '0x0000000000000000000000000000000000000002': 'agree'}, 'leader_receipt': [{'execution_result': 'ERROR', 'genvm_result': {'stdout': '', 'stderr': "UserError(message='EXPECTED_ZERO_VALUE')"}, 'mode': 'leader', 'vote': None, 'node_config': {'address': '0x0000000000000000000000000000000000000000', 'provider': 'glsim', 'model': 'direct', 'config': {}, 'plugin': 'glsim', 'plugin_config': {}, 'stake': 1}, 'calldata': {'readable': '{"args":["Prepare a standards report","- Include the relevant published standard",5000,1787791355],"method":"create_docket"}'}, 'eq_outputs': {}, 'result': {'status': 'rollback', 'payload': "UserError(message='EXPECTED_ZERO_VALUE')"}}], 'validators': [{'execution_result': 'ERROR', 'genvm_result': {'stdout': '', 'stderr': "UserError(message='EXPECTED_ZERO_VALUE')"}, 'mode': 'validator', 'vote': 'agree', 'node_config': {'address': '0x0000000000000000000000000000000000000000', 'provider': 'glsim', 'model': 'direct', 'config': {}, 'plugin': 'glsim', 'plugin_config': {}, 'stake': 1}}, {'execution_result': 'ERROR', 'genvm_result': {'stdout': '', 'stderr': "UserError(message='EXPECTED_ZERO_VALUE')"}, 'mode': 'validator', 'vote': 'agree', 'node_config': {'address': '0x0000000000000000000000000000000000000001', 'provider': 'glsim', 'model': 'direct', 'config': {}, 'plugin': 'glsim', 'plugin_config': {}, 'stake': 1}}, {'execution_result': 'ERROR', 'genvm_result': {'stdout': '', 'stderr': "UserError(message='EXPECTED_ZERO_VALUE')"}, 'mode': 'validator', 'vote': 'agree', 'node_config': {'address': '0x0000000000000000000000000000000000000002', 'provider': 'glsim', 'model': 'direct', 'config': {}, 'plugin': 'glsim', 'plugin_config': {}, 'stake': 1}}]}, 'status_name': 'FINALIZED'})
+============================== 1 failed in 1.90s ===============================

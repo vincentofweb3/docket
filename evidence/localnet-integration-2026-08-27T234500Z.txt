@@ -1,0 +1,301 @@
+WARNING: File `gltest.config.yaml` not found in the current directory, using default config, create a `gltest.config.yaml` file to manage multiple networks
+INFO: Clearing artifacts directory: artifacts
+INFO: Using the following configuration:
+INFO:   RPC URL: http://127.0.0.1:4000/api
+INFO:   Selected Network: localnet
+INFO:   Available networks: ['localnet', 'studionet', 'testnet_asimov', 'testnet_bradbury']
+INFO:   Selected chain type: localnet
+INFO:   Available chains: localnet, studionet, testnet_asimov, testnet_bradbury
+INFO:   Contracts directory: contracts
+INFO:   Artifacts directory: artifacts
+INFO:   Environment: .env
+INFO:   Default wait interval: 3000 ms
+INFO:   Default wait retries: 50
+INFO:   Leader only mode: False
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0 -- /tmp/docket-site/bin/python
+cachedir: .pytest_cache
+rootdir: /home/vincent/projects/docket
+plugins: genlayer-test-0.29.2, anyio-4.14.2
+collecting ... collected 6 items
+
+tests/integration/test_docket_integration.py::TestFullLifecycleFastPath::test_deploy_create_claim_submit_accept_settles_correct_balances FAILED
+tests/integration/test_docket_integration.py::TestFullLifecycleDisputed::test_dispute_with_real_public_evidence_resolves_via_consensus FAILED
+tests/integration/test_docket_integration.py::TestFullLifecycleDisputed::test_dispute_with_unreachable_evidence_resolves_toward_reject FAILED
+tests/integration/test_docket_integration.py::TestAppealFlow::test_accepted_verdict_can_be_appealed_within_finality_window FAILED
+tests/integration/test_docket_integration.py::TestExpiryAgainstRealBlockTime::test_refund_expired_after_real_deadline_passes FAILED
+tests/integration/test_docket_integration.py::TestDeploymentSanity::test_deployed_schema_matches_contract_spec FAILED
+
+=================================== FAILURES ===================================
+_ TestFullLifecycleFastPath.test_deploy_create_claim_submit_accept_settles_correct_balances _
+
+self = <test_docket_integration.TestFullLifecycleFastPath object at 0x7f74c40868a0>
+gl_client = <genlayer_py.client.genlayer_client.GenLayerClient object at 0x7f74c4084d70>
+default_account = <eth_account.signers.local.LocalAccount object at 0x7f74c5641be0>
+accounts = [<eth_account.signers.local.LocalAccount object at 0x7f74c405bda0>, <eth_account.signers.local.LocalAccount object at ...s.local.LocalAccount object at 0x7f74c4086e70>, <eth_account.signers.local.LocalAccount object at 0x7f74c4084920>, ...]
+
+    def test_deploy_create_claim_submit_accept_settles_correct_balances(
+        self, gl_client, default_account, accounts
+    ):
+        client, worker = default_account, accounts[1]
+        contract = _deploy(default_account)
+        _create_claim_submit(contract, client, worker)
+    
+        before = gl_client.get_balance(worker.address)
+        receipt = _assert_ok(
+            contract.connect(client).accept_deliverable(args=[0]).transact(
+                wait_triggered_transactions=True
+            )
+        )
+>       docket = _docket(contract)
+                 ^^^^^^^^^^^^^^^^^
+
+tests/integration/test_docket_integration.py:107: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_docket_integration.py:61: in _docket
+    return contract.get_docket(args=[docket_id]).call()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/docket-site/lib/python3.12/site-packages/gltest/contracts/contract_functions.py:22: in call
+    return self.call_method(
+/tmp/docket-site/lib/python3.12/site-packages/gltest/contracts/contract.py:41: in call_method
+    return client.read_contract(
+/tmp/docket-site/lib/python3.12/site-packages/genlayer_py/client/genlayer_client.py:119: in read_contract
+    return read_contract(
+/tmp/docket-site/lib/python3.12/site-packages/genlayer_py/contracts/actions.py:83: in read_contract
+    enc_result = self.provider.make_request(
+/tmp/docket-site/lib/python3.12/site-packages/genlayer_py/provider/provider.py:48: in make_request
+    self._raise_on_error(resp, method)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <genlayer_py.provider.provider.GenLayerProvider object at 0x7f74c4087ef0>
+resp = {'jsonrpc': '2.0', 'error': {'code': -32603, 'message': "invalid type <class 'genlayer.py.types.Address'>"}, 'id': 1787788401568}
+ctx = 'gen_call'
+
+    def _raise_on_error(self, resp: dict, ctx: str) -> None:
+        if resp.get("error"):
+            err = resp.get("error", {})
+>           raise GenLayerError(
+                f"{ctx} failed (code={err.get('code', 'unknown')}): {err.get('message', 'unknown error')}"
+            )
+E           genlayer_py.exceptions.GenLayerError: gen_call failed (code=-32603): invalid type <class 'genlayer.py.types.Address'>
+
+/tmp/docket-site/lib/python3.12/site-packages/genlayer_py/provider/provider.py:54: GenLayerError
+_ TestFullLifecycleDisputed.test_dispute_with_real_public_evidence_resolves_via_consensus _
+
+self = <test_docket_integration.TestFullLifecycleDisputed object at 0x7f74c40854f0>
+default_account = <eth_account.signers.local.LocalAccount object at 0x7f74c5641be0>
+accounts = [<eth_account.signers.local.LocalAccount object at 0x7f74c405bda0>, <eth_account.signers.local.LocalAccount object at ...s.local.LocalAccount object at 0x7f74c4086e70>, <eth_account.signers.local.LocalAccount object at 0x7f74c4084920>, ...]
+
+    def test_dispute_with_real_public_evidence_resolves_via_consensus(
+        self, default_account, accounts
+    ):
+        client, worker = default_account, accounts[1]
+        contract = _deploy(default_account)
+        _create_claim_submit(contract, client, worker)
+>       receipt = _assert_ok(
+            contract.connect(client).dispute_deliverable(args=[0]).transact(
+                wait_triggered_transactions=True,
+            )
+        )
+
+tests/integration/test_docket_integration.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+receipt = {'hash': '0x000000000000000000000000000000000000000000000000000000000000000a', 'status': 7, 'from_address': '0x8c79efd1bd9111d23a95deea1aee78b9fdfaa261', 'to_address': '0x33d8685897ef83fe1148b3e538356efcc563ff89', ...}
+
+    def _assert_ok(receipt):
+        # GLSim returns the same consensus execution result used by Studio, but
+        # its helper receipt may expose status_name as FINALIZED while the leader
+        # execution_result is ERROR for a deterministic revert. Keep failures
+        # visible and require SUCCESS exactly as the harness documents.
+>       assert tx_execution_succeeded(receipt), receipt
+E       AssertionError: {'hash': '0x000000000000000000000000000000000000000000000000000000000000000a', 'status': 7, 'from_address': '0x8c79efd1bd9111d23a95deea1aee78b9fdfaa261', 'to_address': '0x33d8685897ef83fe1148b3e538356efcc563ff89', ...}
+E       assert False
+E        +  where False = tx_execution_succeeded({'hash': '0x000000000000000000000000000000000000000000000000000000000000000a', 'status': 7, 'from_address': '0x8c79efd1bd9111d23a95deea1aee78b9fdfaa261', 'to_address': '0x33d8685897ef83fe1148b3e538356efcc563ff89', ...})
+
+tests/integration/test_docket_integration.py:48: AssertionError
+_ TestFullLifecycleDisputed.test_dispute_with_unreachable_evidence_resolves_toward_reject _
+
+self = <test_docket_integration.TestFullLifecycleDisputed object at 0x7f74c40857f0>
+default_account = <eth_account.signers.local.LocalAccount object at 0x7f74c5641be0>
+accounts = [<eth_account.signers.local.LocalAccount object at 0x7f74c405bda0>, <eth_account.signers.local.LocalAccount object at ...s.local.LocalAccount object at 0x7f74c4086e70>, <eth_account.signers.local.LocalAccount object at 0x7f74c4084920>, ...]
+
+    def test_dispute_with_unreachable_evidence_resolves_toward_reject(
+        self, default_account, accounts
+    ):
+        client, worker = default_account, accounts[1]
+        contract = _deploy(default_account)
+        _create_claim_submit(contract, client, worker, evidence=DEAD_EVIDENCE_URL)
+        _assert_ok(
+            contract.connect(client).dispute_deliverable(args=[0]).transact(
+                wait_triggered_transactions=True,
+            )
+        )
+>       docket = _docket(contract)
+                 ^^^^^^^^^^^^^^^^^
+
+tests/integration/test_docket_integration.py:144: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_docket_integration.py:61: in _docket
+    return contract.get_docket(args=[docket_id]).call()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/docket-site/lib/python3.12/site-packages/gltest/contracts/contract_functions.py:22: in call
+    return self.call_method(
+/tmp/docket-site/lib/python3.12/site-packages/gltest/contracts/contract.py:41: in call_method
+    return client.read_contract(
+/tmp/docket-site/lib/python3.12/site-packages/genlayer_py/client/genlayer_client.py:119: in read_contract
+    return read_contract(
+/tmp/docket-site/lib/python3.12/site-packages/genlayer_py/contracts/actions.py:83: in read_contract
+    enc_result = self.provider.make_request(
+/tmp/docket-site/lib/python3.12/site-packages/genlayer_py/provider/provider.py:48: in make_request
+    self._raise_on_error(resp, method)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <genlayer_py.provider.provider.GenLayerProvider object at 0x7f74c4087ef0>
+resp = {'jsonrpc': '2.0', 'error': {'code': -32603, 'message': "invalid type <class 'genlayer.py.types.Address'>"}, 'id': 1787788405381}
+ctx = 'gen_call'
+
+    def _raise_on_error(self, resp: dict, ctx: str) -> None:
+        if resp.get("error"):
+            err = resp.get("error", {})
+>           raise GenLayerError(
+                f"{ctx} failed (code={err.get('code', 'unknown')}): {err.get('message', 'unknown error')}"
+            )
+E           genlayer_py.exceptions.GenLayerError: gen_call failed (code=-32603): invalid type <class 'genlayer.py.types.Address'>
+
+/tmp/docket-site/lib/python3.12/site-packages/genlayer_py/provider/provider.py:54: GenLayerError
+_ TestAppealFlow.test_accepted_verdict_can_be_appealed_within_finality_window __
+
+self = <test_docket_integration.TestAppealFlow object at 0x7f74c40873e0>
+default_account = <eth_account.signers.local.LocalAccount object at 0x7f74c5641be0>
+accounts = [<eth_account.signers.local.LocalAccount object at 0x7f74c405bda0>, <eth_account.signers.local.LocalAccount object at ...s.local.LocalAccount object at 0x7f74c4086e70>, <eth_account.signers.local.LocalAccount object at 0x7f74c4084920>, ...]
+
+    def test_accepted_verdict_can_be_appealed_within_finality_window(
+        self, default_account, accounts
+    ):
+        client, worker = default_account, accounts[1]
+        contract = _deploy(default_account)
+        _create_claim_submit(contract, client, worker)
+>       receipt = _assert_ok(
+            contract.connect(client).dispute_deliverable(args=[0]).transact(
+                wait_transaction_status=TransactionStatus.ACCEPTED,
+            )
+        )
+
+tests/integration/test_docket_integration.py:157: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+receipt = {'hash': '0x0000000000000000000000000000000000000000000000000000000000000014', 'status': 7, 'from_address': '0x8c79efd1bd9111d23a95deea1aee78b9fdfaa261', 'to_address': '0x2c883489e8b06c72dec089b574b8e85ca0859664', ...}
+
+    def _assert_ok(receipt):
+        # GLSim returns the same consensus execution result used by Studio, but
+        # its helper receipt may expose status_name as FINALIZED while the leader
+        # execution_result is ERROR for a deterministic revert. Keep failures
+        # visible and require SUCCESS exactly as the harness documents.
+>       assert tx_execution_succeeded(receipt), receipt
+E       AssertionError: {'hash': '0x0000000000000000000000000000000000000000000000000000000000000014', 'status': 7, 'from_address': '0x8c79efd1bd9111d23a95deea1aee78b9fdfaa261', 'to_address': '0x2c883489e8b06c72dec089b574b8e85ca0859664', ...}
+E       assert False
+E        +  where False = tx_execution_succeeded({'hash': '0x0000000000000000000000000000000000000000000000000000000000000014', 'status': 7, 'from_address': '0x8c79efd1bd9111d23a95deea1aee78b9fdfaa261', 'to_address': '0x2c883489e8b06c72dec089b574b8e85ca0859664', ...})
+
+tests/integration/test_docket_integration.py:48: AssertionError
+_ TestExpiryAgainstRealBlockTime.test_refund_expired_after_real_deadline_passes _
+
+self = <test_docket_integration.TestExpiryAgainstRealBlockTime object at 0x7f74c4085100>
+default_account = <eth_account.signers.local.LocalAccount object at 0x7f74c5641be0>
+accounts = [<eth_account.signers.local.LocalAccount object at 0x7f74c405bda0>, <eth_account.signers.local.LocalAccount object at ...s.local.LocalAccount object at 0x7f74c4086e70>, <eth_account.signers.local.LocalAccount object at 0x7f74c4084920>, ...]
+
+    def test_refund_expired_after_real_deadline_passes(self, default_account, accounts):
+        contract = _deploy(default_account)
+        deadline = int(time.time()) + 3
+        _assert_ok(
+            contract.create_docket(args=[
+                "Prepare a report",
+                "- Include sources",
+                5000,
+                deadline,
+            ]).transact(value=1000)
+        )
+        time.sleep(5)
+>       _assert_ok(
+            contract.connect(accounts[1]).refund_expired(args=[0]).transact(
+                wait_triggered_transactions=True,
+            )
+        )
+
+tests/integration/test_docket_integration.py:179: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+receipt = {'hash': '0x0000000000000000000000000000000000000000000000000000000000000017', 'status': 7, 'from_address': '0x4249eb790d1070d5536bce30ec0e0c7a8cac2b8b', 'to_address': '0xcebb892a86081da39431138575780aca65a0b41d', ...}
+
+    def _assert_ok(receipt):
+        # GLSim returns the same consensus execution result used by Studio, but
+        # its helper receipt may expose status_name as FINALIZED while the leader
+        # execution_result is ERROR for a deterministic revert. Keep failures
+        # visible and require SUCCESS exactly as the harness documents.
+>       assert tx_execution_succeeded(receipt), receipt
+E       AssertionError: {'hash': '0x0000000000000000000000000000000000000000000000000000000000000017', 'status': 7, 'from_address': '0x4249eb790d1070d5536bce30ec0e0c7a8cac2b8b', 'to_address': '0xcebb892a86081da39431138575780aca65a0b41d', ...}
+E       assert False
+E        +  where False = tx_execution_succeeded({'hash': '0x0000000000000000000000000000000000000000000000000000000000000017', 'status': 7, 'from_address': '0x4249eb790d1070d5536bce30ec0e0c7a8cac2b8b', 'to_address': '0xcebb892a86081da39431138575780aca65a0b41d', ...})
+
+tests/integration/test_docket_integration.py:48: AssertionError
+_______ TestDeploymentSanity.test_deployed_schema_matches_contract_spec ________
+
+self = <test_docket_integration.TestDeploymentSanity object at 0x7f74c4084b00>
+gl_client = <genlayer_py.client.genlayer_client.GenLayerClient object at 0x7f74c4084d70>
+default_account = <eth_account.signers.local.LocalAccount object at 0x7f74c5641be0>
+
+    def test_deployed_schema_matches_contract_spec(self, gl_client, default_account):
+        contract = _deploy(default_account)
+        schema = gl_client.get_contract_schema(contract.address)
+        expected_methods = {
+            "accept_deliverable": {"params": [["docket_id", "int"]], "kwparams": {}, "readonly": False, "ret": "null", "payable": False},
+            "claim_docket": {"params": [["docket_id", "int"]], "kwparams": {}, "readonly": False, "ret": "null", "payable": False},
+            "create_docket": {"params": [["sow_text", "string"], ["acceptance_criteria", "string"], ["threshold_bp", "int"], ["deadline", "int"]], "kwparams": {}, "readonly": False, "ret": "int", "payable": True},
+            "dispute_deliverable": {"params": [["docket_id", "int"]], "kwparams": {}, "readonly": False, "ret": "null", "payable": False},
+            "get_docket": {"params": [["docket_id", "int"]], "kwparams": {}, "readonly": True, "ret": {"client": "address", "worker": "address", "sow_text": "string", "acceptance_criteria": "string", "threshold_bp": "int", "amount": "int", "deadline": "int", "status": "int", "evidence": [{"$rep": "string"}], "note": "string", "verdict": "int", "score": "int", "unmet_criteria": [{"$rep": "string"}], "created_at": "int", "resolved_at": "int"}},
+            "get_reputation": {"params": [["addr", "address"]], "kwparams": {}, "readonly": True, "ret": {"completed": "int", "disputed": "int", "upheld": "int", "score_sum": "int"}},
+            "list_open_dockets": {"params": [], "kwparams": {}, "readonly": True, "ret": [{"$rep": "int"}]},
+            "refund_expired": {"params": [["docket_id", "int"]], "kwparams": {}, "readonly": False, "ret": "null", "payable": False},
+            "submit_deliverable": {"params": [["docket_id", "int"], ["evidence", [{"$rep": "string"}]], ["note", "string"]], "kwparams": {}, "readonly": False, "ret": "null", "payable": False},
+        }
+        if schema == {"ctor": {"params": [], "kwparams": {}}, "methods": expected_methods}:
+            return
+        # GLSim exposes the equivalent SDK signature in its native serializer:
+        # {params: [type-name], ret: type-name, readonly}. Normalize that shape
+        # semantically instead of coupling this assertion to one RPC encoding.
+        assert schema.get("ctor") == {"params": [], "kwparams": {}}
+        observed = schema.get("methods", {})
+        assert set(observed) == set(expected_methods)
+        expected_types = {
+            "accept_deliverable": (["u32"], "None", False),
+            "claim_docket": (["u32"], "None", False),
+            "create_docket": (["str", "str", "u32", "u64"], "u32", False),
+            "dispute_deliverable": (["u32"], "None", False),
+            "get_docket": (["u32"], "Docket", True),
+            "get_reputation": (["Address"], "ReputationRecord", True),
+            "list_open_dockets": ([], "DynArray", True),
+            "refund_expired": (["u32"], "None", False),
+            "submit_deliverable": (["u32", "list[str]", "str"], "None", False),
+        }
+        for name, (param_types, return_type, readonly) in expected_types.items():
+>           assert observed[name]["params"] == param_types
+E           AssertionError: assert ['u32', 'list', 'str'] == ['u32', 'list[str]', 'str']
+E             
+E             At index 1 diff: 'list' != 'list[str]'
+E             
+E             Full diff:
+E               [
+E                   'u32',
+E             -     'list[str]',...
+E             
+E             ...Full output truncated (4 lines hidden), use '-vv' to show
+
+tests/integration/test_docket_integration.py:222: AssertionError
+=========================== short test summary info ============================
+FAILED tests/integration/test_docket_integration.py::TestFullLifecycleFastPath::test_deploy_create_claim_submit_accept_settles_correct_balances
+FAILED tests/integration/test_docket_integration.py::TestFullLifecycleDisputed::test_dispute_with_real_public_evidence_resolves_via_consensus
+FAILED tests/integration/test_docket_integration.py::TestFullLifecycleDisputed::test_dispute_with_unreachable_evidence_resolves_toward_reject
+FAILED tests/integration/test_docket_integration.py::TestAppealFlow::test_accepted_verdict_can_be_appealed_within_finality_window
+FAILED tests/integration/test_docket_integration.py::TestExpiryAgainstRealBlockTime::test_refund_expired_after_real_deadline_passes
+FAILED tests/integration/test_docket_integration.py::TestDeploymentSanity::test_deployed_schema_matches_contract_spec
+============================== 6 failed in 13.12s ==============================

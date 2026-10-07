@@ -1,0 +1,84 @@
+INFO:     Started server process [6265]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:4000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:34084 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34090 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34106 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34118 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34122 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34132 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34136 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34142 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34144 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34160 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34172 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34178 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34194 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34202 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34212 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34220 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34234 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34236 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34240 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34252 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34264 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34276 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34292 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34300 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34304 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34318 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34322 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34338 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34342 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34352 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34362 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34372 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34388 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34404 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34420 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34436 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34450 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34464 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34466 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34470 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34474 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34476 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34492 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34504 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34520 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34536 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34542 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34544 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34552 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34560 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34568 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34578 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34586 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34598 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34610 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34612 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34616 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34626 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34636 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34642 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34646 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34654 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34658 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34674 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34680 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34696 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34712 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34720 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34722 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34734 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34750 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34760 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34772 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34774 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34790 - "POST /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34800 - "POST /api HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [6265]

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Docket — Appeal DKT-0417</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EEEDE7; --ink:#181B22; --ledger:#1F3A5F; --verdict-gold:#B8862E;
+    --evidence-teal:#2B6E62; --line:#D6D2C7; --danger:#9C3B2E;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;}
+  header{border-bottom:1px solid var(--line);padding:22px 48px;display:flex;justify-content:space-between;align-items:center;}
+  .wordmark{font-family:'IBM Plex Serif',serif;font-weight:600;font-size:22px;}
+  .wordmark span{color:var(--ledger);}
+  nav a{color:#6b6e76;text-decoration:none;font-size:14px;margin-left:28px;}
+
+  main{max-width:700px;margin:0 auto;padding:48px 24px 100px;}
+  .docket-id{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ledger);}
+  h1{font-family:'IBM Plex Serif',serif;font-weight:600;font-size:27px;margin:10px 0 8px;max-width:34ch;}
+  .sub{color:#6b6e76;font-size:14px;margin-bottom:32px;max-width:56ch;}
+
+  .verdict-summary{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--line);border-radius:6px;padding:22px 24px;margin-bottom:24px;}
+  .verdict-summary .vs-word{font-family:'IBM Plex Serif',serif;font-size:20px;font-weight:600;color:var(--verdict-gold);}
+  .verdict-summary .vs-meta{font-size:12.5px;color:#6b6e76;margin-top:4px;}
+  .window-chip{font-family:'IBM Plex Mono',monospace;font-size:11.5px;background:rgba(184,134,46,0.12);color:var(--verdict-gold);padding:6px 12px;border-radius:4px;text-align:right;}
+  .window-chip b{display:block;font-size:14px;}
+
+  .panel{background:#fff;border:1px solid var(--line);border-radius:6px;padding:24px 26px;margin-bottom:22px;}
+  .panel h2{font-family:'IBM Plex Serif',serif;font-size:16px;margin:0 0 12px;}
+  .panel p{font-size:13.5px;color:#3a3d45;line-height:1.65;margin:0 0 10px;}
+  .panel p:last-child{margin-bottom:0;}
+
+  .bond-row{display:flex;justify-content:space-between;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:16px 18px;margin:16px 0;}
+  .bond-row .k{font-size:13px;color:#3a3d45;}
+  .bond-row .v{font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;}
+
+  label{display:block;font-size:13px;font-weight:600;margin-bottom:8px;}
+  textarea{width:100%;font-family:'IBM Plex Sans',sans-serif;font-size:14px;padding:12px 14px;border:1px solid var(--line);border-radius:4px;background:#fff;min-height:100px;resize:vertical;}
+  .hint{font-size:12px;color:#6b6e76;margin-top:8px;}
+
+  .risk-box{background:rgba(156,59,46,0.06);border:1px solid rgba(156,59,46,0.25);border-radius:6px;padding:16px 18px;font-size:13px;color:#6b3128;margin-bottom:26px;}
+  .risk-box b{color:var(--danger);}
+
+  .btn{padding:14px 26px;border-radius:4px;font-size:14px;font-weight:600;border:none;cursor:pointer;}
+  .btn-primary{background:var(--danger);color:#fff;}
+  .note{font-size:12px;color:#6b6e76;margin-top:14px;max-width:56ch;}
+</style>
+</head>
+<body>
+<header>
+  <div class="wordmark">Docket<span>.</span></div>
+  <nav><a href="index.html">Home</a> <a href="my-dockets.html">My Dockets</a></nav>
+</header>
+
+<main>
+  <div class="docket-id">DKT-0417</div>
+  <h1>Appeal this verdict</h1>
+  <p class="sub">This uses GenLayer's native appeal mechanism, not a Docket-specific
+  process — an appeal triggers re-evaluation by a new, larger validator set.</p>
+
+  <div class="verdict-summary">
+    <div>
+      <div class="vs-word">Partial &middot; 70/100</div>
+      <div class="vs-meta">Accepted 14 minutes ago &middot; 700 GEN to worker, 300 GEN refunded</div>
+    </div>
+    <div class="window-chip">Finality window closes in<b>5h 46m</b></div>
+  </div>
+
+  <div class="panel">
+    <h2>Why appeal instead of just disputing again</h2>
+    <p>An accepted verdict isn't final until the finality window closes. Appealing during
+    this window doesn't restart the docket from scratch — it escalates the same
+    adjudication to a new, larger group of validators, who first vote on whether the
+    original result should even be re-evaluated.</p>
+    <p>If they agree it should be, a new leader re-assesses the evidence and the combined
+    validator set votes again. This can escalate through multiple rounds, each doubling
+    the validator count, until a decision holds.</p>
+  </div>
+
+  <div class="panel">
+    <h2>Appeal bond</h2>
+    <p>Appeals require a bond, covered by whoever initiates the appeal. If the appeal
+    succeeds — the verdict is overturned — you get the bond back plus a reward. If it
+    fails, the bond is forfeited.</p>
+    <div class="bond-row">
+      <span class="k">Required bond for this appeal</span>
+      <span class="v">86 GEN</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <label for="reason">Reason for appeal (shown to re-evaluating validators)</label>
+    <textarea id="reason" placeholder="Explain specifically what you believe the original verdict got wrong — reference the acceptance criteria or evidence directly."></textarea>
+    <p class="hint">Be specific. A vague appeal is evaluated on the same evidence either
+    way, but a clear reason helps the re-evaluation focus on the actual disagreement.</p>
+  </div>
+
+  <div class="risk-box">
+    <b>This is not risk-free.</b> If the re-evaluation confirms the original verdict, your
+    bond is forfeited and the original escrow split stands. Only appeal if you believe the
+    evidence genuinely supports a different outcome than the one reached.
+  </div>
+
+  <button class="btn btn-primary">Post appeal bond &amp; escalate</button>
+  <p class="note">This posts an on-chain transaction. The docket moves back into an
+  adjudicating-style state while the new validator set reviews it — you'll see live
+  progress the same way you did during the original dispute.</p>
+</main>
+</body>
+</html>

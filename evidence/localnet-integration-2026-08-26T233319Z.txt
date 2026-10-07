@@ -1,0 +1,213 @@
+WARNING: File `gltest.config.yaml` not found in the current directory, using default config, create a `gltest.config.yaml` file to manage multiple networks
+INFO: Clearing artifacts directory: artifacts
+INFO: Using the following configuration:
+INFO:   RPC URL: http://127.0.0.1:4000/api
+INFO:   Selected Network: localnet
+INFO:   Available networks: ['localnet', 'studionet', 'testnet_asimov', 'testnet_bradbury']
+INFO:   Selected chain type: localnet
+INFO:   Available chains: localnet, studionet, testnet_asimov, testnet_bradbury
+INFO:   Contracts directory: contracts
+INFO:   Artifacts directory: artifacts
+INFO:   Environment: .env
+INFO:   Default wait interval: 3000 ms
+INFO:   Default wait retries: 50
+INFO:   Leader only mode: False
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0 -- /tmp/docket-site/bin/python
+cachedir: .pytest_cache
+rootdir: /home/vincent/projects/docket
+plugins: genlayer-test-0.29.2, anyio-4.14.2
+collecting ... collected 6 items
+
+tests/integration/test_docket_integration.py::TestFullLifecycleFastPath::test_deploy_create_claim_submit_accept_settles_correct_balances FAILED
+tests/integration/test_docket_integration.py::TestFullLifecycleDisputed::test_dispute_with_real_public_evidence_resolves_via_consensus FAILED
+tests/integration/test_docket_integration.py::TestFullLifecycleDisputed::test_dispute_with_unreachable_evidence_resolves_toward_reject FAILED
+tests/integration/test_docket_integration.py::TestAppealFlow::test_accepted_verdict_can_be_appealed_within_finality_window FAILED
+tests/integration/test_docket_integration.py::TestExpiryAgainstRealBlockTime::test_refund_expired_after_real_deadline_passes FAILED
+tests/integration/test_docket_integration.py::TestDeploymentSanity::test_deployed_schema_matches_contract_spec FAILED
+
+=================================== FAILURES ===================================
+_ TestFullLifecycleFastPath.test_deploy_create_claim_submit_accept_settles_correct_balances _
+
+self = <test_docket_integration.TestFullLifecycleFastPath object at 0x7f2e6dc2e780>
+gl_client = <genlayer_py.client.genlayer_client.GenLayerClient object at 0x7f2e6dc4dca0>
+default_account = <eth_account.signers.local.LocalAccount object at 0x7f2e6dfdf2f0>
+accounts = [<eth_account.signers.local.LocalAccount object at 0x7f2e6dc4e8d0>, <eth_account.signers.local.LocalAccount object at ...s.local.LocalAccount object at 0x7f2e6dc4e5a0>, <eth_account.signers.local.LocalAccount object at 0x7f2e6dc4e8a0>, ...]
+
+    def test_deploy_create_claim_submit_accept_settles_correct_balances(
+        self, gl_client, default_account, accounts
+    ):
+        client, worker = default_account, accounts[1]
+        contract = _deploy(default_account)
+>       _create_claim_submit(contract, client, worker)
+
+tests/integration/test_docket_integration.py:95: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_docket_integration.py:75: in _create_claim_submit
+    _assert_ok(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+receipt = {'hash': '0x0000000000000000000000000000000000000000000000000000000000000002', 'status': 7, 'from_address': '0xf296d250a112a38306923a820dbcfd9d24676c20', 'to_address': '0xc673acdd66294f2d7e41e6f0a93bc2cfc67ab598', ...}
+
+    def _assert_ok(receipt):
+>       assert tx_execution_succeeded(receipt), receipt
+E       AssertionError: {'hash': '0x0000000000000000000000000000000000000000000000000000000000000002', 'status': 7, 'from_address': '0xf296d250a112a38306923a820dbcfd9d24676c20', 'to_address': '0xc673acdd66294f2d7e41e6f0a93bc2cfc67ab598', ...}
+E       assert False
+E        +  where False = tx_execution_succeeded({'hash': '0x0000000000000000000000000000000000000000000000000000000000000002', 'status': 7, 'from_address': '0xf296d250a112a38306923a820dbcfd9d24676c20', 'to_address': '0xc673acdd66294f2d7e41e6f0a93bc2cfc67ab598', ...})
+
+tests/integration/test_docket_integration.py:44: AssertionError
+_ TestFullLifecycleDisputed.test_dispute_with_real_public_evidence_resolves_via_consensus _
+
+self = <test_docket_integration.TestFullLifecycleDisputed object at 0x7f2e6dc4d460>
+default_account = <eth_account.signers.local.LocalAccount object at 0x7f2e6dfdf2f0>
+accounts = [<eth_account.signers.local.LocalAccount object at 0x7f2e6dc4e8d0>, <eth_account.signers.local.LocalAccount object at ...s.local.LocalAccount object at 0x7f2e6dc4e5a0>, <eth_account.signers.local.LocalAccount object at 0x7f2e6dc4e8a0>, ...]
+
+    def test_dispute_with_real_public_evidence_resolves_via_consensus(
+        self, default_account, accounts
+    ):
+        client, worker = default_account, accounts[1]
+        contract = _deploy(default_account)
+>       _create_claim_submit(contract, client, worker)
+
+tests/integration/test_docket_integration.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_docket_integration.py:75: in _create_claim_submit
+    _assert_ok(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+receipt = {'hash': '0x0000000000000000000000000000000000000000000000000000000000000004', 'status': 7, 'from_address': '0xf296d250a112a38306923a820dbcfd9d24676c20', 'to_address': '0x50e6eda4313545beacebaf11bed326c1faf3e9ed', ...}
+
+    def _assert_ok(receipt):
+>       assert tx_execution_succeeded(receipt), receipt
+E       AssertionError: {'hash': '0x0000000000000000000000000000000000000000000000000000000000000004', 'status': 7, 'from_address': '0xf296d250a112a38306923a820dbcfd9d24676c20', 'to_address': '0x50e6eda4313545beacebaf11bed326c1faf3e9ed', ...}
+E       assert False
+E        +  where False = tx_execution_succeeded({'hash': '0x0000000000000000000000000000000000000000000000000000000000000004', 'status': 7, 'from_address': '0xf296d250a112a38306923a820dbcfd9d24676c20', 'to_address': '0x50e6eda4313545beacebaf11bed326c1faf3e9ed', ...})
+
+tests/integration/test_docket_integration.py:44: AssertionError
+_ TestFullLifecycleDisputed.test_dispute_with_unreachable_evidence_resolves_toward_reject _
+
+self = <test_docket_integration.TestFullLifecycleDisputed object at 0x7f2e6dc4d700>
+default_account = <eth_account.signers.local.LocalAccount object at 0x7f2e6dfdf2f0>
+accounts = [<eth_account.signers.local.LocalAccount object at 0x7f2e6dc4e8d0>, <eth_account.signers.local.LocalAccount object at ...s.local.LocalAccount object at 0x7f2e6dc4e5a0>, <eth_account.signers.local.LocalAccount object at 0x7f2e6dc4e8a0>, ...]
+
+    def test_dispute_with_unreachable_evidence_resolves_toward_reject(
+        self, default_account, accounts
+    ):
+        client, worker = default_account, accounts[1]
+        contract = _deploy(default_account)
+>       _create_claim_submit(contract, client, worker, evidence=DEAD_EVIDENCE_URL)
+
+tests/integration/test_docket_integration.py:134: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_docket_integration.py:75: in _create_claim_submit
+    _assert_ok(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+receipt = {'hash': '0x0000000000000000000000000000000000000000000000000000000000000006', 'status': 7, 'from_address': '0xf296d250a112a38306923a820dbcfd9d24676c20', 'to_address': '0xe70a8800cfc707b17495cb9743f9a3b912be4344', ...}
+
+    def _assert_ok(receipt):
+>       assert tx_execution_succeeded(receipt), receipt
+E       AssertionError: {'hash': '0x0000000000000000000000000000000000000000000000000000000000000006', 'status': 7, 'from_address': '0xf296d250a112a38306923a820dbcfd9d24676c20', 'to_address': '0xe70a8800cfc707b17495cb9743f9a3b912be4344', ...}
+E       assert False
+E        +  where False = tx_execution_succeeded({'hash': '0x0000000000000000000000000000000000000000000000000000000000000006', 'status': 7, 'from_address': '0xf296d250a112a38306923a820dbcfd9d24676c20', 'to_address': '0xe70a8800cfc707b17495cb9743f9a3b912be4344', ...})
+
+tests/integration/test_docket_integration.py:44: AssertionError
+_ TestAppealFlow.test_accepted_verdict_can_be_appealed_within_finality_window __
+
+self = <test_docket_integration.TestAppealFlow object at 0x7f2e6dc4d9a0>
+default_account = <eth_account.signers.local.LocalAccount object at 0x7f2e6dfdf2f0>
+accounts = [<eth_account.signers.local.LocalAccount object at 0x7f2e6dc4e8d0>, <eth_account.signers.local.LocalAccount object at ...s.local.LocalAccount object at 0x7f2e6dc4e5a0>, <eth_account.signers.local.LocalAccount object at 0x7f2e6dc4e8a0>, ...]
+
+    def test_accepted_verdict_can_be_appealed_within_finality_window(
+        self, default_account, accounts
+    ):
+        client, worker = default_account, accounts[1]
+        contract = _deploy(default_account)
+>       _create_claim_submit(contract, client, worker)
+
+tests/integration/test_docket_integration.py:152: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_docket_integration.py:75: in _create_claim_submit
+    _assert_ok(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+receipt = {'hash': '0x0000000000000000000000000000000000000000000000000000000000000008', 'status': 7, 'from_address': '0xf296d250a112a38306923a820dbcfd9d24676c20', 'to_address': '0x4046fb0680fb333c817e1a55ba91f1593241abb2', ...}
+
+    def _assert_ok(receipt):
+>       assert tx_execution_succeeded(receipt), receipt
+E       AssertionError: {'hash': '0x0000000000000000000000000000000000000000000000000000000000000008', 'status': 7, 'from_address': '0xf296d250a112a38306923a820dbcfd9d24676c20', 'to_address': '0x4046fb0680fb333c817e1a55ba91f1593241abb2', ...}
+E       assert False
+E        +  where False = tx_execution_succeeded({'hash': '0x0000000000000000000000000000000000000000000000000000000000000008', 'status': 7, 'from_address': '0xf296d250a112a38306923a820dbcfd9d24676c20', 'to_address': '0x4046fb0680fb333c817e1a55ba91f1593241abb2', ...})
+
+tests/integration/test_docket_integration.py:44: AssertionError
+_ TestExpiryAgainstRealBlockTime.test_refund_expired_after_real_deadline_passes _
+
+self = <test_docket_integration.TestExpiryAgainstRealBlockTime object at 0x7f2e6dc4dc70>
+default_account = <eth_account.signers.local.LocalAccount object at 0x7f2e6dfdf2f0>
+accounts = [<eth_account.signers.local.LocalAccount object at 0x7f2e6dc4e8d0>, <eth_account.signers.local.LocalAccount object at ...s.local.LocalAccount object at 0x7f2e6dc4e5a0>, <eth_account.signers.local.LocalAccount object at 0x7f2e6dc4e8a0>, ...]
+
+    def test_refund_expired_after_real_deadline_passes(self, default_account, accounts):
+        contract = _deploy(default_account)
+        deadline = int(time.time()) + 3
+>       _assert_ok(
+            contract.create_docket(args=[
+                "Prepare a report",
+                "- Include sources",
+                5000,
+                deadline,
+            ]).transact(value=1000)
+        )
+
+tests/integration/test_docket_integration.py:166: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+receipt = {'hash': '0x000000000000000000000000000000000000000000000000000000000000000a', 'status': 7, 'from_address': '0xf296d250a112a38306923a820dbcfd9d24676c20', 'to_address': '0x97842efbb8791da046d940ec7961918f2a6556e2', ...}
+
+    def _assert_ok(receipt):
+>       assert tx_execution_succeeded(receipt), receipt
+E       AssertionError: {'hash': '0x000000000000000000000000000000000000000000000000000000000000000a', 'status': 7, 'from_address': '0xf296d250a112a38306923a820dbcfd9d24676c20', 'to_address': '0x97842efbb8791da046d940ec7961918f2a6556e2', ...}
+E       assert False
+E        +  where False = tx_execution_succeeded({'hash': '0x000000000000000000000000000000000000000000000000000000000000000a', 'status': 7, 'from_address': '0xf296d250a112a38306923a820dbcfd9d24676c20', 'to_address': '0x97842efbb8791da046d940ec7961918f2a6556e2', ...})
+
+tests/integration/test_docket_integration.py:44: AssertionError
+_______ TestDeploymentSanity.test_deployed_schema_matches_contract_spec ________
+
+self = <test_docket_integration.TestDeploymentSanity object at 0x7f2e6dc4df40>
+gl_client = <genlayer_py.client.genlayer_client.GenLayerClient object at 0x7f2e6dc4dca0>
+default_account = <eth_account.signers.local.LocalAccount object at 0x7f2e6dfdf2f0>
+
+    def test_deployed_schema_matches_contract_spec(self, gl_client, default_account):
+        contract = _deploy(default_account)
+        schema = gl_client.get_contract_schema(contract.address)
+        expected_methods = {
+            "accept_deliverable": {"params": [["docket_id", "int"]], "kwparams": {}, "readonly": False, "ret": "null", "payable": False},
+            "claim_docket": {"params": [["docket_id", "int"]], "kwparams": {}, "readonly": False, "ret": "null", "payable": False},
+            "create_docket": {"params": [["sow_text", "string"], ["acceptance_criteria", "string"], ["threshold_bp", "int"], ["deadline", "int"]], "kwparams": {}, "readonly": False, "ret": "int", "payable": True},
+            "dispute_deliverable": {"params": [["docket_id", "int"]], "kwparams": {}, "readonly": False, "ret": "null", "payable": False},
+            "get_docket": {"params": [["docket_id", "int"]], "kwparams": {}, "readonly": True, "ret": {"client": "address", "worker": "address", "sow_text": "string", "acceptance_criteria": "string", "threshold_bp": "int", "amount": "int", "deadline": "int", "status": "int", "evidence": [{"$rep": "string"}], "note": "string", "verdict": "int", "score": "int", "unmet_criteria": [{"$rep": "string"}], "created_at": "int", "resolved_at": "int"}},
+            "get_reputation": {"params": [["addr", "address"]], "kwparams": {}, "readonly": True, "ret": {"completed": "int", "disputed": "int", "upheld": "int", "score_sum": "int"}},
+            "list_open_dockets": {"params": [], "kwparams": {}, "readonly": True, "ret": [{"$rep": "int"}]},
+            "refund_expired": {"params": [["docket_id", "int"]], "kwparams": {}, "readonly": False, "ret": "null", "payable": False},
+            "submit_deliverable": {"params": [["docket_id", "int"], ["evidence", [{"$rep": "string"}]], ["note", "string"]], "kwparams": {}, "readonly": False, "ret": "null", "payable": False},
+        }
+>       assert schema == {"ctor": {"params": [], "kwparams": {}}, "methods": expected_methods}
+E       AssertionError: assert {'ctor': {'pa... False}, ...}} == {'ctor': {'pa...', ...}, ...}}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing items:
+E         {'methods': {'accept_deliverable': {'params': ['u32'], 'kwparams': {}, 'ret': 'None', 'readonly': False}, 'claim_docke...'readonly': False}, 'dispute_deliverable': {'params': ['u32'], 'kwparams': {}, 'ret': 'None', 'readonly': False}, ...}} != {'methods': {'accept_deliverable': {'params': [['docket_id', 'int']], 'kwparams': {}, 'readonly': False, 'ret': 'null'...'dispute_deliverable': {'params': [['docket_id', 'int']], 'kwparams': {}, 'readonly': False, 'ret': 'null', ...}, ...}}
+E         
+E         Full diff:
+E           {...
+E         
+E         ...Full output truncated (209 lines hidden), use '-vv' to show
+
+tests/integration/test_docket_integration.py:198: AssertionError
+=========================== short test summary info ============================
+FAILED tests/integration/test_docket_integration.py::TestFullLifecycleFastPath::test_deploy_create_claim_submit_accept_settles_correct_balances
+FAILED tests/integration/test_docket_integration.py::TestFullLifecycleDisputed::test_dispute_with_real_public_evidence_resolves_via_consensus
+FAILED tests/integration/test_docket_integration.py::TestFullLifecycleDisputed::test_dispute_with_unreachable_evidence_resolves_toward_reject
+FAILED tests/integration/test_docket_integration.py::TestAppealFlow::test_accepted_verdict_can_be_appealed_within_finality_window
+FAILED tests/integration/test_docket_integration.py::TestExpiryAgainstRealBlockTime::test_refund_expired_after_real_deadline_passes
+FAILED tests/integration/test_docket_integration.py::TestDeploymentSanity::test_deployed_schema_matches_contract_spec
+============================== 6 failed in 2.70s ===============================

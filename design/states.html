@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Docket — Empty &amp; Error States</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EEEDE7; --ink:#181B22; --ledger:#1F3A5F; --verdict-gold:#B8862E;
+    --evidence-teal:#2B6E62; --line:#D6D2C7; --danger:#9C3B2E;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;}
+  header{border-bottom:1px solid var(--line);padding:22px 48px;display:flex;justify-content:space-between;align-items:center;}
+  .wordmark{font-family:'IBM Plex Serif',serif;font-weight:600;font-size:22px;}
+  .wordmark span{color:var(--ledger);}
+  nav a{color:#6b6e76;text-decoration:none;font-size:14px;margin-left:28px;}
+  main{max-width:900px;margin:0 auto;padding:48px 24px 100px;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.08em;color:var(--ledger);text-transform:uppercase;}
+  h1{font-family:'IBM Plex Serif',serif;font-weight:600;font-size:28px;margin:10px 0 6px;}
+  .sub{color:#6b6e76;font-size:14px;margin-bottom:40px;max-width:60ch;}
+  .state-block{margin-bottom:44px;}
+  .state-label{font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:#6b6e76;margin-bottom:12px;}
+
+  .empty{padding:56px 20px;text-align:center;border:1px dashed var(--line);border-radius:8px;background:#fff;}
+  .empty h3{font-family:'IBM Plex Serif',serif;font-size:18px;margin:0 0 8px;}
+  .empty p{font-size:13.5px;color:#6b6e76;max-width:42ch;margin:0 auto 20px;}
+  .empty a, .empty button{background:var(--ledger);color:var(--paper);padding:10px 18px;border-radius:4px;font-size:13.5px;font-weight:500;text-decoration:none;border:none;cursor:pointer;font-family:inherit;}
+
+  .error-banner{display:flex;gap:14px;align-items:flex-start;background:rgba(156,59,46,0.06);border:1px solid rgba(156,59,46,0.3);border-radius:6px;padding:18px 20px;}
+  .error-icon{width:22px;height:22px;border-radius:50%;background:var(--danger);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
+  .error-banner h4{margin:0 0 4px;font-size:14px;color:#6b3128;}
+  .error-banner p{margin:0;font-size:13px;color:#7a4038;line-height:1.55;}
+  .error-banner code{font-family:'IBM Plex Mono',monospace;background:#fff;padding:2px 6px;border-radius:3px;font-size:12px;}
+  .error-banner .retry{margin-top:10px;background:var(--danger);color:#fff;border:none;padding:8px 14px;border-radius:4px;font-size:12.5px;font-weight:600;cursor:pointer;}
+
+  .wallet-gate{text-align:center;padding:56px 20px;background:#fff;border:1px solid var(--line);border-radius:8px;}
+  .wallet-gate h3{font-family:'IBM Plex Serif',serif;font-size:18px;margin:0 0 8px;}
+  .wallet-gate p{font-size:13.5px;color:#6b6e76;max-width:44ch;margin:0 auto 20px;}
+  .wallet-gate a{background:var(--ledger);color:var(--paper);padding:10px 18px;border-radius:4px;font-size:13.5px;font-weight:500;text-decoration:none;}
+
+  .undetermined{background:#fff;border:1px solid var(--line);border-left:4px solid var(--verdict-gold);border-radius:6px;padding:20px 22px;}
+  .undetermined h4{font-family:'IBM Plex Serif',serif;font-size:15px;margin:0 0 8px;color:var(--verdict-gold);}
+  .undetermined p{font-size:13px;color:#3a3d45;line-height:1.6;margin:0 0 10px;}
+  .undetermined p:last-child{margin:0;}
+</style>
+</head>
+<body>
+<header>
+  <div class="wordmark">Docket<span>.</span></div>
+  <nav><a href="index.html">Home</a></nav>
+</header>
+
+<main>
+  <div class="eyebrow">Component reference</div>
+  <h1>Empty &amp; error states</h1>
+  <p class="sub">Every empty or failure state in Docket explains what happened and gives
+  one clear next action, in the interface's voice — never vague, never apologetic.</p>
+
+  <div class="state-block">
+    <div class="state-label">No open dockets match the current filter</div>
+    <div class="empty">
+      <h3>Nothing here yet</h3>
+      <p>Dockets you post or claim will show up here, split by whether you're the client
+      or the worker on each one.</p>
+      <a href="create-docket.html">Post your first docket</a>
+    </div>
+  </div>
+
+  <div class="state-block">
+    <div class="state-label">Wallet not connected, action requires one</div>
+    <div class="wallet-gate">
+      <h3>Connect a wallet to claim this docket</h3>
+      <p>You can read every docket without one. Posting, claiming, submitting, or
+      resolving requires a connected wallet on the bradbury network.</p>
+      <a href="connect-wallet.html">Connect wallet</a>
+    </div>
+  </div>
+
+  <div class="state-block">
+    <div class="state-label">Transaction rejected on-chain</div>
+    <div class="error-banner">
+      <span class="error-icon">!</span>
+      <div>
+        <h4>This docket can't be claimed</h4>
+        <p>Someone else claimed DKT-0430 while your transaction was pending, or its
+        deadline has passed. Error code: <code>EXPECTED_WRONG_STATUS</code>. Refresh to
+        see its current status.</p>
+        <button class="retry">Refresh docket</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="state-block">
+    <div class="state-label">Evidence link unreachable during adjudication</div>
+    <div class="error-banner">
+      <span class="error-icon">!</span>
+      <div>
+        <h4>An evidence link couldn't be reached</h4>
+        <p>Validators couldn't fetch one of the submitted evidence URLs. The docket
+        resolves toward a rejected verdict rather than pausing adjudication. Error code:
+        <code>EXTERNAL_UNREACHABLE_EVIDENCE</code>.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="state-block">
+    <div class="state-label">Consensus not reached (rare)</div>
+    <div class="undetermined">
+      <h4>This dispute is undetermined</h4>
+      <p>Validators didn't reach majority agreement after all leader rotations. This
+      docket will re-enter adjudication with a new leader automatically — no action
+      needed from you.</p>
+      <p>If this keeps happening, it usually means the acceptance criteria are too
+      ambiguous for validators to evaluate consistently. Consider that for future
+      dockets.</p>
+    </div>
+  </div>
+</main>
+</body>
+</html>

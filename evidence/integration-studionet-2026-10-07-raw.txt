@@ -1,0 +1,31 @@
+WARNING: File `gltest.config.yaml` not found in the current directory, using default config, create a `gltest.config.yaml` file to manage multiple networks
+INFO: Clearing artifacts directory: artifacts
+INFO: Using the following configuration:
+INFO:   RPC URL: https://studio.genlayer.com/api
+INFO:   Selected Network: studionet
+INFO:   Available networks: ['localnet', 'studionet', 'testnet_asimov', 'testnet_bradbury']
+INFO:   Selected chain type: studionet
+INFO:   Available chains: localnet, studionet, testnet_asimov, testnet_bradbury
+INFO:   Contracts directory: contracts
+INFO:   Artifacts directory: artifacts
+INFO:   Environment: .env
+INFO:   Default wait interval: 3000 ms
+INFO:   Default wait retries: 50
+INFO:   Leader only mode: False
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/vincent/projects/docket
+plugins: anyio-4.15.1, genlayer-test-0.29.2
+collecting ... collected 6 items
+
+tests/integration/test_docket_integration.py::TestFullLifecycleFastPath::test_deploy_create_claim_submit_accept_settles_correct_balances 
+NOTICE: network has no EVM layer, so the emitted payout cannot credit the worker EOA. Asserting contract-side escrow conservation only.
+PASSED
+tests/integration/test_docket_integration.py::TestFullLifecycleDisputed::test_dispute_with_real_public_evidence_resolves_via_consensus PASSED
+tests/integration/test_docket_integration.py::TestFullLifecycleDisputed::test_dispute_with_unreachable_evidence_resolves_toward_reject PASSED
+tests/integration/test_docket_integration.py::TestAppealFlow::test_accepted_verdict_can_be_appealed_within_finality_window SKIPPED
+tests/integration/test_docket_integration.py::TestExpiryAgainstRealBlockTime::test_refund_expired_after_real_deadline_passes PASSED
+tests/integration/test_docket_integration.py::TestDeploymentSanity::test_deployed_schema_matches_contract_spec PASSED
+
+=================== 5 passed, 1 skipped in 413.18s (0:06:53) ===================

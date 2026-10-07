@@ -1,0 +1,45 @@
+Studionet public deployment evidence (2026-10-07)
+
+Contract address: 0xb1a3778a3B11E0eD000bB24DF06108caDfd7729B
+Network: studionet  RPC: https://studio.genlayer.com/api  chainId 61999 (0xf22f)
+Deployed code byte-identical to contracts/docket.py: True
+Address-derived schema methods: 9 (matches docs/04 contract spec)
+Deployer: 0x81840a3450BeCf32672fd95d0278279f2a3EF486
+Worker (lifecycle counterpart): 0xf309cefdcc8f24e8d880a43e7cf34ae48add50f4
+
+Lifecycle transactions (all status=5 finalized, leader execution_result=SUCCESS):
+
+  deploy     0xcc590545bd6ee43a69cd1e0597478a4c5a7a34a62dcca0c46f43f0562e8655e3
+  A.create   0xffa708326638ac13f8cab2a530f32f4781c84c048da0c48f6e64bed048edccb0
+  A.claim    0xf0df3d53b8c749769e0f3d1e352ad8a76b50cd0fb8c83663c963468524746f1e
+  A.submit   0x85d27211482e860df6bbf10628c774769d4a3e3180351a6a0f0545908cdde822
+  A.accept   0xd781d83d2c951b784eba00fe91c6098ec9c4473686148b70f8358349e06911ad
+  B.create   0x94c034f85f395ef47d848b36f069e8d45bf2365a7c96a6cd0067dc3c022f0cc7
+  B.claim    0xad975aa3f2bfb43c525f6da06635c644ae0d7cbdbc81b4d6c894c7af1a89c3b0
+  B.submit   0xb3c1bf4703de05eddf8bb77f78882df3fbcbc1210f3074445f181e56ffe0c2ae
+  B.dispute  0x876a129e5f8bb06c7b1a790c222d683a87b2cb83133dcf09f43ab392e1b3fbe4
+
+Explorer links (explorer-studio.genlayer.com):
+  contract      https://explorer-studio.genlayer.com/address/0xb1a3778a3B11E0eD000bB24DF06108caDfd7729B
+  deploy        https://explorer-studio.genlayer.com/tx/0xcc590545bd6ee43a69cd1e0597478a4c5a7a34a62dcca0c46f43f0562e8655e3
+  A.create      https://explorer-studio.genlayer.com/tx/0xffa708326638ac13f8cab2a530f32f4781c84c048da0c48f6e64bed048edccb0
+  A.claim       https://explorer-studio.genlayer.com/tx/0xf0df3d53b8c749769e0f3d1e352ad8a76b50cd0fb8c83663c963468524746f1e
+  A.submit      https://explorer-studio.genlayer.com/tx/0x85d27211482e860df6bbf10628c774769d4a3e3180351a6a0f0545908cdde822
+  A.accept      https://explorer-studio.genlayer.com/tx/0xd781d83d2c951b784eba00fe91c6098ec9c4473686148b70f8358349e06911ad
+  B.create      https://explorer-studio.genlayer.com/tx/0x94c034f85f395ef47d848b36f069e8d45bf2365a7c96a6cd0067dc3c022f0cc7
+  B.claim       https://explorer-studio.genlayer.com/tx/0xad975aa3f2bfb43c525f6da06635c644ae0d7cbdbc81b4d6c894c7af1a89c3b0
+  B.submit      https://explorer-studio.genlayer.com/tx/0xb3c1bf4703de05eddf8bb77f78882df3fbcbc1210f3074445f181e56ffe0c2ae
+  B.dispute     https://explorer-studio.genlayer.com/tx/0x876a129e5f8bb06c7b1a790c222d683a87b2cb83133dcf09f43ab392e1b3fbe4
+
+Docket 0 (fast path, client accepted): status=5 verdict=1 score=100 amount=1000
+Docket 1 (disputed, AI adjudication via validator consensus): status=5 verdict=3 score=10 amount=1000
+  unmet_criteria returned by validators:
+    - Must be an implementation guide (delivered the RFC specification itself, not a guide for implementing it)
+    - Must cite the published RFC (the document IS the RFC, not a guide that cites it)
+    - Must be for HTTP/1.1 specification (RFC 9110 covers HTTP Semantics generally, not HTTP/1.1 specifically)
+
+Reputation (client): {"completed": 2, "disputed": 1, "score_sum": 110, "upheld": 1}
+Contract balance after both settlements: 0 GEN (escrow fully distributed)
+
+Verdict codes: 0 none, 1 full, 2 partial, 3 reject. Status codes: 5 closed, 6 expired.
+Full machine-readable capture: evidence/studionet-address-evidence-2026-10-07.json

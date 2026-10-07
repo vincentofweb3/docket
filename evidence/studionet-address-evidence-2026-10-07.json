@@ -1,0 +1,226 @@
+{
+  "contract_address": "0xb1a3778a3B11E0eD000bB24DF06108caDfd7729B",
+  "rpc": "https://studio.genlayer.com/api",
+  "network": "studionet",
+  "collected_at": "2026-10-07T16:41:36.743Z",
+  "deployer": "0x81840a3450BeCf32672fd95d0278279f2a3EF486",
+  "code_matches_repo_source": true,
+  "schema": {
+    "ctor": {
+      "params": [],
+      "kwparams": {}
+    },
+    "methods": {
+      "accept_deliverable": {
+        "params": [
+          [
+            "docket_id",
+            "int"
+          ]
+        ],
+        "kwparams": {},
+        "readonly": false,
+        "ret": "null",
+        "payable": false
+      },
+      "claim_docket": {
+        "params": [
+          [
+            "docket_id",
+            "int"
+          ]
+        ],
+        "kwparams": {},
+        "readonly": false,
+        "ret": "null",
+        "payable": false
+      },
+      "create_docket": {
+        "params": [
+          [
+            "sow_text",
+            "string"
+          ],
+          [
+            "acceptance_criteria",
+            "string"
+          ],
+          [
+            "threshold_bp",
+            "int"
+          ],
+          [
+            "deadline",
+            "int"
+          ]
+        ],
+        "kwparams": {},
+        "readonly": false,
+        "ret": "int",
+        "payable": true
+      },
+      "dispute_deliverable": {
+        "params": [
+          [
+            "docket_id",
+            "int"
+          ]
+        ],
+        "kwparams": {},
+        "readonly": false,
+        "ret": "null",
+        "payable": false
+      },
+      "get_docket": {
+        "params": [
+          [
+            "docket_id",
+            "int"
+          ]
+        ],
+        "kwparams": {},
+        "readonly": true,
+        "ret": {
+          "client": "address",
+          "worker": "address",
+          "sow_text": "string",
+          "acceptance_criteria": "string",
+          "threshold_bp": "int",
+          "amount": "int",
+          "deadline": "int",
+          "status": "int",
+          "evidence": [
+            {
+              "$rep": "string"
+            }
+          ],
+          "note": "string",
+          "verdict": "int",
+          "score": "int",
+          "unmet_criteria": [
+            {
+              "$rep": "string"
+            }
+          ],
+          "created_at": "int",
+          "resolved_at": "int"
+        }
+      },
+      "get_reputation": {
+        "params": [
+          [
+            "addr",
+            "address"
+          ]
+        ],
+        "kwparams": {},
+        "readonly": true,
+        "ret": {
+          "completed": "int",
+          "disputed": "int",
+          "upheld": "int",
+          "score_sum": "int"
+        }
+      },
+      "list_open_dockets": {
+        "params": [],
+        "kwparams": {},
+        "readonly": true,
+        "ret": [
+          {
+            "$rep": "int"
+          }
+        ]
+      },
+      "refund_expired": {
+        "params": [
+          [
+            "docket_id",
+            "int"
+          ]
+        ],
+        "kwparams": {},
+        "readonly": false,
+        "ret": "null",
+        "payable": false
+      },
+      "submit_deliverable": {
+        "params": [
+          [
+            "docket_id",
+            "int"
+          ],
+          [
+            "evidence",
+            [
+              {
+                "$rep": "string"
+              }
+            ]
+          ],
+          [
+            "note",
+            "string"
+          ]
+        ],
+        "kwparams": {},
+        "readonly": false,
+        "ret": "null",
+        "payable": false
+      }
+    }
+  },
+  "list_open_dockets": [],
+  "dockets": {
+    "0": {
+      "acceptance_criteria": "- Include a timeline\n- Name an owner per finding\n- Cite each source as an https URL",
+      "amount": 1000,
+      "client": "0x81840a3450becf32672fd95d0278279f2a3ef486",
+      "created_at": 1791390700,
+      "deadline": 1791995497,
+      "evidence": [
+        "https://www.rfc-editor.org/rfc/rfc9110.txt"
+      ],
+      "note": "Report published and indexed.",
+      "resolved_at": 1791390720,
+      "score": 100,
+      "sow_text": "Produce a weekly incident-review report",
+      "status": 5,
+      "threshold_bp": 5000,
+      "unmet_criteria": [],
+      "verdict": 1,
+      "worker": "0xf309cefdcc8f24e8d880a43e7cf34ae48add50f4"
+    },
+    "1": {
+      "acceptance_criteria": "- Must cite the published RFC\n- Must be an https URL",
+      "amount": 1000,
+      "client": "0x81840a3450becf32672fd95d0278279f2a3ef486",
+      "created_at": 1791390740,
+      "deadline": 1791995538,
+      "evidence": [
+        "https://www.rfc-editor.org/rfc/rfc9110.txt"
+      ],
+      "note": "Guide written and published.",
+      "resolved_at": 1791390759,
+      "score": 10,
+      "sow_text": "Publish an implementation guide for the HTTP/1.1 specification",
+      "status": 5,
+      "threshold_bp": 5000,
+      "unmet_criteria": [
+        "Must be an implementation guide (delivered the RFC specification itself, not a guide for implementing it)",
+        "Must cite the published RFC (the document IS the RFC, not a guide that cites it)",
+        "Must be for HTTP/1.1 specification (RFC 9110 covers HTTP Semantics generally, not HTTP/1.1 specifically)"
+      ],
+      "verdict": 3,
+      "worker": "0xf309cefdcc8f24e8d880a43e7cf34ae48add50f4"
+    }
+  },
+  "reputation": {
+    "client": {
+      "completed": 2,
+      "disputed": 1,
+      "score_sum": 110,
+      "upheld": 1
+    }
+  }
+}

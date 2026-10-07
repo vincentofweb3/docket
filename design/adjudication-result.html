@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Docket — Adjudication Result</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EEEDE7; --ink:#181B22; --ledger:#1F3A5F; --verdict-gold:#B8862E;
+    --evidence-teal:#2B6E62; --line:#D6D2C7; --danger:#9C3B2E;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;}
+  header{border-bottom:1px solid var(--line);padding:22px 48px;display:flex;justify-content:space-between;align-items:center;}
+  .wordmark{font-family:'IBM Plex Serif',serif;font-weight:600;font-size:22px;}
+  .wordmark span{color:var(--ledger);}
+  nav a{color:#6b6e76;text-decoration:none;font-size:14px;margin-left:28px;}
+  main{max-width:780px;margin:0 auto;padding:48px 24px 100px;}
+  .docket-id{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ledger);}
+  h1{font-family:'IBM Plex Serif',serif;font-weight:600;font-size:26px;margin:8px 0 24px;max-width:38ch;}
+
+  .case-stage{display:grid;grid-template-columns:1fr auto;gap:32px;align-items:center;border:1px solid var(--line);background:#fff;border-radius:6px;padding:32px;margin-bottom:28px;}
+  .stage-copy .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.08em;color:var(--evidence-teal);text-transform:uppercase;}
+  .stage-copy h2{font-family:'IBM Plex Serif',serif;font-size:19px;margin:8px 0 6px;}
+  .stage-copy p{font-size:13px;color:#6b6e76;max-width:44ch;margin:0;}
+  .btn{padding:12px 22px;border-radius:4px;font-size:13px;font-weight:600;border:none;cursor:pointer;white-space:nowrap;}
+  .btn-primary{background:var(--ledger);color:var(--paper);}
+
+  /* --- signature element: the verdict seal --- */
+  .seal-wrap{display:flex;justify-content:center;padding:20px 0 36px;}
+  .seal{
+    width:172px;height:172px;border-radius:50%;
+    border:3px solid var(--verdict-gold);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    transform:rotate(-6deg) scale(0.4);
+    opacity:0;
+    transition:transform 0.5s cubic-bezier(.2,1.4,.4,1), opacity 0.3s ease;
+    position:relative;
+  }
+  .seal.reject{border-color:var(--danger);}
+  .seal::before{
+    content:"";position:absolute;inset:8px;border-radius:50%;border:1px solid currentColor;opacity:0.5;
+  }
+  .seal.shown{transform:rotate(-6deg) scale(1);opacity:1;}
+  .seal .verdict-word{font-family:'IBM Plex Serif',serif;font-weight:600;font-size:20px;letter-spacing:0.03em;text-transform:uppercase;color:var(--verdict-gold);}
+  .seal.reject .verdict-word{color:var(--danger);}
+  .seal .score{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink);margin-top:4px;}
+  .seal .docket-ref{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#6b6e76;margin-top:6px;letter-spacing:0.05em;}
+
+  .breakdown{background:#fff;border:1px solid var(--line);border-radius:6px;padding:24px 26px;margin-bottom:20px;}
+  .breakdown h2{font-family:'IBM Plex Serif',serif;font-size:16px;margin:0 0 14px;}
+  .row{display:flex;justify-content:space-between;font-size:13px;padding:9px 0;border-bottom:1px solid var(--line);}
+  .row:last-child{border:none;}
+  .row .k{color:#6b6e76;}
+  .row .v{font-family:'IBM Plex Mono',monospace;}
+  .unmet{margin-top:14px;}
+  .unmet-item{font-size:13px;color:var(--danger);padding:6px 0;}
+
+  .demo-controls{display:flex;gap:10px;margin-bottom:36px;padding:14px 16px;background:rgba(31,58,95,0.05);border:1px dashed var(--line);border-radius:6px;font-size:12px;color:#6b6e76;align-items:center;}
+  .demo-controls button{font-family:'IBM Plex Mono',monospace;font-size:12px;padding:6px 10px;border-radius:3px;border:1px solid var(--line);background:#fff;cursor:pointer;}
+</style>
+</head>
+<body>
+<header>
+  <div class="wordmark">Docket<span>.</span></div>
+  <nav><a href="index.html">Home</a> <a href="landing.html">The Register</a></nav>
+</header>
+
+<main>
+  <div class="docket-id">DKT-0417</div>
+  <h1>Ship 6 explainer diagrams for Optimistic Democracy onboarding</h1>
+
+  <div class="demo-controls">
+    Design mockup only — click to preview each verdict state:
+    <button onclick="showVerdict('full')">full</button>
+    <button onclick="showVerdict('partial')">partial</button>
+    <button onclick="showVerdict('reject')">reject</button>
+  </div>
+
+  <div class="case-stage">
+    <div class="stage-copy">
+      <div class="eyebrow" id="stage-eyebrow">Resolved via validator consensus</div>
+      <h2 id="stage-headline">Escrow released — 700 GEN to worker, 300 GEN refunded</h2>
+      <p id="stage-body">A dispute was raised on this docket. GenLayer validators
+      independently fetched the linked evidence and reached consensus on the verdict below.
+      This result entered the standard finality window and is now final.</p>
+    </div>
+    <button class="btn btn-primary">View transaction</button>
+  </div>
+
+  <div class="seal-wrap">
+    <div class="seal" id="seal">
+      <div class="verdict-word" id="seal-word">Partial</div>
+      <div class="score" id="seal-score">70 / 100</div>
+      <div class="docket-ref">DKT-0417 · finalized</div>
+    </div>
+  </div>
+
+  <div class="breakdown">
+    <h2>Adjudication breakdown</h2>
+    <div class="row"><span class="k">Verdict</span><span class="v" id="b-verdict">partial</span></div>
+    <div class="row"><span class="k">Compliance score</span><span class="v" id="b-score">70 / 100</span></div>
+    <div class="row"><span class="k">Acceptance threshold</span><span class="v">50 / 100</span></div>
+    <div class="row"><span class="k">Escrow</span><span class="v">1,000 GEN</span></div>
+    <div class="row"><span class="k">Paid to worker</span><span class="v" id="b-payout">700 GEN</span></div>
+    <div class="row"><span class="k">Refunded to client</span><span class="v" id="b-refund">300 GEN</span></div>
+    <div class="unmet" id="unmet-block">
+      <div class="row" style="border:none;"><span class="k">Unmet criteria</span><span></span></div>
+      <div class="unmet-item">Diagram 4 omits the appeal-escalation step described in the acceptance criteria</div>
+      <div class="unmet-item">Two diagrams use raster export instead of the required SVG format</div>
+    </div>
+  </div>
+</main>
+
+<script>
+  const states = {
+    full: {word:'Full', cls:'', eyebrow:'Resolved · deliverable accepted in full', headline:'Escrow released — 1,000 GEN to worker', body:'Validators found the deliverable met the acceptance criteria in full.', verdict:'full', score:'100 / 100', payout:'1,000 GEN', refund:'0 GEN', showUnmet:false},
+    partial: {word:'Partial', cls:'', eyebrow:'Resolved via validator consensus', headline:'Escrow released — 700 GEN to worker, 300 GEN refunded', body:'A dispute was raised on this docket. GenLayer validators independently fetched the linked evidence and reached consensus on the verdict below. This result entered the standard finality window and is now final.', verdict:'partial', score:'70 / 100', payout:'700 GEN', refund:'300 GEN', showUnmet:true},
+    reject: {word:'Reject', cls:'reject', eyebrow:'Resolved · deliverable did not meet scope', headline:'Escrow refunded — 1,000 GEN to client', body:'Validators found the deliverable did not meet the acceptance criteria, or the linked evidence was unreachable.', verdict:'reject', score:'20 / 100', payout:'0 GEN', refund:'1,000 GEN', showUnmet:true}
+  };
+  function showVerdict(key){
+    const s = states[key];
+    const seal = document.getElementById('seal');
+    seal.classList.remove('shown','reject');
+    void seal.offsetWidth; // restart animation
+    document.getElementById('seal-word').textContent = s.word;
+    document.getElementById('seal-score').textContent = s.score;
+    document.getElementById('stage-eyebrow').textContent = s.eyebrow;
+    document.getElementById('stage-headline').textContent = s.headline;
+    document.getElementById('stage-body').textContent = s.body;
+    document.getElementById('b-verdict').textContent = s.verdict;
+    document.getElementById('b-score').textContent = s.score;
+    document.getElementById('b-payout').textContent = s.payout;
+    document.getElementById('b-refund').textContent = s.refund;
+    document.getElementById('unmet-block').style.display = s.showUnmet ? 'block' : 'none';
+    if(s.cls) seal.classList.add(s.cls);
+    requestAnimationFrame(()=> seal.classList.add('shown'));
+  }
+  showVerdict('partial');
+</script>
+</body>
+</html>

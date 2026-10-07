@@ -1,0 +1,198 @@
+{
+  "address": "0xb1a3778a3B11E0eD000bB24DF06108caDfd7729B",
+  "rpc": "https://studio.genlayer.com/api",
+  "network": "studionet",
+  "verified_at": "2026-10-07T18:29:00.509Z",
+  "deployer": "0x81840a3450BeCf32672fd95d0278279f2a3EF486",
+  "code_matches_repo_source": true,
+  "schema": {
+    "ctor": {
+      "params": [],
+      "kwparams": {}
+    },
+    "methods": {
+      "accept_deliverable": {
+        "params": [
+          [
+            "docket_id",
+            "int"
+          ]
+        ],
+        "kwparams": {},
+        "readonly": false,
+        "ret": "null",
+        "payable": false
+      },
+      "claim_docket": {
+        "params": [
+          [
+            "docket_id",
+            "int"
+          ]
+        ],
+        "kwparams": {},
+        "readonly": false,
+        "ret": "null",
+        "payable": false
+      },
+      "create_docket": {
+        "params": [
+          [
+            "sow_text",
+            "string"
+          ],
+          [
+            "acceptance_criteria",
+            "string"
+          ],
+          [
+            "threshold_bp",
+            "int"
+          ],
+          [
+            "deadline",
+            "int"
+          ]
+        ],
+        "kwparams": {},
+        "readonly": false,
+        "ret": "int",
+        "payable": true
+      },
+      "dispute_deliverable": {
+        "params": [
+          [
+            "docket_id",
+            "int"
+          ]
+        ],
+        "kwparams": {},
+        "readonly": false,
+        "ret": "null",
+        "payable": false
+      },
+      "get_docket": {
+        "params": [
+          [
+            "docket_id",
+            "int"
+          ]
+        ],
+        "kwparams": {},
+        "readonly": true,
+        "ret": {
+          "client": "address",
+          "worker": "address",
+          "sow_text": "string",
+          "acceptance_criteria": "string",
+          "threshold_bp": "int",
+          "amount": "int",
+          "deadline": "int",
+          "status": "int",
+          "evidence": [
+            {
+              "$rep": "string"
+            }
+          ],
+          "note": "string",
+          "verdict": "int",
+          "score": "int",
+          "unmet_criteria": [
+            {
+              "$rep": "string"
+            }
+          ],
+          "created_at": "int",
+          "resolved_at": "int"
+        }
+      },
+      "get_reputation": {
+        "params": [
+          [
+            "addr",
+            "address"
+          ]
+        ],
+        "kwparams": {},
+        "readonly": true,
+        "ret": {
+          "completed": "int",
+          "disputed": "int",
+          "upheld": "int",
+          "score_sum": "int"
+        }
+      },
+      "list_open_dockets": {
+        "params": [],
+        "kwparams": {},
+        "readonly": true,
+        "ret": [
+          {
+            "$rep": "int"
+          }
+        ]
+      },
+      "refund_expired": {
+        "params": [
+          [
+            "docket_id",
+            "int"
+          ]
+        ],
+        "kwparams": {},
+        "readonly": false,
+        "ret": "null",
+        "payable": false
+      },
+      "submit_deliverable": {
+        "params": [
+          [
+            "docket_id",
+            "int"
+          ],
+          [
+            "evidence",
+            [
+              {
+                "$rep": "string"
+              }
+            ]
+          ],
+          [
+            "note",
+            "string"
+          ]
+        ],
+        "kwparams": {},
+        "readonly": false,
+        "ret": "null",
+        "payable": false
+      }
+    }
+  },
+  "schema_method_names": [
+    "accept_deliverable",
+    "claim_docket",
+    "create_docket",
+    "dispute_deliverable",
+    "get_docket",
+    "get_reputation",
+    "list_open_dockets",
+    "refund_expired",
+    "submit_deliverable"
+  ],
+  "list_open_dockets": [],
+  "dockets": {},
+  "reputation": {
+    "0x81840a3450BeCf32672fd95d0278279f2a3EF486": {
+      "completed": 4,
+      "disputed": 2,
+      "score_sum": 210,
+      "upheld": 2
+    }
+  },
+  "balances": {
+    "contract": 0,
+    "deployer": 0
+  }
+}

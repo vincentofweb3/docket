@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Docket — Submit Deliverable</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EEEDE7; --ink:#181B22; --ledger:#1F3A5F; --verdict-gold:#B8862E;
+    --evidence-teal:#2B6E62; --line:#D6D2C7; --danger:#9C3B2E;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;}
+  header{border-bottom:1px solid var(--line);padding:22px 48px;display:flex;justify-content:space-between;align-items:center;}
+  .wordmark{font-family:'IBM Plex Serif',serif;font-weight:600;font-size:22px;}
+  .wordmark span{color:var(--ledger);}
+  nav a{color:#6b6e76;text-decoration:none;font-size:14px;margin-left:28px;}
+  nav a.active{color:var(--ink);font-weight:500;}
+  main{max-width:760px;margin:0 auto;padding:48px 24px 100px;}
+  .case-header{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid var(--ink);padding-bottom:18px;margin-bottom:28px;}
+  .docket-id{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ledger);}
+  h1{font-family:'IBM Plex Serif',serif;font-weight:600;font-size:26px;margin:8px 0 0;max-width:38ch;}
+  .status-chip{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.04em;text-transform:uppercase;padding:5px 10px;border-radius:3px;background:rgba(31,58,95,0.1);color:var(--ledger);height:fit-content;}
+  .panel{background:#fff;border:1px solid var(--line);border-radius:6px;padding:22px 24px;margin-bottom:24px;}
+  .panel h2{font-family:'IBM Plex Serif',serif;font-size:16px;font-weight:600;margin:0 0 12px;}
+  .panel p{font-size:14px;line-height:1.6;color:#3a3d45;margin:0;}
+  .criteria-list{margin:10px 0 0;padding-left:18px;font-size:14px;color:#3a3d45;line-height:1.8;}
+  label{display:block;font-size:13px;font-weight:600;margin-bottom:8px;}
+  .hint{font-size:12px;color:#6b6e76;font-weight:400;margin-top:6px;}
+  .evidence-row{display:flex;gap:10px;margin-bottom:10px;}
+  .evidence-row input{flex:1;font-family:'IBM Plex Mono',monospace;font-size:13px;padding:11px 13px;border:1px solid var(--line);border-radius:4px;background:#fff;}
+  .evidence-row .tag{align-self:center;font-size:12px;color:var(--evidence-teal);font-family:'IBM Plex Mono',monospace;}
+  .add-link{font-size:13px;color:var(--ledger);text-decoration:underline;cursor:pointer;background:none;border:none;padding:0;font-family:inherit;}
+  textarea{width:100%;font-family:'IBM Plex Sans',sans-serif;font-size:14px;padding:12px 14px;border:1px solid var(--line);border-radius:4px;background:#fff;min-height:80px;resize:vertical;}
+  .warning{background:rgba(184,134,46,0.1);border:1px solid rgba(184,134,46,0.35);border-radius:6px;padding:14px 16px;font-size:13px;color:#7a5c1f;margin-bottom:28px;}
+  .btn{padding:14px 26px;border-radius:4px;font-size:14px;font-weight:600;border:none;cursor:pointer;}
+  .btn-primary{background:var(--ledger);color:var(--paper);}
+  .note{font-size:12px;color:#6b6e76;margin-top:14px;max-width:56ch;}
+</style>
+</head>
+<body>
+<header>
+  <div class="wordmark">Docket<span>.</span></div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="landing.html">The Register</a>
+    <a href="create-docket.html">Post a Docket</a>
+    <a href="submit-deliverable.html" class="active">My Claims</a>
+  </nav>
+</header>
+
+<main>
+  <div class="case-header">
+    <div>
+      <div class="docket-id">DKT-0430</div>
+      <h1>Audit and patch a TreeMap iteration bug in a testnet indexer</h1>
+    </div>
+    <span class="status-chip">Claimed · deadline in 2d 6h</span>
+  </div>
+
+  <div class="panel">
+    <h2>Acceptance criteria</h2>
+    <ul class="criteria-list">
+      <li>Root cause of the iteration bug identified and explained in a linked writeup</li>
+      <li>Patch submitted as a PR against the linked repo's default branch</li>
+      <li>Linked CI suite passes on the PR, screenshot or CI link required</li>
+      <li>No new lint warnings introduced</li>
+    </ul>
+  </div>
+
+  <div class="panel">
+    <h2>Evidence (public URLs only)</h2>
+    <p style="margin-bottom:14px;">Every link here will be fetched independently by
+    GenLayer validators if this docket is disputed — link only material a stranger with no
+    account access could open and verify.</p>
+    <div class="evidence-row">
+      <input type="text" value="https://github.com/example/testnet-indexer/pull/214" />
+      <span class="tag">pull request</span>
+    </div>
+    <div class="evidence-row">
+      <input type="text" value="https://github.com/example/testnet-indexer/actions/runs/9931" />
+      <span class="tag">CI run</span>
+    </div>
+    <div class="evidence-row">
+      <input type="text" placeholder="https://…" />
+    </div>
+    <button class="add-link">+ Add another evidence link</button>
+  </div>
+
+  <div class="panel">
+    <h2>Note to client (optional, not adjudicated directly)</h2>
+    <textarea placeholder="Anything you want the client to know before they review. This note is informational only — validators adjudicate the evidence links against the acceptance criteria, not this note."></textarea>
+  </div>
+
+  <div class="warning">
+    Submitting locks in this evidence set for this docket. You can't add links after
+    submission — if you're missing something, add it now.
+  </div>
+
+  <button class="btn btn-primary">Submit deliverable</button>
+  <p class="note">The client can accept immediately (releases escrow to you right away) or
+  dispute within the review window, which triggers GenLayer validator adjudication against
+  the acceptance criteria above.</p>
+</main>
+</body>
+</html>

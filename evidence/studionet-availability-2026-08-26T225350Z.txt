@@ -1,0 +1,13 @@
+Studionet availability check
+Timestamp (UTC): 2026-08-26T22:53:50Z
+Endpoint: https://studio.genlayer.com/api
+
+Command:
+curl -fsS --max-time 10 https://studio.genlayer.com/api
+
+Complete raw output:
+curl: (28) Resolving timed out after 10014 milliseconds
+
+Exit code: 28
+Classification: DNS/transport timeout. The integration gate and deployment were not started
+because the endpoint availability check did not reach Studionet.

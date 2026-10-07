@@ -1,0 +1,15 @@
+Command:
+PYTHONPATH=/tmp/docket-site /tmp/docket-site/bin/gltest --network studionet tests/integration/ -v -s
+
+Result: 6 failed, 0 passed, 185.68s.
+All six failures occurred during hosted Studionet RPC/deployment polling before the test assertions.
+Observed errors:
+- SSLV3_ALERT_BAD_RECORD_MAC
+- DECRYPTION_FAILED_OR_BAD_RECORD_MAC
+Endpoint: https://studio.genlayer.com/api
+This is a network/TLS blocker; no integration assertion was treated as passing.
+
+Consolidated retry (same command, 2026-08-25): 6 failed, 0 passed. The endpoint then failed
+DNS resolution with `socket.gaierror: [Errno -2] Name or service not known` for
+`studio.genlayer.com`, before deployment could begin. Full retry output is in
+`integration-tests-retry.txt`.

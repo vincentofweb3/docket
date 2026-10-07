@@ -1,0 +1,14 @@
+{
+  "ctor": {"params": [], "kwparams": {}},
+  "methods": {
+    "accept_deliverable": {"params": [["docket_id", "int"]], "kwparams": {}, "readonly": false, "ret": "null", "payable": false},
+    "claim_docket": {"params": [["docket_id", "int"]], "kwparams": {}, "readonly": false, "ret": "null", "payable": false},
+    "create_docket": {"params": [["sow_text", "string"], ["acceptance_criteria", "string"], ["threshold_bp", "int"], ["deadline", "int"]], "kwparams": {}, "readonly": false, "ret": "int", "payable": true},
+    "dispute_deliverable": {"params": [["docket_id", "int"]], "kwparams": {}, "readonly": false, "ret": "null", "payable": false},
+    "get_docket": {"params": [["docket_id", "int"]], "kwparams": {}, "readonly": true, "ret": {"client": "address", "worker": "address", "sow_text": "string", "acceptance_criteria": "string", "threshold_bp": "int", "amount": "int", "deadline": "int", "status": "int", "evidence": [{"$rep": "string"}], "note": "string", "verdict": "int", "score": "int", "unmet_criteria": [{"$rep": "string"}], "created_at": "int", "resolved_at": "int"}},
+    "get_reputation": {"params": [["addr", "address"]], "kwparams": {}, "readonly": true, "ret": {"completed": "int", "disputed": "int", "upheld": "int", "score_sum": "int"}},
+    "list_open_dockets": {"params": [], "kwparams": {}, "readonly": true, "ret": [{"$rep": "int"}]},
+    "refund_expired": {"params": [["docket_id", "int"]], "kwparams": {}, "readonly": false, "ret": "null", "payable": false},
+    "submit_deliverable": {"params": [["docket_id", "int"], ["evidence", [{"$rep": "string"}]], ["note", "string"]], "kwparams": {}, "readonly": false, "ret": "null", "payable": false}
+  }
+}

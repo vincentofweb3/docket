@@ -1,0 +1,143 @@
+WARNING: File `gltest.config.yaml` not found in the current directory, using default config, create a `gltest.config.yaml` file to manage multiple networks
+INFO: Clearing artifacts directory: artifacts
+INFO: Using the following configuration:
+INFO:   RPC URL: http://127.0.0.1:4000/api
+INFO:   Selected Network: localnet
+INFO:   Available networks: ['localnet', 'studionet', 'testnet_asimov', 'testnet_bradbury']
+INFO:   Selected chain type: localnet
+INFO:   Available chains: localnet, studionet, testnet_asimov, testnet_bradbury
+INFO:   Contracts directory: contracts
+INFO:   Artifacts directory: artifacts
+INFO:   Environment: .env
+INFO:   Default wait interval: 3000 ms
+INFO:   Default wait retries: 50
+INFO:   Leader only mode: False
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0 -- /tmp/docket-site/bin/python
+cachedir: .pytest_cache
+rootdir: /home/vincent/projects/docket
+plugins: genlayer-test-0.29.2, anyio-4.14.2
+collecting ... collected 3 items
+
+tests/integration/test_docket_integration.py::TestFullLifecycleFastPath::test_deploy_create_claim_submit_accept_settles_correct_balances FAILED
+tests/integration/test_docket_integration.py::TestFullLifecycleDisputed::test_dispute_with_real_public_evidence_resolves_via_consensus RECEIPT_DEBUG {'hash': '0x000000000000000000000000000000000000000000000000000000000000000a', 'status': 7, 'from_address': '0x9d3efc0de9d250f0693b2a696f388c0d6da6c738', 'to_address': '0x766551de44cda5735ff50c0364890a998a51cfba', 'type': 2, 'nonce': 0, 'value': 0, 'fee_value': 0, 'valid_until': None, 'salt_nonce': None, 'fees_distribution': None, 'message_allocations_count': 0, 'gaslimit': 0, 'created_at': '2026-08-27T00:48:16.054354+00:00', 'data': {'calldata': {'readable': '{"args":[0],"method":"dispute_deliverable"}'}}, 'consensus_data': {'votes': {'0x0000000000000000000000000000000000000000': 'agree', '0x0000000000000000000000000000000000000001': 'agree', '0x0000000000000000000000000000000000000002': 'agree'}, 'leader_receipt': [{'execution_result': 'ERROR', 'genvm_result': {'stdout': '', 'stderr': "UserError(message='LLM_ERROR_MALFORMED_VERDICT')"}, 'mode': 'leader', 'vote': None, 'node_config': {'address': '0x0000000000000000000000000000000000000000', 'provider': 'glsim', 'model': 'direct', 'config': {}, 'plugin': 'glsim', 'plugin_config': {}, 'stake': 1}, 'calldata': {'readable': '{"args":[0],"method":"dispute_deliverable"}'}, 'eq_outputs': {}, 'result': {'status': 'rollback', 'payload': "UserError(message='LLM_ERROR_MALFORMED_VERDICT')"}}], 'validators': [{'execution_result': 'ERROR', 'genvm_result': {'stdout': '', 'stderr': "UserError(message='LLM_ERROR_MALFORMED_VERDICT')"}, 'mode': 'validator', 'vote': 'agree', 'node_config': {'address': '0x0000000000000000000000000000000000000000', 'provider': 'glsim', 'model': 'direct', 'config': {}, 'plugin': 'glsim', 'plugin_config': {}, 'stake': 1}}, {'execution_result': 'ERROR', 'genvm_result': {'stdout': '', 'stderr': "UserError(message='LLM_ERROR_MALFORMED_VERDICT')"}, 'mode': 'validator', 'vote': 'agree', 'node_config': {'address': '0x0000000000000000000000000000000000000001', 'provider': 'glsim', 'model': 'direct', 'config': {}, 'plugin': 'glsim', 'plugin_config': {}, 'stake': 1}}, {'execution_result': 'ERROR', 'genvm_result': {'stdout': '', 'stderr': "UserError(message='LLM_ERROR_MALFORMED_VERDICT')"}, 'mode': 'validator', 'vote': 'agree', 'node_config': {'address': '0x0000000000000000000000000000000000000002', 'provider': 'glsim', 'model': 'direct', 'config': {}, 'plugin': 'glsim', 'plugin_config': {}, 'stake': 1}}]}, 'status_name': 'FINALIZED'}
+FAILED
+tests/integration/test_docket_integration.py::TestExpiryAgainstRealBlockTime::test_refund_expired_after_real_deadline_passes RECEIPT_DEBUG {'hash': '0x000000000000000000000000000000000000000000000000000000000000000d', 'status': 7, 'from_address': '0xbd35619a8b558a9e416467d2ea474e1660ec038d', 'to_address': '0x840240f8ee69744a28c4fab0d4699885d5fc1b22', 'type': 2, 'nonce': 0, 'value': 0, 'fee_value': 0, 'valid_until': None, 'salt_nonce': None, 'fees_distribution': None, 'message_allocations_count': 0, 'gaslimit': 0, 'created_at': '2026-08-27T00:48:21.335661+00:00', 'data': {'calldata': {'readable': '{"args":[0],"method":"refund_expired"}'}}, 'consensus_data': {'votes': {'0x0000000000000000000000000000000000000000': 'agree', '0x0000000000000000000000000000000000000001': 'agree', '0x0000000000000000000000000000000000000002': 'agree'}, 'leader_receipt': [{'execution_result': 'ERROR', 'genvm_result': {'stdout': '', 'stderr': "UserError(message='EXPECTED_NOT_YET_EXPIRED')"}, 'mode': 'leader', 'vote': None, 'node_config': {'address': '0x0000000000000000000000000000000000000000', 'provider': 'glsim', 'model': 'direct', 'config': {}, 'plugin': 'glsim', 'plugin_config': {}, 'stake': 1}, 'calldata': {'readable': '{"args":[0],"method":"refund_expired"}'}, 'eq_outputs': {}, 'result': {'status': 'rollback', 'payload': "UserError(message='EXPECTED_NOT_YET_EXPIRED')"}}], 'validators': [{'execution_result': 'ERROR', 'genvm_result': {'stdout': '', 'stderr': "UserError(message='EXPECTED_NOT_YET_EXPIRED')"}, 'mode': 'validator', 'vote': 'agree', 'node_config': {'address': '0x0000000000000000000000000000000000000000', 'provider': 'glsim', 'model': 'direct', 'config': {}, 'plugin': 'glsim', 'plugin_config': {}, 'stake': 1}}, {'execution_result': 'ERROR', 'genvm_result': {'stdout': '', 'stderr': "UserError(message='EXPECTED_NOT_YET_EXPIRED')"}, 'mode': 'validator', 'vote': 'agree', 'node_config': {'address': '0x0000000000000000000000000000000000000001', 'provider': 'glsim', 'model': 'direct', 'config': {}, 'plugin': 'glsim', 'plugin_config': {}, 'stake': 1}}, {'execution_result': 'ERROR', 'genvm_result': {'stdout': '', 'stderr': "UserError(message='EXPECTED_NOT_YET_EXPIRED')"}, 'mode': 'validator', 'vote': 'agree', 'node_config': {'address': '0x0000000000000000000000000000000000000002', 'provider': 'glsim', 'model': 'direct', 'config': {}, 'plugin': 'glsim', 'plugin_config': {}, 'stake': 1}}]}, 'status_name': 'FINALIZED'}
+FAILED
+
+=================================== FAILURES ===================================
+_ TestFullLifecycleFastPath.test_deploy_create_claim_submit_accept_settles_correct_balances _
+
+self = <test_docket_integration.TestFullLifecycleFastPath object at 0x7fad229fdb20>
+gl_client = <genlayer_py.client.genlayer_client.GenLayerClient object at 0x7fad229ddd60>
+default_account = <eth_account.signers.local.LocalAccount object at 0x7fad229df5f0>
+accounts = [<eth_account.signers.local.LocalAccount object at 0x7fad229ddd90>, <eth_account.signers.local.LocalAccount object at ...s.local.LocalAccount object at 0x7fad229fc9e0>, <eth_account.signers.local.LocalAccount object at 0x7fad229fcef0>, ...]
+
+    def test_deploy_create_claim_submit_accept_settles_correct_balances(
+        self, gl_client, default_account, accounts
+    ):
+        client, worker = default_account, accounts[1]
+        contract = _deploy(default_account)
+        _create_claim_submit(contract, client, worker)
+    
+        before = gl_client.get_balance(worker.address)
+        receipt = _assert_ok(
+            contract.connect(client).accept_deliverable(args=[0]).transact(
+                wait_triggered_transactions=True
+            )
+        )
+        docket = _docket(contract)
+        assert _field(docket, "status") == STATUS_CLOSED
+        assert _field(docket, "verdict") == VERDICT_FULL
+        contract_address = gl_client.w3.to_checksum_address(contract.address)
+        assert gl_client.get_balance(contract_address) == 0
+>       assert gl_client.get_balance(worker.address) >= before + 1000
+E       AssertionError: assert 0 >= (0 + 1000)
+E        +  where 0 = get_balance('0xBD35619a8B558A9e416467d2eA474E1660ec038d')
+E        +    where get_balance = <genlayer_py.client.genlayer_client.GenLayerClient object at 0x7fad229ddd60>.get_balance
+E        +    and   '0xBD35619a8B558A9e416467d2eA474E1660ec038d' = <eth_account.signers.local.LocalAccount object at 0x7fad229df7a0>.address
+
+tests/integration/test_docket_integration.py:114: AssertionError
+_ TestFullLifecycleDisputed.test_dispute_with_real_public_evidence_resolves_via_consensus _
+
+self = <test_docket_integration.TestFullLifecycleDisputed object at 0x7fad229fdc40>
+default_account = <eth_account.signers.local.LocalAccount object at 0x7fad229df5f0>
+accounts = [<eth_account.signers.local.LocalAccount object at 0x7fad229ddd90>, <eth_account.signers.local.LocalAccount object at ...s.local.LocalAccount object at 0x7fad229fc9e0>, <eth_account.signers.local.LocalAccount object at 0x7fad229fcef0>, ...]
+
+    def test_dispute_with_real_public_evidence_resolves_via_consensus(
+        self, default_account, accounts
+    ):
+        client, worker = default_account, accounts[1]
+        contract = _deploy(default_account)
+        _create_claim_submit(contract, client, worker)
+>       receipt = _assert_ok(
+            contract.connect(client).dispute_deliverable(args=[0]).transact(
+                wait_triggered_transactions=True,
+            )
+        )
+
+tests/integration/test_docket_integration.py:125: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+receipt = {'hash': '0x000000000000000000000000000000000000000000000000000000000000000a', 'status': 7, 'from_address': '0x9d3efc0de9d250f0693b2a696f388c0d6da6c738', 'to_address': '0x766551de44cda5735ff50c0364890a998a51cfba', ...}
+
+    def _assert_ok(receipt):
+        # GLSim returns the same consensus execution result used by Studio, but
+        # its helper receipt may expose status_name as FINALIZED while the leader
+        # execution_result is ERROR for a deterministic revert. Keep failures
+        # visible and require SUCCESS exactly as the harness documents.
+        if not tx_execution_succeeded(receipt):
+            print("RECEIPT_DEBUG", repr(receipt), flush=True)
+>       assert tx_execution_succeeded(receipt), receipt
+E       AssertionError: {'hash': '0x000000000000000000000000000000000000000000000000000000000000000a', 'status': 7, 'from_address': '0x9d3efc0de9d250f0693b2a696f388c0d6da6c738', 'to_address': '0x766551de44cda5735ff50c0364890a998a51cfba', ...}
+E       assert False
+E        +  where False = tx_execution_succeeded({'hash': '0x000000000000000000000000000000000000000000000000000000000000000a', 'status': 7, 'from_address': '0x9d3efc0de9d250f0693b2a696f388c0d6da6c738', 'to_address': '0x766551de44cda5735ff50c0364890a998a51cfba', ...})
+
+tests/integration/test_docket_integration.py:50: AssertionError
+_ TestExpiryAgainstRealBlockTime.test_refund_expired_after_real_deadline_passes _
+
+self = <test_docket_integration.TestExpiryAgainstRealBlockTime object at 0x7fad229fd220>
+default_account = <eth_account.signers.local.LocalAccount object at 0x7fad229df5f0>
+accounts = [<eth_account.signers.local.LocalAccount object at 0x7fad229ddd90>, <eth_account.signers.local.LocalAccount object at ...s.local.LocalAccount object at 0x7fad229fc9e0>, <eth_account.signers.local.LocalAccount object at 0x7fad229fcef0>, ...]
+
+    def test_refund_expired_after_real_deadline_passes(self, default_account, accounts):
+        contract = _deploy(default_account)
+        deadline = int(time.time()) + 3
+        _assert_ok(
+            contract.create_docket(args=[
+                "Prepare a report",
+                "- Include sources",
+                5000,
+                deadline,
+            ]).transact(value=1000)
+        )
+        time.sleep(5)
+>       _assert_ok(
+            contract.connect(accounts[1]).refund_expired(args=[0]).transact(
+                wait_triggered_transactions=True,
+            )
+        )
+
+tests/integration/test_docket_integration.py:182: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+receipt = {'hash': '0x000000000000000000000000000000000000000000000000000000000000000d', 'status': 7, 'from_address': '0xbd35619a8b558a9e416467d2ea474e1660ec038d', 'to_address': '0x840240f8ee69744a28c4fab0d4699885d5fc1b22', ...}
+
+    def _assert_ok(receipt):
+        # GLSim returns the same consensus execution result used by Studio, but
+        # its helper receipt may expose status_name as FINALIZED while the leader
+        # execution_result is ERROR for a deterministic revert. Keep failures
+        # visible and require SUCCESS exactly as the harness documents.
+        if not tx_execution_succeeded(receipt):
+            print("RECEIPT_DEBUG", repr(receipt), flush=True)
+>       assert tx_execution_succeeded(receipt), receipt
+E       AssertionError: {'hash': '0x000000000000000000000000000000000000000000000000000000000000000d', 'status': 7, 'from_address': '0xbd35619a8b558a9e416467d2ea474e1660ec038d', 'to_address': '0x840240f8ee69744a28c4fab0d4699885d5fc1b22', ...}
+E       assert False
+E        +  where False = tx_execution_succeeded({'hash': '0x000000000000000000000000000000000000000000000000000000000000000d', 'status': 7, 'from_address': '0xbd35619a8b558a9e416467d2ea474e1660ec038d', 'to_address': '0x840240f8ee69744a28c4fab0d4699885d5fc1b22', ...})
+
+tests/integration/test_docket_integration.py:50: AssertionError
+=========================== short test summary info ============================
+FAILED tests/integration/test_docket_integration.py::TestFullLifecycleFastPath::test_deploy_create_claim_submit_accept_settles_correct_balances
+FAILED tests/integration/test_docket_integration.py::TestFullLifecycleDisputed::test_dispute_with_real_public_evidence_resolves_via_consensus
+FAILED tests/integration/test_docket_integration.py::TestExpiryAgainstRealBlockTime::test_refund_expired_after_real_deadline_passes
+============================== 3 failed in 14.14s ==============================

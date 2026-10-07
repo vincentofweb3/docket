@@ -1,0 +1,52 @@
+WARNING: File `gltest.config.yaml` not found in the current directory, using default config, create a `gltest.config.yaml` file to manage multiple networks
+INFO: Clearing artifacts directory: artifacts
+INFO: Using the following configuration:
+INFO:   RPC URL: http://127.0.0.1:4000/api
+INFO:   Selected Network: localnet
+INFO:   Available networks: ['localnet', 'studionet', 'testnet_asimov', 'testnet_bradbury']
+INFO:   Selected chain type: localnet
+INFO:   Available chains: localnet, studionet, testnet_asimov, testnet_bradbury
+INFO:   Contracts directory: contracts
+INFO:   Artifacts directory: artifacts
+INFO:   Environment: .env
+INFO:   Default wait interval: 3000 ms
+INFO:   Default wait retries: 50
+INFO:   Leader only mode: False
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/vincent/projects/docket
+plugins: genlayer-test-0.29.2, anyio-4.14.2
+collecting ... collected 29 items
+
+tests/direct/test_docket_direct.py::TestDocketCreation::test_rejects_zero_value PASSED [  3%]
+tests/direct/test_docket_direct.py::TestDocketCreation::test_rejects_empty_sow PASSED [  6%]
+tests/direct/test_docket_direct.py::TestDocketCreation::test_rejects_empty_criteria PASSED [ 10%]
+tests/direct/test_docket_direct.py::TestDocketCreation::test_rejects_threshold_over_10000_bp PASSED [ 13%]
+tests/direct/test_docket_direct.py::TestDocketCreation::test_rejects_past_or_present_deadline PASSED [ 17%]
+tests/direct/test_docket_direct.py::TestDocketCreation::test_happy_path_assigns_sequential_ids_and_open_status PASSED [ 20%]
+tests/direct/test_docket_direct.py::TestClaiming::test_rejects_client_claiming_own_docket PASSED [ 24%]
+tests/direct/test_docket_direct.py::TestClaiming::test_rejects_claim_on_non_open_docket PASSED [ 27%]
+tests/direct/test_docket_direct.py::TestClaiming::test_rejects_claim_after_deadline PASSED [ 31%]
+tests/direct/test_docket_direct.py::TestClaiming::test_happy_path_sets_worker_and_claimed_status PASSED [ 34%]
+tests/direct/test_docket_direct.py::TestSubmission::test_rejects_empty_evidence PASSED [ 37%]
+tests/direct/test_docket_direct.py::TestSubmission::test_rejects_non_https_url PASSED [ 41%]
+tests/direct/test_docket_direct.py::TestSubmission::test_rejects_non_assigned_worker PASSED [ 44%]
+tests/direct/test_docket_direct.py::TestSubmission::test_rejects_submission_after_deadline PASSED [ 48%]
+tests/direct/test_docket_direct.py::TestSubmission::test_happy_path_sets_submitted_status PASSED [ 51%]
+tests/direct/test_docket_direct.py::TestFastPathAcceptance::test_rejects_non_client_caller PASSED [ 55%]
+tests/direct/test_docket_direct.py::TestFastPathAcceptance::test_rejects_wrong_status PASSED [ 58%]
+tests/direct/test_docket_direct.py::TestFastPathAcceptance::test_happy_path_closes_and_updates_reputation PASSED [ 62%]
+tests/direct/test_docket_direct.py::TestSplitEscrowPureFunction::test_full_verdict_pays_worker_entire_amount PASSED [ 65%]
+tests/direct/test_docket_direct.py::TestSplitEscrowPureFunction::test_reject_verdict_refunds_client_entire_amount PASSED [ 68%]
+tests/direct/test_docket_direct.py::TestSplitEscrowPureFunction::test_partial_verdict_above_threshold_pays_proportional_amount PASSED [ 72%]
+tests/direct/test_docket_direct.py::TestSplitEscrowPureFunction::test_partial_verdict_below_threshold_refunds_entirely PASSED [ 75%]
+tests/direct/test_docket_direct.py::TestSplitEscrowPureFunction::test_partial_verdict_exactly_at_threshold_boundary PASSED [ 79%]
+tests/direct/test_docket_direct.py::TestAdjudication::test_structured_result_is_bounded_and_uses_response_body PASSED [ 82%]
+tests/direct/test_docket_direct.py::TestAdjudication::test_unreachable_evidence_resolves_toward_reject PASSED [ 86%]
+tests/direct/test_docket_direct.py::TestAdjudication::test_malformed_llm_output_uses_canonical_error PASSED [ 89%]
+tests/direct/test_docket_direct.py::TestExpiryAndTyping::test_refund_expired_is_permissionless PASSED [ 93%]
+tests/direct/test_docket_direct.py::TestExpiryAndTyping::test_refund_expired_before_deadline_rejected PASSED [ 96%]
+tests/direct/test_docket_direct.py::TestExpiryAndTyping::test_storage_records_have_explicit_collection_types PASSED [100%]
+
+============================== 29 passed in 1.71s ==============================
