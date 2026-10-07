@@ -1,0 +1,29 @@
+Frontend verification against live Studionet — 2026-10-07
+Contract: 0xb1a3778a3B11E0eD000bB24DF06108caDfd7729B
+Build: next build OK (14 routes)  |  typecheck OK  |  vitest 10/10 passed
+
+Route status (production build, live chain reads):
+  200  /
+  200  /register
+  200  /docket/4
+  200  /docket/1/result
+  200  /docket/6/submit
+  200  /dockets/new
+  200  /my-dockets
+  200  /appeal-guide
+  200  /connect-wallet
+  200  /reputation/0x81840a3450BeCf32672fd95d0278279f2a3EF486
+  200  /api/dockets
+  200  /api/dockets/4
+  200  /api/tx/0xced7f3f38d85a6002e431698ed15e6fc21affaebd00dc74280364e8e52f9a352
+
+Live data confirmed rendered (not fixtures):
+  register: 3 open dockets (ids 4,5,6), 420 / 1150 / 300 GEN, sorted by deadline
+  landing stats: 7 dockets on chain, 4 resolved, 50% settled without dispute
+  docket 1 result: verdict reject, score 10, 3 unmet criteria from validators
+  reputation 0x8184...: completed 4, disputed 2, upheld 2, avg 52.5/100
+
+Demo data seeded on-chain (scripts/deploy/seed-demo.mjs):
+  https://explorer-studio.genlayer.com/tx/0xced7f3f38d85a6002e431698ed15e6fc21affaebd00dc74280364e8e52f9a352
+  https://explorer-studio.genlayer.com/tx/0x4c83a5624490ec6528a38c40611307ce6b8b638011f083f199468e7c10e554f4
+  https://explorer-studio.genlayer.com/tx/0xd7a052aea046dbf4220307925e7964f05562cf43c41b73b3ba406d57f3ece116

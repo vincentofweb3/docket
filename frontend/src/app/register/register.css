@@ -1,0 +1,18 @@
+.register-hero {
+  padding-bottom: 40px;
+  padding-top: 56px;
+}
+.register-hero h1 {
+  max-width: 16ch;
+}
+.hero-actions {
+  margin-top: 26px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.hero-actions .btn {
+  padding: 12px 22px;
+  font-size: 14px;
+}

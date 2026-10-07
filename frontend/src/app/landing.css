@@ -1,0 +1,150 @@
+.hero {
+  padding: 88px 48px 72px;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+.hero h1 {
+  font-size: 52px;
+  line-height: 1.1;
+  margin: 14px 0 20px;
+  max-width: 18ch;
+}
+.hero h1 em {
+  font-style: normal;
+  color: var(--ledger);
+}
+.hero .hero-actions {
+  margin-top: 28px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.stats {
+  display: flex;
+  gap: 48px;
+  margin-top: 52px;
+  padding-top: 30px;
+  border-top: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.stat-value {
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 600;
+  line-height: 1;
+}
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.section {
+  padding: 80px 48px;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+.section-head {
+  max-width: 64ch;
+  margin-bottom: 44px;
+}
+.section-head h2 {
+  font-size: 30px;
+  margin: 10px 0 14px;
+}
+
+.compare {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.compare th {
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 10px 14px 10px 0;
+  border-bottom: 2px solid var(--ink);
+  font-weight: 500;
+}
+.compare td {
+  padding: 14px 14px 14px 0;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+.compare-self td {
+  border-bottom: 2px solid var(--ledger);
+  background: rgba(31, 58, 95, 0.04);
+}
+.compare-self td:first-child {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ledger);
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 28px;
+}
+.step {
+  border-top: 2px solid var(--ink);
+  padding-top: 18px;
+}
+.step-n {
+  font-size: 12px;
+  color: var(--ledger);
+  letter-spacing: 0.08em;
+}
+.step h3 {
+  margin: 8px 0 8px;
+  font-size: 18px;
+}
+.step p {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: #3a3d45;
+  margin: 0;
+}
+
+.cta-panel {
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: 32px 34px;
+}
+.cta-panel h3 {
+  font-size: 22px;
+  margin: 0 0 8px;
+}
+
+@media (max-width: 820px) {
+  .hero {
+    padding: 56px 22px 48px;
+  }
+  .hero h1 {
+    font-size: 34px;
+  }
+  .section {
+    padding: 52px 22px;
+  }
+  .section-head h2 {
+    font-size: 24px;
+  }
+  .stats {
+    gap: 28px;
+  }
+  .stat-value {
+    font-size: 26px;
+  }
+}

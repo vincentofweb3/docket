@@ -1,0 +1,77 @@
+.detail-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: -8px 0 26px;
+}
+
+.pre-wrap {
+  white-space: pre-wrap;
+  font-size: 14px;
+  line-height: 1.65;
+  margin: 0;
+  color: #2a2d34;
+}
+
+.hint {
+  font-size: 12.5px;
+  line-height: 1.5;
+  margin: -4px 0 12px;
+  max-width: 64ch;
+}
+
+.evidence-list {
+  margin: 0 0 12px;
+  padding-left: 18px;
+  font-size: 13px;
+}
+.evidence-list li {
+  margin-bottom: 6px;
+  word-break: break-all;
+}
+
+.kv .v.note {
+  font-family: var(--font-body);
+  text-align: right;
+  max-width: 44ch;
+}
+
+.action-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.action-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.contract-note {
+  font-size: 11px;
+  margin-top: 30px;
+  word-break: break-all;
+}
+
+/*
+ * Network-capability notice. Shown where a capability genuinely does not exist on the active
+ * network, so the UI never offers an action that cannot work — and never implies escrow paid
+ * out when the network cannot move GEN to an EOA.
+ */
+.capability-note {
+  border: 1px dashed var(--line);
+  background: rgba(184, 134, 46, 0.05);
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+  margin-bottom: 20px;
+  font-size: 12.5px;
+  color: #5a4a22;
+  line-height: 1.6;
+}
+.capability-note strong {
+  display: block;
+  color: var(--verdict-gold);
+  margin-bottom: 4px;
+}

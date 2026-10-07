@@ -1,43 +1,111 @@
-# Docket Frontend (planned — not yet scaffolded)
+# Docket Frontend
 
-This directory intentionally does not contain a running app yet. Do not `npx create-next-app`
-here until `contracts/docket.py` is deployed to at least Studionet and its schema has been
-generated — see `docs/06-integration-plan.md` for the full rationale and sequencing.
+Next.js 15 (App Router) + TypeScript frontend for Docket, wired to the Intelligent Contract
+deployed on GenLayer Studionet at
+`0xb1a3778a3B11E0eD000bB24DF06108caDfd7729B`.
 
-## When you're ready to scaffold
+Implements `docs/06-integration-plan.md` and transcribes `design/design-system.md` (tokens,
+type roles, the ruled register layout, and the verdict seal).
+
+## Running it
 
 ```bash
-npm install genlayer-js
-# then follow the GenLayer project boilerplate's frontend structure as a reference:
-# https://github.com/genlayerlabs/genlayer-project-boilerplate
+npm install
+npm run dev      # http://localhost:3000
+npm run build && npm run start
+npm test         # contract-parity tests
+npm run typecheck
 ```
 
-## Screens to build (see `design/` for the visual spec of each)
+Reads work with no wallet. Writes need a GenLayer-enabled wallet (MetaMask + GenLayer Snap),
+because `genlayer-js`'s `metamaskClient` only reports Snap installation — it does not sign.
 
-| Screen | Design file | Reads | Writes |
+## Configuration
+
+Everything network-specific lives in `src/lib/config.ts`. No component hardcodes an address or
+RPC URL. Override without editing source:
+
+```bash
+NEXT_PUBLIC_GENLAYER_NETWORK=studionet|testnet-bradbury|localnet
+NEXT_PUBLIC_DOCKET_CONTRACT_ADDRESS=0x...
+```
+
+`config.ts` also records two per-network capability flags, `creditsEoaPayouts` and
+`supportsAppeals`. Both are **false** on Studionet because they were measured there, not assumed.
+The UI uses them to avoid offering actions that cannot work, and to disclose limitations where a
+user would otherwise be misled.
+
+## Screens
+
+| Route | Design reference | Reads | Writes |
 |---|---|---|---|
-| Marketing landing | `design/index.html` | — (static marketing content) | — |
-| Connect wallet / onboarding | `design/connect-wallet.html` | — | wallet connection only, no contract call |
-| Browse open dockets | `design/landing.html` | `list_open_dockets`, `get_docket` per id | — |
-| Single docket detail | `design/docket-detail.html` | `get_docket`, `get_reputation` (poster) | `claim_docket` |
-| Create a docket | `design/create-docket.html` | — | `create_docket` |
-| Submit a deliverable | `design/submit-deliverable.html` | `get_docket` | `submit_deliverable` |
-| My Dockets dashboard | `design/my-dockets.html` | `get_docket` for each id the connected address appears in as client or worker | — (links out to the relevant action screen per row) |
-| Adjudicating (waiting state) | `design/adjudicating.html` | transaction status via the real GenLayer lifecycle (pending/proposing/committing/revealing/accepted/finalized) | — |
-| Adjudication / dispute result | `design/adjudication-result.html` | `get_docket`, `get_reputation` | `accept_deliverable`, `dispute_deliverable` |
-| Appeal | `design/appeal.html` | transaction/appeal status | native GenLayer appeal transaction (see `genlayer-cli`'s `transactions appeal`/`appeal-bond` as the reference; confirm the JS SDK equivalent) |
-| Reputation / profile | `design/reputation.html` | `get_reputation` | — |
-| Empty & error states (reference) | `design/states.html` | n/a — component reference | n/a |
-| Transaction status component (reference) | `design/components.html` | n/a — component reference | n/a |
+| `/` | `design/index.html` | live stats | — |
+| `/register` | `design/landing.html` | `list_open_dockets`, `get_docket` | — |
+| `/docket/[id]` | `design/docket-detail.html` | `get_docket` | `claim_docket`, `submit_deliverable`, `accept_deliverable`, `dispute_deliverable`, `refund_expired` |
+| `/docket/[id]/result` | `design/adjudication-result.html` | `get_docket` | — |
+| `/docket/[id]/submit` | `design/submit-deliverable.html` | `get_docket` | `submit_deliverable` |
+| `/dockets/new` | `design/create-docket.html` | — | `create_docket` |
+| `/my-dockets` | `design/my-dockets.html` | bounded id scan | — |
+| `/reputation/[address]` | `design/reputation.html` | `get_reputation` | — |
+| `/appeal-guide` | `design/appeal.html` | — | native appeal (unsupported on Studionet) |
+| `/connect-wallet` | `design/connect-wallet.html` | — | wallet connect |
 
-`states.html` and `components.html` aren't standalone routes — they're the reusable
-building blocks (empty states, error banners, the transaction-status toast/modal) every
-screen above should use consistently, so build those two components first.
+`design/states.html` and `design/components.html` are component references rather than routes;
+their patterns are implemented in `src/components/TxStatusToast.tsx` and `globals.css`.
 
-## Non-negotiable rules for this frontend (see `docs/06-integration-plan.md` for why)
+## Rules this frontend does not bend
 
-- Never call an LLM client-side to pre-compute or preview a verdict.
-- Always show the real transaction lifecycle (submitted → pending → accepted → finalized,
-  with a distinct failed/undetermined state) — never a generic spinner for a write call.
-- Keep contract address, network config, and the deployed schema in one typed config module.
-- Verify every `genlayer-js` method name against the SDK reference before using it.
+From `docs/06-integration-plan.md`, `docs/07-security-and-audit-checklist.md` and
+`design/frontend/README.md`:
+
+- **Never pre-computes a verdict.** No LLM call anywhere in this codebase. Docket links to the
+  same evidence URLs a validator would fetch and leaves judgement to consensus.
+- **Never collapses a write into a spinner.** `src/lib/tx.ts` polls the real transaction and
+  surfaces submitted → pending → proposing/committing → revealing → accepted → finalized, with
+  distinct failed and undetermined states. A disputed adjudication takes minutes and the UI says
+  so explicitly rather than looking hung.
+- **Reads and writes are separated.** Reads use `readContract`; writes go through an injected
+  EIP-1193 provider and are gated on a connected wallet.
+- **Failed reads are loud.** When the RPC is unreachable the register reports the error and shows
+  no rows, rather than falling back to sample data that would misrepresent escrowed funds.
+- **Error codes are surfaced by name.** `src/lib/docket.ts` maps every `EXPECTED_*`,
+  `EXTERNAL_*` and `LLM_ERROR_*` code the contract can raise to a specific explanation.
+- **Marketing figures are computed live.** The design mockup carried invented stats
+  ("212 dockets resolved"); `/` computes its own from chain state and says "—" when the RPC is
+  down, rather than shipping fabricated numbers.
+
+## Implementation notes worth knowing
+
+**Address encoding.** `genlayer-js` 1.1.8 does not re-export `CalldataAddress` from the package
+root. A plain hex address passed to `readContract`/`writeContract` is encoded as `TYPE_BYTES`,
+and GenVM's `TreeMap` then raises `assert isinstance(r, Address)` — so every external call taking
+an `Address` reverts. Internal in-contract calls are unaffected, which is why contract-level
+tests never catch it. `src/lib/address.server.ts` locates the real class in the package's dist
+chunks and fails loudly rather than silently degrading to bytes. This module is server-only.
+
+**RPC rate limits.** Studionet allows 30 requests/minute. Two consequences:
+
+- `src/lib/genlayer.ts` classifies a missing docket (`KeyError` in the leader receipt's stderr)
+  separately from a throttled request. Conflating them makes a rate limit report "no dockets
+  exist" — an empty register that looks like real state.
+- `scanAllDockets` seeds its upper bound from `list_open_dockets` (one cheap call) instead of
+  blind-probing, and `scanAllDocketsCached` memoises for 60s. A cold `/` render takes ~20s
+  against the rate limit; warm renders are instant.
+
+**No index by address.** The contract has no read that lists dockets for an address, so
+`/my-dockets` walks a bounded range of sequential ids and says so in the UI rather than implying
+completeness.
+
+## Known limitations
+
+- **Escrow payouts do not credit a wallet on Studionet.** The contract settles correctly and the
+  escrow leaves the contract, but the emitted transfer to a recipient EOA finalizes with an
+  execution error, because Studionet has no EVM layer or ghost contracts. `NetworkLimits`
+  discloses this next to any settlement that involves a payout. Measured in
+  `evidence/studionet-fund-trace-2026-10-07.json`.
+- **Appeals are unavailable on Studionet.** `gen_appealTransaction`, `gen_getAppealCharge` and
+  `gen_canAppeal` all return -32601, and this SDK version does not implement the documented
+  `getAppealCharge` API. `/appeal-guide` explains the mechanism and reports the gap rather than
+  wiring a button to an RPC that does not exist.
+- **Write paths are untested end-to-end** — they need a GenLayer Snap, which cannot be automated
+  here. Everything read-only is verified against the live deployment.

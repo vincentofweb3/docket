@@ -1,0 +1,37 @@
+.case-stage {
+  display: block;
+}
+.stage-headline {
+  font-size: 19px;
+  margin: 8px 0 6px;
+}
+.stage-body {
+  font-size: 13px;
+  max-width: 62ch;
+  margin: 0;
+}
+
+.unmet-list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+  color: var(--danger);
+  line-height: 1.6;
+}
+.unmet-list li {
+  margin-bottom: 8px;
+}
+
+.evidence-list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+}
+.evidence-list li {
+  margin-bottom: 6px;
+  word-break: break-all;
+}
+
+.small {
+  font-size: 12.5px;
+}

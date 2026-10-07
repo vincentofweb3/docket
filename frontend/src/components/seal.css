@@ -1,0 +1,74 @@
+.seal-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0 36px;
+}
+
+/*
+ * The seal is the only element permitted a large radius (172px here) — the design system
+ * caps everything else at 6px so this lands as a stamp rather than a shape.
+ */
+.seal {
+  width: 172px;
+  height: 172px;
+  border-radius: 50%;
+  border: 3px solid var(--verdict-gold);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-6deg) scale(0.4);
+  opacity: 0;
+  transition:
+    transform 0.5s cubic-bezier(0.2, 1.4, 0.4, 1),
+    opacity 0.3s ease;
+  position: relative;
+}
+.seal.reject {
+  border-color: var(--danger);
+}
+.seal.undecided {
+  border-color: var(--line);
+  opacity: 1;
+  transform: rotate(-6deg) scale(0.86);
+}
+.seal.shown {
+  transform: rotate(-6deg) scale(1);
+  opacity: 1;
+}
+.seal::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  opacity: 0.5;
+}
+.seal .verdict-word {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 20px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--verdict-gold);
+}
+.seal.reject .verdict-word {
+  color: var(--danger);
+}
+.seal.undecided .verdict-word {
+  color: var(--muted);
+  font-size: 15px;
+}
+.seal .score {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink);
+  margin-top: 4px;
+}
+.seal .docket-ref {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--muted);
+  margin-top: 6px;
+  letter-spacing: 0.05em;
+}

@@ -1,0 +1,25 @@
+{
+  "seeded_at": "2026-10-07T19:41:04.753Z",
+  "created": [
+    {
+      "hash": "0xced7f3f38d85a6002e431698ed15e6fc21affaebd00dc74280364e8e52f9a352",
+      "sow": "Ship a Farcaster frame that renders live docket status",
+      "gen": 420
+    },
+    {
+      "hash": "0x4c83a5624490ec6528a38c40611307ce6b8b638011f083f199468e7c10e554f4",
+      "sow": "Write an implementation guide for the HTTP/1.1 specification",
+      "gen": 1150
+    },
+    {
+      "hash": "0xd7a052aea046dbf4220307925e7964f05562cf43c41b73b3ba406d57f3ece116",
+      "sow": "Produce 6 explainer diagrams for Optimistic Democracy onboarding",
+      "gen": 300
+    }
+  ],
+  "open": [
+    4,
+    5,
+    6
+  ]
+}
