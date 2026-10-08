@@ -40,7 +40,7 @@ export function DocketActions({
       <div className="wallet-gate">
         <h3>Connect a wallet to act on this docket</h3>
         <p>
-          You can read every docket without one — this record, the escrow, and any verdict are
+          You can read every docket without one - this record, the escrow, and any verdict are
           all public. Claiming, submitting, and resolving require a GenLayer-enabled wallet on{" "}
           {network.label}.
         </p>
@@ -181,7 +181,7 @@ export function DocketActions({
                     )
                   }
                 >
-                  Dispute — have validators judge it
+                  Dispute - have validators judge it
                 </button>
               </div>
               <p className="muted small">
@@ -201,7 +201,7 @@ export function DocketActions({
           <p>
             This docket is in AI adjudication. Validators independently fetch the evidence URLs
             and judge the deliverable against the acceptance criteria. This takes several
-            minutes and needs nothing from you — it is not stuck.
+            minutes and needs nothing from you - it is not stuck.
           </p>
         </div>
       ) : (

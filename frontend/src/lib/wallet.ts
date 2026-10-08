@@ -85,7 +85,7 @@ export function appealSupportNote(): {
       message:
         `Appeals are not available on ${network.label}. The network exposes no appeal ` +
         "primitives (gen_appealTransaction, gen_getAppealCharge and gen_canAppeal all return " +
-        "Method not found), and an appeal must be funded with the charge those calls return — " +
+        "Method not found), and an appeal must be funded with the charge those calls return - " +
         "which this SDK version does not implement. This is a network limitation, not a Docket " +
         "limitation.",
     };
@@ -98,8 +98,8 @@ export function appealSupportNote(): {
       // moment of submission, which this SDK version cannot read.
       supported: false,
       message:
-        `${network.label} has the appeal infrastructure deployed — the appeals, fee-manager ` +
-        "and rounds-storage contracts all respond to calls — but no appeal has been driven " +
+        `${network.label} has the appeal infrastructure deployed - the appeals, fee-manager ` +
+        "and rounds-storage contracts all respond to calls - but no appeal has been driven " +
         "end-to-end against Docket yet. An appeal also has to be funded with the charge " +
         "quoted immediately before submission, so the bond is never hardcoded here.",
     };
@@ -110,6 +110,6 @@ export function appealSupportNote(): {
     supported: true,
     message:
       "Appeals are a native GenLayer transaction-level action. Quote the current appeal " +
-      "charge and submit it immediately before — never hardcode the bond.",
+      "charge and submit it immediately before - never hardcode the bond.",
   };
 }

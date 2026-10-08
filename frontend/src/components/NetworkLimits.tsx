@@ -11,7 +11,7 @@ import { network } from "@/lib/config";
 export function NetworkLimits() {
   return (
     <div className="capability-note">
-      <strong>Escrow accounting is final — the payout has not reached a wallet on {network.label}</strong>
+      <strong>Escrow accounting is final - the payout has not reached a wallet on {network.label}</strong>
       The contract recorded the settlement and released escrow correctly. On {network.label} the
       emitted transfer to a worker&apos;s address finalizes with an execution error, because this
       network has no EVM layer or ghost contracts for a cross-layer transfer to land on. The

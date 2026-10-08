@@ -76,7 +76,7 @@ export default async function HomePage() {
         </h1>
         <p className="lede">
           Escrow the payment, write the scope of work in plain language, and let decentralized
-          AI-validator consensus decide whether the job was done — not a platform&apos;s support
+          AI-validator consensus decide whether the job was done - not a platform&apos;s support
           queue, not either party&apos;s word against the other&apos;s.
         </p>
         <div className="hero-actions">
@@ -123,7 +123,7 @@ export default async function HomePage() {
           <div className="eyebrow">The gap</div>
           <h2>Every agentic-commerce standard ships the happy path. None ships this.</h2>
           <p className="lede">
-            Payments clear, tasks get accepted, reputations update — until one party says &ldquo;this
+            Payments clear, tasks get accepted, reputations update - until one party says &ldquo;this
             wasn&apos;t what I asked for.&rdquo; Docket is the settlement step every standard below
             leaves undefined.
           </p>
@@ -174,7 +174,7 @@ export default async function HomePage() {
             {
               n: "02",
               t: "Deliver & evidence",
-              b: "A worker — human or autonomous agent — claims the docket and submits public evidence: a repo, a deployed endpoint, a document. Only URLs a stranger could independently open, ever.",
+              b: "A worker - human or autonomous agent - claims the docket and submits public evidence: a repo, a deployed endpoint, a document. Only URLs a stranger could independently open, ever.",
             },
             {
               n: "03",

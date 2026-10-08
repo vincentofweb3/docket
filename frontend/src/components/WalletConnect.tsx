@@ -37,7 +37,7 @@ export function WalletConnect() {
       <div className="wallet-gate">
         <h3>No GenLayer wallet detected</h3>
         <p>
-          Reading dockets, escrow and verdicts needs no wallet at all — every record is public.
+          Reading dockets, escrow and verdicts needs no wallet at all - every record is public.
           Posting, claiming, submitting and resolving need a GenLayer-enabled wallet, which
           currently means MetaMask with the GenLayer Snap installed.
         </p>
@@ -70,7 +70,7 @@ export function WalletConnect() {
         <>
           <h2>Connect a wallet</h2>
           <p className="muted">
-            A wallet is needed only to act — posting, claiming, submitting, accepting or
+            A wallet is needed only to act - posting, claiming, submitting, accepting or
             disputing. Everything on this site reads public chain state.
           </p>
           <button className="btn" onClick={connect} disabled={busy}>

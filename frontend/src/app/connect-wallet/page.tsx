@@ -24,7 +24,7 @@ export default function ConnectWalletPage() {
         </p>
         <p className="muted">
           Network capability differs by chain. On {network.label} an emitted escrow payout does
-          not credit a recipient wallet, and appeals are unavailable — both are network
+          not credit a recipient wallet, and appeals are unavailable - both are network
           limitations, recorded with evidence in the project repository.
         </p>
       </div>

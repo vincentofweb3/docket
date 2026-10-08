@@ -320,20 +320,263 @@ h3 {
   text-align: right;
 }
 
-@media (max-width: 820px) {
+/* ---------- responsive ----------
+ * Three tiers rather than one:
+ *   <=980px  register collapses from 5 ruled columns to a 2-column condensed row
+ *   <=700px  key/value rows stack label-over-value; forms go single column; nav wraps
+ *   <=520px  register becomes fully stacked; tables become per-record cards; tap targets grow
+ * A single breakpoint left the comparison table, escrow rows and case header overflowing on
+ * phones, so each tier is explicit about what it reflows.
+ */
+
+/* Nothing should ever scroll sideways. Individual offenders are fixed below; this is the
+ * backstop so a long unbroken string cannot widen the whole page. */
+html,
+body {
+  overflow-x: hidden;
+}
+
+@media (max-width: 980px) {
   :root {
-    --shell-pad: 22px;
+    --shell-pad: 28px;
   }
+  h1 {
+    font-size: 32px;
+  }
+  /* Condense 5 columns to 3 without named areas: the title and its sub-line live in the same
+     wrapper div, so grid-template-areas would name a cell no child actually occupies. Placed by
+     explicit line/column instead. */
+  .register-row {
+    grid-template-columns: 100px 1fr auto;
+    grid-template-rows: auto auto auto;
+    gap: 6px 16px;
+    align-items: start;
+  }
+  .register-row .docket-id {
+    grid-column: 1;
+    grid-row: 1 / span 3;
+  }
+  .register-row > div:nth-child(2) {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    min-width: 0;
+  }
+  .register-row > div:nth-child(3) {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: end;
+  }
+  .register-row .amount {
+    grid-column: 2;
+    grid-row: 3;
+    text-align: left;
+  }
+  .register-row .deadline {
+    grid-column: 3;
+    grid-row: 3;
+    text-align: right;
+  }
+  .register-row .row-sub {
+    white-space: normal;
+  }
+}
+
+@media (max-width: 700px) {
+  :root {
+    --shell-pad: 20px;
+  }
+  body {
+    font-size: 14.5px;
+  }
+  h1 {
+    font-size: 27px;
+  }
+  h2 {
+    font-size: 18px;
+  }
+
+  /* Key/value rows stack, so a long address or amount wraps instead of being clipped. */
+  .kv {
+    flex-direction: column;
+    gap: 2px;
+  }
+  .kv .v {
+    text-align: left;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0;
+  }
+
+  .panel {
+    padding: 20px 18px;
+  }
+
+  /* Nav wraps to its own rows instead of squeezing links into an unreadable strip. */
+  .site-header {
+    padding: 16px var(--shell-pad);
+    gap: 12px;
+  }
+  .site-nav {
+    gap: 14px;
+    width: 100%;
+  }
+  .site-nav a {
+    font-size: 13px;
+  }
+
+  .detail-head {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tab {
+    padding: 10px 14px;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 520px) {
+  h1 {
+    font-size: 24px;
+  }
+
+  /* Fully stacked register — each child on its own row, in source order. */
   .register-row {
     grid-template-columns: 1fr;
+    grid-template-rows: none;
     gap: 6px;
+    padding: 18px 0;
+  }
+  .register-row .docket-id,
+  .register-row > div:nth-child(2),
+  .register-row > div:nth-child(3),
+  .register-row .amount,
+  .register-row .deadline {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  .register-row > div:nth-child(3) {
+    justify-self: start;
   }
   .register-row .amount,
   .register-row .deadline {
     text-align: left;
   }
-  h1 {
-    font-size: 30px;
+  .register-row .row-sub {
+    white-space: normal;
+  }
+
+  /* The ruled ledger is the product's signature, so keep the rows and the rules even when the
+   * horizontal rules go vertical. */
+  .compare thead {
+    display: none;
+  }
+  .compare,
+  .compare tbody,
+  .compare tr,
+  .compare td {
+    display: block;
+    width: 100%;
+  }
+  .compare tr {
+    border-bottom: 2px solid var(--line);
+    padding: 14px 0;
+  }
+  .compare-self tr,
+  .compare tr.compare-self {
+    border-bottom: 2px solid var(--ledger);
+  }
+  .compare td {
+    border: none;
+    padding: 3px 0;
+  }
+  /* Each cell gets its column name back as a label, since the header row is hidden. */
+  .compare td:nth-child(1)::before {
+    content: "Layer";
+  }
+  .compare td:nth-child(2)::before {
+    content: "Standard";
+  }
+  .compare td:nth-child(3)::before {
+    content: "Handles";
+  }
+  .compare td:nth-child(4)::before {
+    content: "Dispute resolution";
+  }
+  .compare td::before {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin-bottom: 1px;
+  }
+  .compare td:first-child {
+    font-weight: 600;
+  }
+
+  .stats {
+    gap: 22px 30px;
+  }
+  .stat-value {
+    font-size: 24px;
+  }
+
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Touch targets: 44px is the accessibility floor. */
+  .btn,
+  .nav-cta,
+  .site-nav a,
+  button {
+    min-height: 44px;
+  }
+  .btn-sm,
+  .chip-btn {
+    min-height: 36px;
+  }
+
+  .seal {
+    width: 148px;
+    height: 148px;
+  }
+  .seal .verdict-word {
+    font-size: 17px;
+  }
+
+  .toast {
+    padding: 14px;
+  }
+  .toast-body {
+    min-width: 0;
+  }
+  .lifecycle-row {
+    font-size: 12.5px;
+  }
+}
+
+/* Very narrow phones (e.g. 320px) still need to not overflow. */
+@media (max-width: 360px) {
+  :root {
+    --shell-pad: 14px;
+  }
+  .site-nav a {
+    font-size: 12.5px;
+  }
+  .seal {
+    width: 132px;
+    height: 132px;
   }
 }
 
@@ -404,6 +647,14 @@ h3 {
     transition-duration: 0.001ms !important;
   }
 }
+/* ---------- form grids ---------- */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0 20px;
+}
+
 /* ---------- tabs & filters ---------- */
 
 .tabs {

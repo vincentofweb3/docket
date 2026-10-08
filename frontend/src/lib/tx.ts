@@ -157,7 +157,7 @@ export async function runWrite(opts: {
         hash,
         message:
           "Validators didn't reach a majority after all leader rotations. The network will " +
-          "retry adjudication with a new leader — no action is needed from you.",
+          "retry adjudication with a new leader - no action is needed from you.",
       });
       return;
     }
@@ -173,7 +173,7 @@ export async function runWrite(opts: {
     kind: "undetermined",
     hash,
     message:
-      "Still awaiting consensus after several minutes. The transaction is live on-chain — " +
+      "Still awaiting consensus after several minutes. The transaction is live on-chain - " +
       "open it in the explorer rather than resubmitting, or you risk paying twice.",
   });
 }

@@ -27,10 +27,13 @@
 .seal.reject {
   border-color: var(--danger);
 }
-.seal.undecided {
+.seal-undecided {
   border-color: var(--line);
   opacity: 1;
   transform: rotate(-6deg) scale(0.86);
+}
+.seal-undecided::before {
+  border-color: var(--line);
 }
 .seal.shown {
   transform: rotate(-6deg) scale(1);
@@ -55,7 +58,7 @@
 .seal.reject .verdict-word {
   color: var(--danger);
 }
-.seal.undecided .verdict-word {
+.seal-undecided .verdict-word {
   color: var(--muted);
   font-size: 15px;
 }
@@ -71,4 +74,11 @@
   color: var(--muted);
   margin-top: 6px;
   letter-spacing: 0.05em;
+}
+
+/* `.seal.shown` sets scale(1)/opacity 1, so the undecided modifier needs to come after it to keep
+ * its muted scale. Declared last deliberately. */
+.seal-undecided.shown {
+  transform: rotate(-6deg) scale(0.86);
+  opacity: 1;
 }

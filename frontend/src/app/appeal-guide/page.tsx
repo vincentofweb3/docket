@@ -20,7 +20,7 @@ export default function AppealGuidePage() {
       <h1>Appealing a verdict</h1>
       <p className="lede">
         If you think validators reached the wrong verdict, you can challenge the decision during
-        its appeal window. The appeal is adjudicated by GenLayer itself — it is not a Docket
+        its appeal window. The appeal is adjudicated by GenLayer itself - it is not a Docket
         feature, and the contract has no appeal method.
       </p>
 
@@ -41,7 +41,7 @@ export default function AppealGuidePage() {
             recomputation. If it matches, the appeal fails and the original result stands.
           </li>
           <li>
-            Once no valid appeal remains, anyone can finalize — and the result becomes final and
+            Once no valid appeal remains, anyone can finalize - and the result becomes final and
             unappealable.
           </li>
         </ol>
@@ -53,7 +53,7 @@ export default function AppealGuidePage() {
           <>
             <p className="muted">{appeal.message}</p>
             <p className="muted">
-              Read the charge immediately before submitting — it is a function of the current
+              Read the charge immediately before submitting - it is a function of the current
               round, never a fixed bond.
             </p>
           </>

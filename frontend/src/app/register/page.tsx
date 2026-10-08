@@ -39,7 +39,7 @@ export default async function RegisterPage() {
         <h1>Every job has a scope. Docket settles whether it was met.</h1>
         <p className="lede">
           Escrow the payment, write the scope of work in plain language, and let decentralized
-          AI-validator consensus — not a platform, not either party — decide whether the job was
+          AI-validator consensus - not a platform, not either party - decide whether the job was
           done. This register is read live from the contract at{" "}
           <Link href={network.explorerAddressUrl(CONTRACT_ADDRESS)} className="mono">
             {CONTRACT_ADDRESS.slice(0, 10)}…{CONTRACT_ADDRESS.slice(-6)}

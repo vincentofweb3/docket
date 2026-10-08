@@ -128,6 +128,17 @@ conservative: it has not been observed to credit a worker balance there, so the 
 it until someone watches one rise.
 - **Write paths are untested end-to-end** — they need a GenLayer Snap, which cannot be automated
   here. Everything read-only is verified against the live deployment.
+- **Responsive layout is enforced by a test, not by eye.** `tests/responsive.test.ts` statically
+  asserts the four breakpoint tiers, that the register reflows, that the standards comparison
+  table becomes per-record cards with its column labels restored, that key/value rows stack, that
+  no fixed width exceeds 360px, and that every `className` in a component has a matching CSS rule.
+  That last check earned its place: it caught `.form-grid` (used by the create form, styled
+  nowhere) and a `seal-undecided` / `.seal.undecided` naming mismatch that meant the undecided
+  verdict stamp never picked up its muted styling on any screen size.
+
+  This is static analysis, not a rendered-pixel check — it runs in CI with no browser, and it
+  cannot catch everything an unbreakable long string in real content would cause.
+
 - **Next.js is pinned exactly, not caret-ranged.** Vercel refuses to deploy a build containing a
   Next.js version flagged by its security scan, so a floating `^16` could resolve into a future
   advisory and break deploys for a reason unrelated to this code. Upgrade deliberately and re-verify

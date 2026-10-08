@@ -34,7 +34,7 @@ export default async function ReputationPage({
       </h1>
       <p className="lede">
         Written by the contract itself as dockets resolve. Read-only, and readable by any
-        address or future identity system — nobody can edit it.
+        address or future identity system - nobody can edit it.
       </p>
 
       <div className="panel">

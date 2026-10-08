@@ -1,10 +1,20 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import "./globals.css";
 // Global stylesheets must be imported from the app root in the App Router.
 import "@/components/tx.css";
 import "@/components/seal.css";
 import { network } from "@/lib/config";
+
+/**
+ * Explicit viewport. Next supplies a default, but this app reflows at 980/700/520/360px and
+ * states the intent rather than relying on it.
+ */
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
   title: "Docket — deliverable escrow and spec-compliance adjudication",
@@ -35,7 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <footer className="site-footer">
           <span>
             Docket is an independent open-source project built on GenLayer. It is not a legal
-            arbitrator — read the scope of work before posting or claiming. Live on{" "}
+            arbitrator - read the scope of work before posting or claiming. Live on{" "}
             <strong>{network.label}</strong>.
           </span>
           <span className="mono">

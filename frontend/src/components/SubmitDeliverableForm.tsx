@@ -81,7 +81,7 @@ export function SubmitDeliverableForm({ docketId }: { docketId: number }) {
 
       <p className="hint muted">
         Validators fetch these URLs independently during adjudication. Link to something
-        durable and public — a deployed endpoint, a published document, a repository.
+        durable and public - a deployed endpoint, a published document, a repository.
       </p>
 
       {urls.map((u, i) => (
@@ -118,7 +118,7 @@ export function SubmitDeliverableForm({ docketId }: { docketId: number }) {
       <div className="field" style={{ marginTop: 20 }}>
         <label htmlFor="note">Note to the client (optional)</label>
         <p className="hint">
-          Context only. This is not evidence — validators judge the URLs, not this.
+          Context only. This is not evidence - validators judge the URLs, not this.
         </p>
         <textarea
           id="note"

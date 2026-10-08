@@ -65,15 +65,15 @@ export default async function ResultPage({ params }: { params: Promise<{ id: str
         <div>
           <div className="eyebrow">
             {expired
-              ? "Expired — escrow refunded"
+              ? "Expired - escrow refunded"
               : disputed
                 ? "Resolved via validator consensus"
-                : "Settled — deliverable accepted"}
+                : "Settled - deliverable accepted"}
           </div>
           <h2 className="stage-headline">
             {expired
-              ? `Escrow refunded — ${formatGen(docket.amount)} to client`
-              : `Escrow released — ${formatGen(payout)} to worker, ${formatGen(refund)} refunded`}
+              ? `Escrow refunded - ${formatGen(docket.amount)} to client`
+              : `Escrow released - ${formatGen(payout)} to worker, ${formatGen(refund)} refunded`}
           </h2>
           <p className="muted stage-body">
             {expired

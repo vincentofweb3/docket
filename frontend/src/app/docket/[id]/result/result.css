@@ -35,3 +35,13 @@
 .small {
   font-size: 12.5px;
 }
+/* Result-page pieces that assume a wide viewport. */
+@media (max-width: 700px) {
+  .case-stage {
+    padding: 20px 18px;
+  }
+  .unmet-list,
+  .evidence-list {
+    padding-left: 16px;
+  }
+}
