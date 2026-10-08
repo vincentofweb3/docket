@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { TxStatusToast } from "@/components/TxStatusToast";
+import { NetworkWarning } from "@/components/NetworkWarning";
 import { runWrite, type TxPhase } from "@/lib/tx";
 import { detectInjectedProvider } from "@/lib/wallet";
 import { useWallet } from "@/lib/wallet-context";
@@ -20,7 +21,7 @@ const GEN = 10n ** 18n;
  */
 export function CreateDocketForm() {
   const router = useRouter();
-  const { account, connect, hasWallet } = useWallet();
+  const { account, connect, hasWallet, provider } = useWallet();
   const [sow, setSow] = useState("");
   const [criteria, setCriteria] = useState("");
   const [threshold, setThreshold] = useState("50");
@@ -89,6 +90,7 @@ export function CreateDocketForm() {
 
   return (
     <div className="panel">
+      <NetworkWarning provider={provider} />
       <TxStatusToast phase={phase} />
 
       <div className="field">
@@ -121,7 +123,10 @@ export function CreateDocketForm() {
       <div className="form-grid">
         <div className="field">
           <label htmlFor="amount">Escrow amount (GEN)</label>
-          <p className="hint">Held by the contract, released by verdict.</p>
+          <p className="hint">
+            Held by the contract, released by verdict. Paid in GEN on the active network —
+            this is real value once the app is pointed at a funded network.
+          </p>
           <input
             id="amount"
             type="number"

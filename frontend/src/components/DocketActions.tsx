@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { TxStatusToast } from "@/components/TxStatusToast";
+import { NetworkWarning } from "@/components/NetworkWarning";
 import { runWrite, type TxPhase } from "@/lib/tx";
 import { useWallet } from "@/lib/wallet-context";
 import { detectInjectedProvider } from "@/lib/wallet";
@@ -32,7 +33,7 @@ export function DocketActions({
   worker?: string;
 }) {
   const router = useRouter();
-  const { hasWallet, account, connect } = useWallet();
+  const { hasWallet, account, connect, provider } = useWallet();
   const [phase, setPhase] = useState<TxPhase>({ kind: "idle" });
   const [busy, setBusy] = useState(false);
 
@@ -86,6 +87,7 @@ export function DocketActions({
     <div className="panel">
       <h2>Actions</h2>
 
+      <NetworkWarning provider={provider} />
       <TxStatusToast phase={phase} />
 
       {!account ? (

@@ -170,6 +170,41 @@ describe("navigation affordance", () => {
   });
 });
 
+describe("fund-safety guards", () => {
+  /**
+   * Regression guard for a real incident: with the wallet left on Ethereum mainnet the app asked
+   * the user to sign "send 250 ETH" (~$603,000) to a GenLayer contract address. GEN and ETH are
+   * both 18-decimal, so the escrow amount renders as the same number of a different token and
+   * nothing in the wallet popup distinguishes them.
+   */
+  it("refuses to write when the wallet is on a different chain", () => {
+    const w = readFileSync(join(SRC, "lib", "wallet-write.ts"), "utf8");
+    expect(w).toMatch(/assertCorrectChain/);
+    expect(w).toMatch(/WrongNetworkError/);
+    // Checked before the wallet is asked to sign, not after.
+    const guardAt = w.indexOf("await assertCorrectChain(provider);");
+    const sendAt = w.indexOf('method: "eth_sendTransaction"');
+    expect(guardAt).toBeGreaterThan(-1);
+    expect(guardAt).toBeLessThan(sendAt);
+    // And again immediately before broadcasting, in case the chain changed meanwhile.
+    expect(w.match(/assertCorrectChain\(provider\)/g)?.length ?? 0).toBeGreaterThanOrEqual(2);
+  });
+
+  it("refuses to escrow more than the account holds", () => {
+    const w = readFileSync(join(SRC, "lib", "wallet-write.ts"), "utf8");
+    expect(w).toMatch(/balance < value/);
+  });
+
+  it("shows the wrong-network banner on every screen that can sign", () => {
+    for (const f of ["CreateDocketForm.tsx", "DocketActions.tsx", "SubmitDeliverableForm.tsx"]) {
+      expect(readFileSync(join(SRC, "components", f), "utf8"), f).toMatch(/NetworkWarning/);
+    }
+    expect(readFileSync(join(SRC, "app", "connect-wallet", "page.tsx"), "utf8")).toMatch(
+      /NetworkWarning/,
+    );
+  });
+});
+
 describe("components only reference classes that exist", () => {
   /**
    * `.form-grid` shipped in the create-docket form with no matching rule anywhere, so its

@@ -135,6 +135,31 @@ The footer is a four-column reference block over a base rule — Product / Learn
 brand column — kept ruled and flat so it matches the register instead of becoming a separate visual
 language.
 
+## Fund safety: the wrong-network guard
+
+`src/lib/wallet-write.ts` refuses to write unless the wallet is on the expected chain, and it is
+checked **twice** — before the wallet is ever asked to sign, and again immediately before
+broadcasting, in case the chain changed while the prompt was open.
+
+This exists because of a real incident. With the wallet left on Ethereum mainnet, the app asked the
+user to sign "send 250 ETH" (~$603,000) to `0xb7278A61aa25c888815aFC32Ad3cC52fF24fE575` — a GenLayer
+address that is not a contract on that chain, where nothing can recover the funds. **GEN and ETH are
+both 18-decimal**, so an escrow of 250 GEN renders as "250 ETH" on the wrong network and the wallet
+popup shows the number, not the token. Nothing in that popup distinguishes them.
+
+So the app now:
+
+- throws `WrongNetworkError` before signing, naming both chains and what went wrong
+- renders a `NetworkWarning` banner on every screen that can sign, with a one-click network switch
+- shows expected network, actual chain id, and native balance on `/connect-wallet`
+- refuses to escrow more than the account holds, instead of letting it revert for a confusing reason
+
+`tests/responsive.test.ts` guards the ordering (guard before `eth_sendTransaction`) so the check
+cannot be moved after the fact.
+
+MetaMask also disables **Sign** on a chain it cannot simulate, which is normal for a custom
+network. If the button stays disabled on the correct GenLayer chain, check the account balance first.
+
 ## Network support
 
 Bradbury (`https://rpc-bradbury.genlayer.com`, chainId 4221) is reachable and **is** usable, with

@@ -250,3 +250,71 @@
 .undetermined p:last-child {
   margin: 0;
 }
+/* --- wrong-network guard ---
+ * Deliberately the loudest thing on the page. A mistaken signature here sends real value to an
+ * address that is not a contract on the wallet's chain. */
+.network-warning {
+  background: rgba(156, 59, 46, 0.07);
+  border: 1px solid rgba(156, 59, 46, 0.4);
+  border-left-width: 4px;
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  margin-bottom: 22px;
+}
+.nw-head strong {
+  color: var(--danger);
+  font-size: 14px;
+}
+.network-warning p {
+  margin: 8px 0 14px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #7a4038;
+  max-width: 70ch;
+}
+.nw-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.nw-hint {
+  font-size: 11.5px;
+  color: var(--muted);
+}
+.nw-error {
+  margin: 12px 0 0;
+  font-size: 12.5px;
+  color: var(--danger);
+}
+
+/* --- network/balance summary on the connect page --- */
+.net-summary {
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+  padding: 14px 0 4px;
+}
+.net-summary .item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.net-summary .item .label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.net-summary .item .value {
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
+.net-summary .item .value.ok {
+  color: var(--evidence-teal);
+}
+.net-summary .item .value.bad {
+  color: var(--danger);
+  font-weight: 600;
+}

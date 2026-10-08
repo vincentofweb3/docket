@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { TxStatusToast } from "@/components/TxStatusToast";
+import { NetworkWarning } from "@/components/NetworkWarning";
 import { MAX_EVIDENCE_URLS } from "@/lib/config";
 import { useWallet } from "@/lib/wallet-context";
 import { sendContractWrite } from "@/lib/wallet-write";
@@ -19,7 +20,7 @@ import { detectInjectedProvider } from "@/lib/wallet";
  */
 export function SubmitDeliverableForm({ docketId }: { docketId: number }) {
   const router = useRouter();
-  const { account, connect } = useWallet();
+  const { account, connect, provider } = useWallet();
   const [urls, setUrls] = useState<string[]>([""]);
   const [note, setNote] = useState("");
   const [phase, setPhase] = useState<TxPhase>({ kind: "idle" });
@@ -80,6 +81,7 @@ export function SubmitDeliverableForm({ docketId }: { docketId: number }) {
 
   return (
     <div className="panel">
+      <NetworkWarning provider={provider} />
       <TxStatusToast phase={phase} />
 
       <p className="hint muted">

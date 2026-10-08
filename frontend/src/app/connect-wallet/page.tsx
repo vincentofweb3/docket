@@ -4,9 +4,20 @@ import Link from "next/link";
 import "@/components/tx.css";
 import { network } from "@/lib/config";
 import { shortAccount, useWallet } from "@/lib/wallet-context";
+import { NetworkWarning } from "@/components/NetworkWarning";
+import { useChainState } from "@/lib/chain-state";
 
 export default function ConnectWalletPage() {
-  const { hasWallet, account, connecting, error, connect, disconnect } = useWallet();
+  const { hasWallet, account, connecting, error, connect, disconnect, provider } = useWallet();
+  const { chainId, onExpectedNetwork, balance } = useChainState(provider);
+  const fmt = (wei: bigint | null) => {
+    if (wei == null) return "—";
+    const whole = wei / 10n ** 18n;
+    const frac = wei % 10n ** 18n;
+    if (whole === 0n) return `${frac} wei`;
+    const f = frac.toString().padStart(18, "0").replace(/0+$/, "");
+    return f ? `${whole}.${f} GEN` : `${whole} GEN`;
+  };
 
   return (
     <div className="shell shell-narrow">
@@ -18,6 +29,8 @@ export default function ConnectWalletPage() {
       </p>
 
       <div style={{ height: 20 }} />
+
+      {hasWallet !== null ? <NetworkWarning provider={provider} /> : null}
 
       {hasWallet === null ? (
         <div className="panel">
@@ -43,8 +56,35 @@ export default function ConnectWalletPage() {
             <span className="v">{account}</span>
           </div>
           <div className="kv">
-            <span className="k">Network</span>
-            <span className="v">{network.label}</span>
+            <span className="k">Expected network</span>
+            <span className="v">
+              {network.label} · chain id {network.chainId}
+            </span>
+          </div>
+          <div className="kv">
+            <span className="k">Your wallet is on</span>
+            <span className="v">
+              {chainId == null ? "unknown" : `chain id ${chainId}`}{" "}
+              {onExpectedNetwork === true ? "✓" : onExpectedNetwork === false ? "✗" : ""}
+            </span>
+          </div>
+          <div className="kv">
+            <span className="k">Balance</span>
+            <span className="v">{fmt(balance)}</span>
+          </div>
+          <div className="net-summary">
+            <div className="item">
+              <span className="label">Network check</span>
+              <span className={`value ${onExpectedNetwork ? "ok" : "bad"}`}>
+                {onExpectedNetwork === null ? "…" : onExpectedNetwork ? "correct" : "wrong network"}
+              </span>
+            </div>
+            <div className="item">
+              <span className="label">Can post an escrow?</span>
+              <span className={`value ${balance == null || balance === 0n ? "bad" : "ok"}`}>
+                {balance == null ? "—" : balance === 0n ? "no — 0 GEN" : "yes"}
+              </span>
+            </div>
           </div>
           <p className="muted">
             Your dockets are on the <Link href="/my-dockets">My Dockets</Link> page, split by
