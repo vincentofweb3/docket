@@ -11,9 +11,10 @@ export const dynamic = "force-dynamic";
  * against the rate limit, hence the 60s memo in scanAllDocketsCached — and hence it lives on the
  * server rather than in the browser.
  */
-export async function GET() {
+export async function GET(req: Request) {
+  const requestNonce = Number(req.headers.get("x-docket-scan-nonce") ?? 0);
   try {
-    const scanned = await scanAllDocketsCached();
+    const scanned = await scanAllDocketsCached(requestNonce);
     return NextResponse.json({
       dockets: scanned.map(({ id, docket }) => ({ id, docket: serialise(docket) })),
     });

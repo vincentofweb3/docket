@@ -4,10 +4,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { TxStatusToast } from "@/components/TxStatusToast";
 import { MAX_EVIDENCE_URLS } from "@/lib/config";
+import { useWallet } from "@/lib/wallet-context";
+import { sendContractWrite } from "@/lib/wallet-write";
+import { invalidateDocketScan } from "@/lib/scan-cache";
 import { runWrite, type TxPhase } from "@/lib/tx";
 import { detectInjectedProvider } from "@/lib/wallet";
-
-const CONTRACT = process.env.NEXT_PUBLIC_DOCKET_CONTRACT_ADDRESS as `0x${string}`;
 
 /**
  * Submit a deliverable against evidence URLs.
@@ -18,6 +19,7 @@ const CONTRACT = process.env.NEXT_PUBLIC_DOCKET_CONTRACT_ADDRESS as `0x${string}
  */
 export function SubmitDeliverableForm({ docketId }: { docketId: number }) {
   const router = useRouter();
+  const { account, connect } = useWallet();
   const [urls, setUrls] = useState<string[]>([""]);
   const [note, setNote] = useState("");
   const [phase, setPhase] = useState<TxPhase>({ kind: "idle" });
@@ -45,6 +47,14 @@ export function SubmitDeliverableForm({ docketId }: { docketId: number }) {
     }
     setError(null);
 
+    if (!account) {
+      setPhase({
+        kind: "failed",
+        code: null,
+        message: "Connect the wallet that claimed this docket to submit against it.",
+      });
+      return;
+    }
     const provider = detectInjectedProvider();
     if (!provider) {
       setPhase({ kind: "failed", code: null, message: "No wallet detected." });
@@ -52,27 +62,20 @@ export function SubmitDeliverableForm({ docketId }: { docketId: number }) {
     }
 
     setBusy(true);
-    await runWrite({
+    const outcome = await runWrite({
       title: "Submitting deliverable",
-      send: async () => {
-        // Ask the wallet to sign from its own selected account.
-        const accounts = (await provider.request({ method: "eth_accounts" })) as string[];
-        return (await provider.request({
-          method: "genlayer_sendTransaction",
-          params: [
-            {
-              to: CONTRACT,
-              from: accounts[0],
-              method: "submit_deliverable",
-              args: [docketId, cleaned, note],
-            },
-          ],
-        })) as string;
-      },
+      send: () =>
+        sendContractWrite(provider, account as `0x${string}`, {
+          method: "submit_deliverable",
+          args: [docketId, cleaned, note],
+        }),
       onPhase: setPhase,
     });
     setBusy(false);
-    router.refresh();
+    if (outcome.ok) {
+      invalidateDocketScan();
+      router.refresh();
+    }
   };
 
   return (

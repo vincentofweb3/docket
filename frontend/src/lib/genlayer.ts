@@ -8,6 +8,19 @@
  */
 import { createClient } from "genlayer-js";
 import { localnet, studionet, testnetBradbury } from "genlayer-js/chains";
+import * as genlayerJs from "genlayer-js";
+
+/**
+ * Shape of the SDK's calldata helpers, declared loosely because `CalldataAddress` is not exported
+ * from the package root (see address.server.ts) so the real types are not reachable.
+ */
+type CalldataNs = {
+  encode: (obj: unknown) => number[];
+  makeCalldataObject: (method: string, args?: unknown[]) => unknown;
+};
+
+/** `serialize` is exported from abi.transactions, not abi.calldata — verified at runtime. */
+type SerializeNs = { serialize: (data: unknown[]) => `0x${string}` };
 import { CONTRACT_ADDRESS, network } from "./config";
 import type { Docket } from "./docket";
 
@@ -197,14 +210,74 @@ const FALLBACK_CEILING = 12;
  * far fresher than any cached-forever figure. In-process only: fine for a single deployment, and
  * documented as such rather than pretending to be a distributed cache.
  */
-let scanCache: { at: number; value: { id: number; docket: Docket }[] } | null = null;
+let scanCache: {
+  at: number;
+  nonce: number;
+  value: { id: number; docket: Docket }[];
+} | null = null;
 const SCAN_TTL_MS = 60_000;
 
-export async function scanAllDocketsCached(): Promise<{ id: number; docket: Docket }[]> {
-  if (scanCache && Date.now() - scanCache.at < SCAN_TTL_MS) return scanCache.value;
+/**
+ * Invalidate the memo from a write.
+ *
+ * Without this, posting a docket leaves it invisible for up to the memo's 60s lifetime, which reads
+ * to the user as "my post didn't save". `nonce` lets a scan request that began before the write
+ * detect that it is holding pre-write state.
+ */
+export function invalidateScan(nonce = 0): void {
+  scanCache = null;
+  lastInvalidationNonce = Math.max(lastInvalidationNonce, nonce);
+}
+
+let lastInvalidationNonce = 0;
+
+/** Nonce of the most recent invalidation, so a stale in-flight scan can be discarded. */
+export function scanInvalidationNonce(): number {
+  return lastInvalidationNonce;
+}
+
+export async function scanAllDocketsCached(
+  requestNonce = 0,
+): Promise<{ id: number; docket: Docket }[]> {
+  // A scan requested before the last invalidation is looking at pre-write state; refresh it.
+  const stale = requestNonce > 0 && requestNonce < lastInvalidationNonce;
+  if (!stale && scanCache && Date.now() - scanCache.at < SCAN_TTL_MS) return scanCache.value;
   const value = await scanAllDockets();
-  scanCache = { at: Date.now(), value };
+  scanCache = { at: Date.now(), nonce: requestNonce, value };
   return value;
+}
+
+/**
+ * Encode a contract call the way the protocol expects it in an EVM transaction.
+ *
+ * A GenLayer write is not a direct call to the contract: it is an EVM transaction to the chain's
+ * consensus main contract whose `data` is the RLP-serialized contract calldata. Mirrors what
+ * genlayer-js does internally in `writeContract` — `[encode(makeCalldataObject(...)), leaderOnly]`
+ * passed through `serialize` — so the SDK remains the single source of truth for the encoding.
+ *
+ * Exported because the browser cannot import genlayer-js (it is deliberately server-external), so
+ * the wallet path gets its payload from /api/encode instead.
+ */
+export function encodeContractCall(
+  functionName: string,
+  args: unknown[],
+  leaderOnly = false,
+): string {
+  const ns = genlayerJs as unknown as {
+    abi?: { calldata?: CalldataNs; transactions?: SerializeNs };
+    calldata?: CalldataNs;
+    transactions?: SerializeNs;
+  };
+  const cd = ns.abi?.calldata ?? ns.calldata;
+  const tx = ns.abi?.transactions ?? ns.transactions;
+  if (!cd?.encode || !cd?.makeCalldataObject) {
+    throw new Error("genlayer-js calldata helpers are unavailable; cannot encode a write.");
+  }
+  if (!tx?.serialize) {
+    throw new Error("genlayer-js serialize is unavailable; cannot encode a write.");
+  }
+  const encoded = cd.encode(cd.makeCalldataObject(functionName, args));
+  return tx.serialize([encoded, leaderOnly]);
 }
 
 export type { Client };

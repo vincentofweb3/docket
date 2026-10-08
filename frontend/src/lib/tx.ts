@@ -99,6 +99,10 @@ function statusNameOf(tx: unknown): TxStatus {
  * visible, and a disputed adjudication legitimately takes minutes. `waitForTransactionReceipt`
  * would hide all of it behind one spinner.
  */
+export type WriteOutcome =
+  | { ok: true; hash: string }
+  | { ok: false; hash: string | null; reason: string; code: string | null };
+
 export async function runWrite(opts: {
   title: string;
   /** Submit the transaction. The browser does this through an injected wallet. */
@@ -106,7 +110,7 @@ export async function runWrite(opts: {
   onPhase: (phase: TxPhase) => void;
   /** Give up after this long. Adjudication rounds are slow but not unbounded. */
   timeoutMs?: number;
-}): Promise<void> {
+}): Promise<WriteOutcome> {
   const { title, send, onPhase } = opts;
 
   onPhase({ kind: "sending", title });
@@ -116,12 +120,9 @@ export async function runWrite(opts: {
     hash = (await send()) as string;
   } catch (err) {
     const code = extractErrorCode(err);
-    onPhase({
-      kind: "failed",
-      code,
-      message: code ?? (err as Error)?.message ?? "The transaction was not accepted.",
-    });
-    return;
+    const message = (err as Error)?.message ?? "The transaction was not accepted.";
+    onPhase({ kind: "failed", code, message: code ?? message });
+    return { ok: false, hash: null, reason: message, code };
   }
 
   const timeoutMs = opts.timeoutMs ?? 15 * 60_000;
@@ -149,7 +150,7 @@ export async function runWrite(opts: {
 
     if (status === TX_STATUS.FINALIZED) {
       onPhase({ kind: "finalized", hash });
-      return;
+      return { ok: true, hash };
     }
     if (status === TX_STATUS.UNDETERMINED) {
       onPhase({
@@ -159,23 +160,21 @@ export async function runWrite(opts: {
           "Validators didn't reach a majority after all leader rotations. The network will " +
           "retry adjudication with a new leader - no action is needed from you.",
       });
-      return;
+      return { ok: false, hash, reason: "Adjudication is undetermined.", code: null };
     }
     if (status === TX_STATUS.CANCELED) {
       onPhase({ kind: "failed", code: null, message: "The transaction was canceled." });
-      return;
+      return { ok: false, hash, reason: "The transaction was canceled.", code: null };
     }
 
     await sleep(3000);
   }
 
-  onPhase({
-    kind: "undetermined",
-    hash,
-    message:
-      "Still awaiting consensus after several minutes. The transaction is live on-chain - " +
-      "open it in the explorer rather than resubmitting, or you risk paying twice.",
-  });
+  const timeoutMessage =
+    "Still awaiting consensus after several minutes. The transaction is live on-chain - " +
+    "open it in the explorer rather than resubmitting, or you risk paying twice.";
+  onPhase({ kind: "undetermined", hash, message: timeoutMessage });
+  return { ok: false, hash, reason: timeoutMessage, code: null };
 }
 
 export const explorerTxUrl = (hash: string) => network.explorerTxUrl(hash);

@@ -3,11 +3,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { TxStatusToast } from "@/components/TxStatusToast";
-import { MAX_EVIDENCE_URLS } from "@/lib/config";
 import { runWrite, type TxPhase } from "@/lib/tx";
-import { detectInjectedProvider, type Eip1193Provider } from "@/lib/wallet";
+import { detectInjectedProvider } from "@/lib/wallet";
+import { useWallet } from "@/lib/wallet-context";
+import { sendContractWrite } from "@/lib/wallet-write";
+import { invalidateDocketScan } from "@/lib/scan-cache";
 
-const CONTRACT = process.env.NEXT_PUBLIC_DOCKET_CONTRACT_ADDRESS as `0x${string}`;
 const GEN = 10n ** 18n;
 
 /**
@@ -19,6 +20,7 @@ const GEN = 10n ** 18n;
  */
 export function CreateDocketForm() {
   const router = useRouter();
+  const { account, connect, hasWallet } = useWallet();
   const [sow, setSow] = useState("");
   const [criteria, setCriteria] = useState("");
   const [threshold, setThreshold] = useState("50");
@@ -44,38 +46,45 @@ export function CreateDocketForm() {
 
   const submit = async () => {
     if (!validate()) return;
+    if (!account) {
+      setPhase({
+        kind: "failed",
+        code: null,
+        message: "Connect a GenLayer-enabled wallet before posting — posting a docket requires signing the escrow.",
+      });
+      return;
+    }
     const provider = detectInjectedProvider();
     if (!provider) {
-      setPhase({ kind: "failed", code: null, message: "No wallet detected. Connect a GenLayer-enabled wallet first." });
+      setPhase({ kind: "failed", code: null, message: "No wallet detected." });
       return;
     }
     setBusy(true);
     const deadline = BigInt(Math.floor(Date.now() / 1000) + Number(days) * 86400);
     const bp = Math.round(Number(threshold) * 100); // contract takes basis points
 
-    await runWrite({
+    const outcome = await runWrite({
       title: "Posting docket",
-      send: async () => {
-        // Ask the wallet to sign from its own selected account.
-        const accounts = (await provider.request({ method: "eth_accounts" })) as string[];
-        const hash = await provider.request({
-          method: "genlayer_sendTransaction",
-          params: [
-            {
-              to: CONTRACT,
-              from: accounts[0],
-              method: "create_docket",
-              args: [sow.trim(), criteria.trim(), bp, deadline],
-              value: BigInt(amount) * GEN,
-            },
-          ],
-        });
-        return hash as string;
-      },
+      send: () =>
+        sendContractWrite(provider, account as `0x${string}`, {
+          method: "create_docket",
+          args: [sow.trim(), criteria.trim(), bp, deadline.toString()],
+          value: BigInt(amount) * GEN,
+        }),
       onPhase: setPhase,
     });
     setBusy(false);
-    if (phase.kind !== "failed") router.push("/my-dockets");
+
+    // Only navigate once the transaction actually finalized. The previous version read `phase`
+    // after awaiting, which is a stale closure, so a failed post still redirected and looked
+    // successful — the exact symptom reported.
+    if (outcome.ok) {
+      // The new docket id cannot be read from the transaction (the SDK does not surface a
+      // method's return value either), so drop the cached docket scan and let My Dockets
+      // re-read it. Otherwise the new docket stays invisible for up to a minute.
+      invalidateDocketScan();
+      router.push("/my-dockets");
+    }
   };
 
   return (
@@ -157,18 +166,4 @@ export function CreateDocketForm() {
       </button>
     </div>
   );
-}
-
-/** Shared by the deliverable form; kept here to avoid a second wallet-import site. */
-export async function sendMethod(
-  provider: Eip1193Provider,
-  account: string,
-  method: string,
-  args: unknown[],
-  value = 0n,
-): Promise<string> {
-  return (await provider.request({
-    method: "genlayer_sendTransaction",
-    params: [{ to: CONTRACT, from: account, method, args, value }],
-  })) as string;
 }

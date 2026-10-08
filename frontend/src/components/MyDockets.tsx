@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useWallet } from "@/lib/wallet-context";
+import { scanNonceHeaders } from "@/lib/scan-cache";
 import { STATUS_LABEL, docketRef, formatGen, relativeDeadline, type Docket } from "@/lib/docket";
 
 /** Docket as it arrives over JSON, with BigInt fields as decimal strings. */
@@ -42,7 +43,7 @@ export function MyDockets() {
         // address. The contract has no index-by-address read, and Studionet allows only 30 RPC
         // requests/minute, so this is explicitly a recent-window scan.
         const me = account.toLowerCase();
-        const res = await fetch("/api/dockets/scan");
+        const res = await fetch("/api/dockets/scan", { headers: scanNonceHeaders(), cache: "no-store" });
         if (!res.ok) throw new Error((await res.json()).error ?? "scan failed");
         const { dockets } = (await res.json()) as {
           dockets: { id: number; docket: WireDocket }[];

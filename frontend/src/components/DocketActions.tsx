@@ -5,7 +5,9 @@ import { useRouter } from "next/navigation";
 import { TxStatusToast } from "@/components/TxStatusToast";
 import { runWrite, type TxPhase } from "@/lib/tx";
 import { useWallet } from "@/lib/wallet-context";
-import { detectInjectedProvider, type Eip1193Provider } from "@/lib/wallet";
+import { detectInjectedProvider } from "@/lib/wallet";
+import { sendContractWrite } from "@/lib/wallet-write";
+import { invalidateDocketScan } from "@/lib/scan-cache";
 import { STATUS } from "@/lib/docket";
 import { network } from "@/lib/config";
 
@@ -52,18 +54,27 @@ export function DocketActions({
 
   const doWrite = async (
     title: string,
-    fn: (provider: Eip1193Provider, account: string) => Promise<unknown>,
+    method: string,
+    args: unknown[],
+    value?: bigint,
   ) => {
-    setBusy(true);
     const provider = detectInjectedProvider();
-    const resolved = account;
-    if (!provider || !resolved) {
-      setBusy(false);
+    if (!provider || !account) {
+      setPhase({ kind: "failed", code: null, message: "Connect a wallet first." });
       return;
     }
-    await runWrite({ title, send: () => fn(provider, resolved), onPhase: setPhase });
+    setBusy(true);
+    const outcome = await runWrite({
+      title,
+      send: () =>
+        sendContractWrite(provider, account as `0x${string}`, { method, args, value }),
+      onPhase: setPhase,
+    });
     setBusy(false);
-    router.refresh();
+    if (outcome.ok) {
+      invalidateDocketScan();
+      router.refresh();
+    }
   };
 
   if (hasWallet === null) return null;
@@ -92,11 +103,7 @@ export function DocketActions({
             <button
               className="btn"
               disabled={busy || isClient}
-              onClick={() =>
-                doWrite("Claiming docket", (p, a) =>
-                  sendWrite(p, a, "claim_docket", [docketId]),
-                )
-              }
+              onClick={() => doWrite("Claiming docket", "claim_docket", [docketId])}
             >
               Claim this docket
             </button>
@@ -109,9 +116,7 @@ export function DocketActions({
               <button
                 className="btn btn-danger"
                 disabled={busy}
-                onClick={() =>
-                  doWrite("Reclaiming escrow", (p, a) => sendWrite(p, a, "refund_expired", [docketId]))
-                }
+                onClick={() => doWrite("Reclaiming escrow", "refund_expired", [docketId])}
               >
                 Reclaim escrowed funds
               </button>
@@ -135,9 +140,7 @@ export function DocketActions({
               <button
                 className="btn btn-danger"
                 disabled={busy}
-                onClick={() =>
-                  doWrite("Reclaiming escrow", (p, a) => sendWrite(p, a, "refund_expired", [docketId]))
-                }
+                onClick={() => doWrite("Reclaiming escrow", "refund_expired", [docketId])}
               >
                 Reclaim escrowed funds
               </button>
@@ -157,22 +160,14 @@ export function DocketActions({
                 <button
                   className="btn"
                   disabled={busy}
-                  onClick={() =>
-                    doWrite("Accepting deliverable", (p, a) =>
-                      sendWrite(p, a, "accept_deliverable", [docketId]),
-                    )
-                  }
+                  onClick={() => doWrite("Accepting deliverable", "accept_deliverable", [docketId])}
                 >
                   Accept &amp; release escrow
                 </button>
                 <button
                   className="btn btn-danger"
                   disabled={busy}
-                  onClick={() =>
-                    doWrite("Disputing deliverable", (p, a) =>
-                      sendWrite(p, a, "dispute_deliverable", [docketId]),
-                    )
-                  }
+                  onClick={() => doWrite("Disputing deliverable", "dispute_deliverable", [docketId])}
                 >
                   Dispute - have validators judge it
                 </button>
@@ -202,26 +197,4 @@ export function DocketActions({
       )}
     </div>
   );
-}
-
-/**
- * Send an Intelligent Contract write through the injected wallet.
- *
- * genlayer-js's `metamaskClient` only reports whether the GenLayer Snap is installed; it does
- * not sign, so the raw transaction goes through the EIP-1193 provider directly. The exact
- * request shape depends on the wallet's GenLayer support, so this is deliberately thin and
- * reports failures rather than pretending success.
- */
-async function sendWrite(
-  provider: Eip1193Provider,
-  account: string,
-  method: string,
-  args: unknown[],
-): Promise<string> {
-  const payload = { to: process.env.NEXT_PUBLIC_DOCKET_CONTRACT_ADDRESS, method, args, from: account };
-  const result = (await provider.request({
-    method: "genlayer_sendTransaction",
-    params: [payload],
-  })) as string;
-  return result;
 }
