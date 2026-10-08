@@ -12,7 +12,7 @@ export default function NewDocketPage() {
       <h1>Post a docket</h1>
       <p className="lede">
         Escrow the payment and write the scope in plain language. If you and the worker later
-        disagree about whether the job was done, validators fetch the evidence and decide — not
+        disagree about whether the job was done, validators fetch the evidence and decide - not
         either of you.
       </p>
 

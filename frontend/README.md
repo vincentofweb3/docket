@@ -47,8 +47,10 @@ user would otherwise be misled.
 | `/dockets/new` | `design/create-docket.html` | — | `create_docket` |
 | `/my-dockets` | `design/my-dockets.html` | bounded id scan | — |
 | `/reputation/[address]` | `design/reputation.html` | `get_reputation` | — |
+| `/how-it-works` | new | — | — |
 | `/appeal-guide` | `design/appeal.html` | — | native appeal (unsupported on Studionet) |
-| `/connect-wallet` | `design/connect-wallet.html` | — | wallet connect |
+| `/connect-wallet` | `design/connect-wallet.html` | — | wallet connect / disconnect |
+| `/reputation` | `design/reputation.html` | — | — |
 
 `design/states.html` and `design/components.html` are component references rather than routes;
 their patterns are implemented in `src/components/TxStatusToast.tsx` and `globals.css`.
@@ -107,6 +109,31 @@ completeness.
   `gen_canAppeal` all return -32601, and this SDK version does not implement the documented
   `getAppealCharge` API. `/appeal-guide` explains the mechanism and reports the gap rather than
   wiring a button to an RPC that does not exist.
+
+## Wallet handling
+
+`src/lib/wallet-context.tsx` owns the single wallet state shared by the nav, the docket action
+buttons and My Dockets, so they cannot disagree about whether a wallet is attached. It listens for
+`accountsChanged`, so switching accounts in the wallet updates the UI without a reload — otherwise
+a stale address would keep rendering the previous account's dockets.
+
+Disconnect prefers the standard EIP-2255 `wallet_revokePermissions`. Wallets that do not implement
+revocation fall back to clearing local state, which is the most that can honestly be done: there is
+no server-side session to destroy.
+
+An earlier duplicate `WalletConnect` component was removed so there is one connect implementation
+rather than two.
+
+## Navigation and footer
+
+The connect control sits in the nav against the paper background, so it is a **white surface with a
+ledger hairline** rather than the solid ink fill used for primary in-page actions. Nav links carry
+no underline on hover — affordance comes from colour, because the connect button is itself an
+`<a>` inside `.site-nav`, so an underline rule there would also strike through the button.
+
+The footer is a four-column reference block over a base rule — Product / Learn / Project plus a
+brand column — kept ruled and flat so it matches the register instead of becoming a separate visual
+language.
 
 ## Network support
 

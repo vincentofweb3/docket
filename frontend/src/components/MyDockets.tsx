@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { currentAccount, detectInjectedProvider } from "@/lib/wallet";
+import { useWallet } from "@/lib/wallet-context";
 import { STATUS_LABEL, docketRef, formatGen, relativeDeadline, type Docket } from "@/lib/docket";
 
 /** Docket as it arrives over JSON, with BigInt fields as decimal strings. */
@@ -24,18 +24,12 @@ const fromWire = (d: WireDocket): Docket => ({
 type Row = { id: number; docket: Docket; role: "client" | "worker" };
 
 export function MyDockets() {
-  const [account, setAccount] = useState<string | null>(null);
-  const [hasWallet, setHasWallet] = useState<boolean | null>(null);
+  const { hasWallet, account, connect } = useWallet();
   const [rows, setRows] = useState<Row[]>([]);
   const [scanning, setScanning] = useState(false);
   const [tab, setTab] = useState<"client" | "worker">("client");
   const [filter, setFilter] = useState<"active" | "all">("active");
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    setHasWallet(Boolean(detectInjectedProvider()));
-    currentAccount().then(setAccount);
-  }, []);
 
   useEffect(() => {
     if (!account) return;

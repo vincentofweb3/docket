@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { TxStatusToast } from "@/components/TxStatusToast";
 import { runWrite, type TxPhase } from "@/lib/tx";
+import { useWallet } from "@/lib/wallet-context";
 import { detectInjectedProvider, type Eip1193Provider } from "@/lib/wallet";
 import { STATUS } from "@/lib/docket";
 import { network } from "@/lib/config";
@@ -29,13 +30,11 @@ export function DocketActions({
   worker?: string;
 }) {
   const router = useRouter();
-  const [account, setAccount] = useState<string | null>(null);
+  const { hasWallet, account, connect } = useWallet();
   const [phase, setPhase] = useState<TxPhase>({ kind: "idle" });
   const [busy, setBusy] = useState(false);
 
-  const hasWallet = typeof window !== "undefined" && Boolean(detectInjectedProvider());
-
-  if (!hasWallet) {
+  if (hasWallet === false) {
     return (
       <div className="wallet-gate">
         <h3>Connect a wallet to act on this docket</h3>
@@ -51,20 +50,23 @@ export function DocketActions({
     );
   }
 
-  const doWrite = async (title: string, fn: (provider: Eip1193Provider, account: string) => Promise<unknown>) => {
+  const doWrite = async (
+    title: string,
+    fn: (provider: Eip1193Provider, account: string) => Promise<unknown>,
+  ) => {
     setBusy(true);
     const provider = detectInjectedProvider();
-    if (!provider) {
+    const resolved = account;
+    if (!provider || !resolved) {
       setBusy(false);
       return;
     }
-    const resolved =
-      account ?? ((await provider.request({ method: "eth_accounts" })) as string[])[0];
-    setAccount(resolved ?? null);
     await runWrite({ title, send: () => fn(provider, resolved), onPhase: setPhase });
     setBusy(false);
     router.refresh();
   };
+
+  if (hasWallet === null) return null;
 
   const isClient = Boolean(account && client && account.toLowerCase() === client.toLowerCase());
   const isWorker = Boolean(account && worker && account.toLowerCase() === worker.toLowerCase());
@@ -77,16 +79,7 @@ export function DocketActions({
 
       {!account ? (
         <div className="action-row">
-          <button
-            className="btn"
-            onClick={async () => {
-              const provider = detectInjectedProvider();
-              const accs = (await provider?.request({ method: "eth_requestAccounts" })) as string[];
-              setAccount(accs?.[0] ?? null);
-              router.refresh();
-            }}
-            disabled={busy}
-          >
+          <button className="btn" onClick={connect} disabled={busy}>
             Connect to see your actions
           </button>
           <span className="muted">

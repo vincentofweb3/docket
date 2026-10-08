@@ -80,22 +80,24 @@ a {
   gap: 22px;
   flex-wrap: wrap;
 }
+/* Nav links must never show an underline, on hover or otherwise. The nav-cta is itself an
+ * <a> inside .site-nav, so any underline rule here would also strike through the connect button.
+ * Affordance comes from colour instead. */
 .site-nav a {
   color: var(--ink);
   text-decoration: none;
   font-size: 14px;
+  transition: color 0.12s ease;
 }
 .site-nav a:hover {
-  text-decoration: underline;
-  text-decoration-color: var(--ledger);
+  color: var(--ledger);
+  text-decoration: none;
 }
 .site-nav a[aria-current="page"] {
   color: var(--ledger);
-  text-decoration: underline;
-  text-decoration-color: var(--ledger);
+  font-weight: 500;
 }
 
-.nav-cta,
 .btn {
   font-family: var(--font-body);
   background: var(--ledger);
@@ -110,8 +112,65 @@ a {
   display: inline-block;
   line-height: 1.3;
 }
-.btn:hover,
+
+/* Connect wallet sits in the nav against the paper background, so it is a light surface with a
+ * ledger hairline rather than the solid ink fill used for primary in-page actions. */
+.nav-cta {
+  font-family: var(--font-body);
+  background: #fff;
+  color: var(--ledger);
+  border: 1px solid var(--ledger);
+  padding: 8px 17px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-block;
+  line-height: 1.3;
+  white-space: nowrap;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
 .nav-cta:hover {
+  background: #fff;
+  border-color: var(--ink);
+  color: var(--ink);
+  text-decoration: none;
+}
+.nav-cta.connected {
+  background: transparent;
+  border-color: var(--line);
+  color: var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 5px 6px 5px 12px;
+}
+.nav-cta.connected:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+.nav-cta.connected .addr {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+}
+.nav-cta .disconnect {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  color: var(--muted);
+  padding: 3px 8px;
+  cursor: pointer;
+  line-height: 1.2;
+}
+.nav-cta .disconnect:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+.btn:hover {
   background: #16304f;
 }
 .btn:disabled {
@@ -141,15 +200,113 @@ a {
   font-size: 13px;
 }
 
+/* Footer: a four-column reference block over a base rule. Kept ruled and flat to match the
+ * register rather than becoming a separate visual language. */
 .site-footer {
-  padding: 32px var(--shell-pad);
-  border-top: 1px solid var(--line);
+  padding: 44px var(--shell-pad) 28px;
+  border-top: 2px solid var(--ink);
+  margin-top: 40px;
+  font-size: 13px;
+  color: var(--muted);
+  display: grid;
+  grid-template-columns: 1.6fr repeat(3, 1fr);
+  gap: 36px 32px;
+}
+
+.footer-brand {
+  max-width: 34ch;
+}
+.footer-mark {
+  font-size: 19px;
+  margin-bottom: 10px;
+}
+.footer-tagline {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #3a3d45;
+  margin: 0 0 10px;
+}
+.footer-note {
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.footer-col h2 {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin: 0 0 2px;
+}
+.footer-col a {
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 13px;
+  width: fit-content;
+}
+.footer-col a:hover {
+  color: var(--ledger);
+  text-decoration: none;
+}
+.footer-live {
   font-size: 12px;
   color: var(--muted);
+  margin-top: 4px;
+}
+.footer-live strong {
+  color: var(--evidence-teal);
+  font-weight: 500;
+}
+
+.footer-base {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
   display: flex;
   justify-content: space-between;
-  gap: 24px;
+  gap: 16px;
   flex-wrap: wrap;
+  font-size: 11.5px;
+  color: var(--faint);
+}
+.footer-base a {
+  color: var(--muted);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.footer-base a:hover {
+  color: var(--ledger);
+}
+
+@media (max-width: 980px) {
+  .site-footer {
+    grid-template-columns: 1fr 1fr;
+    gap: 30px 24px;
+  }
+  .footer-brand {
+    grid-column: 1 / -1;
+    max-width: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .site-footer {
+    grid-template-columns: 1fr;
+    padding: 32px var(--shell-pad) 22px;
+    gap: 26px;
+  }
+  .footer-base {
+    flex-direction: column;
+    gap: 8px;
+  }
 }
 
 /* ---------- type ---------- */

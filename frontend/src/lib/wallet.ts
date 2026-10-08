@@ -16,6 +16,9 @@ export type Signer = {
 
 export type Eip1193Provider = {
   request(args: { method: string; params?: unknown[] | object }): Promise<unknown>;
+  /** Injected providers are EIP-1193 event emitters; optional because not all wallets expose it. */
+  on?: (event: string, listener: (...args: unknown[]) => void) => void;
+  removeListener?: (event: string, listener: (...args: unknown[]) => void) => void;
 };
 
 declare global {
