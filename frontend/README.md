@@ -1,6 +1,6 @@
 # Docket Frontend
 
-Next.js 15 (App Router) + TypeScript frontend for Docket, wired to the Intelligent Contract
+Next.js 16 (App Router) + TypeScript frontend for Docket, wired to the Intelligent Contract
 deployed on GenLayer Studionet at
 `0xb1a3778a3B11E0eD000bB24DF06108caDfd7729B`.
 
@@ -128,3 +128,7 @@ conservative: it has not been observed to credit a worker balance there, so the 
 it until someone watches one rise.
 - **Write paths are untested end-to-end** — they need a GenLayer Snap, which cannot be automated
   here. Everything read-only is verified against the live deployment.
+- **Next.js is pinned exactly, not caret-ranged.** Vercel refuses to deploy a build containing a
+  Next.js version flagged by its security scan, so a floating `^16` could resolve into a future
+  advisory and break deploys for a reason unrelated to this code. Upgrade deliberately and re-verify
+  the build.
