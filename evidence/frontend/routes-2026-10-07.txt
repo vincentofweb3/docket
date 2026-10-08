@@ -53,3 +53,32 @@ and an operator. No attempt was made to bypass it.
 Also fixed: frontend/src/lib/config.ts had guessed Bradbury's chainId (61999) and RPC host
 (bradbury.genlayer.com) wrong. Corrected to 4221 / rpc-bradbury.genlayer.com from the
 genlayer-js chain definition, verified live.
+
+--------------------------------------------------------------------------------
+Responsive pass — 2026-10-07
+--------------------------------------------------------------------------------
+
+Breakpoint tiers now declared explicitly in frontend/src/app/globals.css:
+  <=980px  register condenses 5 ruled columns to 3
+  <=700px  key/value rows stack; forms single column; nav wraps
+  <=520px  register fully stacked; comparison table becomes per-record cards;
+           tap targets grow to 44px
+  <=360px  tightest phones do not overflow
+
+Viewport declared explicitly in layout.tsx (was relying on Next's default).
+
+Verified: build clean, typecheck clean, 21/21 vitest tests pass (10 contract-parity
++ 11 responsive), every route 200 against live Studionet.
+
+NOT VERIFIED: rendered-pixel behaviour at each breakpoint. The Windows headless
+browser used for measurement would not bind its DevTools port to an address
+reachable from this WSL shell (tried 127.0.0.1 and the host gateway), so the
+responsive assertions are static analysis of the stylesheets rather than a
+measurement of a rendered viewport. The user should eyeball the deployed build on
+a real phone; the likely remaining candidates for visual review are the register
+row at the 980px tier and the comparison-table cards at 520px.
+
+Bugs fixed during this pass, both of which affected desktop too:
+- VerdictSeal.tsx applied "seal-undecided" while seal.css styled ".seal.undecided",
+  so the undecided stamp never got its muted border/opacity/scale
+- .form-grid used by the create-docket form had no CSS rule anywhere
