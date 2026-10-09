@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Docket">
+  <rect width="64" height="64" rx="12" fill="#1f3a5f" />
+  <path
+    fill="#eeede7"
+    fill-rule="evenodd"
+    d="M16.5 15h11a17 17 0 0 1 0 34h-11zM22.5 21h5a11 11 0 0 1 0 22h-5z" />
+  <circle cx="48" cy="42" r="4" fill="#b8862e" />
+</svg>
