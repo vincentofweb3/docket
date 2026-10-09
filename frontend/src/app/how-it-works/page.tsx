@@ -56,8 +56,8 @@ export default function HowItWorksPage() {
             <div>
               <h3>They submit evidence URLs</h3>
               <p>
-                The deliverable is public links — a deployed endpoint, a published document, a
-                repository — not a description. Validators fetch these themselves rather than
+                The deliverable is public links - a deployed endpoint, a published document, a
+                repository - not a description. Validators fetch these themselves rather than
                 taking anyone&apos;s word. <Link href="/my-dockets">Track it as the worker &rarr;</Link>
               </p>
             </div>
@@ -79,7 +79,7 @@ export default function HowItWorksPage() {
               <h3>The escrow settles from the verdict</h3>
               <p>
                 <strong>Full</strong> pays the worker everything. <strong>Partial</strong> pays
-                the score as a percentage — unless it falls below your threshold, in which case it
+                the score as a percentage - unless it falls below your threshold, in which case it
                 refunds in full. <strong>Reject</strong> refunds the client in full. If the
                 deadline passes with no deliverable, anyone can refund the escrow.
               </p>

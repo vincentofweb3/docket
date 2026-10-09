@@ -210,7 +210,7 @@ export default async function HomePage() {
             No account needed to browse. Connect a wallet when you&apos;re ready to post or claim work.
           </p>
           <div className="hero-actions">
-            <Link className="btn" href="/dockets/new">
+            <Link className="btn" href="/dockets/new" style={{ paddingRight: '20px' }}>
               Post a docket
             </Link>
             <Link className="btn btn-ghost" href="/register">

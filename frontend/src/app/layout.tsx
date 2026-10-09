@@ -66,7 +66,7 @@ function Footer() {
         </p>
         <p className="footer-note">
           Docket is an independent open-source project. It is not a legal arbitrator and does not
-          make a result binding outside the escrow it settles — read the scope of work before
+          make a result binding outside the escrow it settles - read the scope of work before
           posting or claiming.
         </p>
       </div>
