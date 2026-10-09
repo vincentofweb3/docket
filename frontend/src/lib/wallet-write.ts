@@ -124,8 +124,13 @@ export async function sendContractWrite(
     throw new Error(payload.error ?? "Could not prepare this transaction.");
   }
 
-  // The escrow itself must be covered, or the write will revert for a confusing reason.
-  if (value > 0n) {
+  // Balance pre-check, only where the network actually requires funds.
+  //
+  // It was originally unconditional, which was wrong: on Studionet an account holding 0 GEN
+  // successfully created a 420 GEN escrow and gasPrice is 0, so the network simulates value
+  // transfers. The check therefore refused transactions the chain accepts and blocked the demo.
+  // Bradbury is a real testnet and does need a funded account, so it is enforced there.
+  if (value > 0n && network.requiresEscrowFunds) {
     const balance = await nativeBalance(provider, from);
     if (balance < value) {
       throw new Error(
@@ -138,7 +143,10 @@ export async function sendContractWrite(
   // Chain can change while the wallet prompt is open.
   await assertCorrectChain(provider);
 
-  const hash = (await provider.request({
+  // Bound the wallet handshake. Some wallet builds leave the request promise pending (for example
+  // when the confirmation window is dismissed without a response), which previously left the UI
+  // stuck on "signing with your wallet" indefinitely and hid whatever the wallet had decided.
+  const request = provider.request({
     method: "eth_sendTransaction",
     params: [
       {
@@ -149,7 +157,26 @@ export async function sendContractWrite(
         gas: payload.gas,
       },
     ],
-  })) as `0x${string}`;
+  }) as Promise<`0x${string}`>;
+
+  const TIMEOUT_MS = 5 * 60_000;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const hash = (await Promise.race([
+    request,
+    new Promise<never>((_, reject) => {
+      timer = setTimeout(
+        () =>
+          reject(
+            new Error(
+              `The wallet did not return a response within ${TIMEOUT_MS / 60_000} minutes. ` +
+                "If you approved the transaction, check your wallet's activity for the hash — " +
+                "the write may still be settling on-chain.",
+            ),
+          ),
+        TIMEOUT_MS,
+      );
+    }),
+  ]).finally(() => clearTimeout(timer))) as `0x${string}`;
 
   if (!hash || !/^0x[0-9a-fA-F]{64}$/.test(hash)) {
     throw new Error(

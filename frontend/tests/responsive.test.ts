@@ -190,9 +190,23 @@ describe("fund-safety guards", () => {
     expect(w.match(/assertCorrectChain\(provider\)/g)?.length ?? 0).toBeGreaterThanOrEqual(2);
   });
 
-  it("refuses to escrow more than the account holds", () => {
+  it("refuses to escrow more than the account holds only where funds are required", () => {
     const w = readFileSync(join(SRC, "lib", "wallet-write.ts"), "utf8");
     expect(w).toMatch(/balance < value/);
+    // Unconditional, this check refused transactions Studionet accepts: an account holding
+    // 0 GEN created a 420 GEN escrow there, because gas is free and value is simulated.
+    expect(w).toMatch(/network\.requiresEscrowFunds/);
+  });
+
+  it("marks Studionet as not requiring escrow funds, Bradbury as requiring them", () => {
+    const cfg = readFileSync(join(SRC, "lib", "config.ts"), "utf8");
+    const studionetBlock = cfg.slice(cfg.indexOf("studionet: {"), cfg.indexOf('"testnet-bradbury": {'));
+    const bradburyBlock = cfg.slice(
+      cfg.indexOf('"testnet-bradbury": {'),
+      cfg.indexOf("localnet: {"),
+    );
+    expect(studionetBlock).toMatch(/requiresEscrowFunds:\s*false/);
+    expect(bradburyBlock).toMatch(/requiresEscrowFunds:\s*true/);
   });
 
   it("shows the wrong-network banner on every screen that can sign", () => {

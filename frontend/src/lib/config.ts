@@ -27,6 +27,16 @@ export type NetworkConfig = {
    */
   creditsEoaPayouts: boolean;
   /**
+   * Whether an account must actually hold GEN to escrow it.
+   *
+   * Verified 2026-10-07 on Studionet: an account with a 0 GEN balance successfully created a
+   * docket carrying a 420 GEN escrow, and gasPrice is 0. The network simulates value transfers, so
+   * pre-checking the balance here would refuse a transaction that the chain accepts — which it
+   * did, blocking the whole demo. Bradbury is a real testnet and does require funds.
+   */
+  requiresEscrowFunds: boolean;
+
+  /**
    * Appeal capability, in three states, because "works" and "absent" are not the only options:
    *  - "absent":  the network exposes no appeal RPCs at all. Verified on Studionet, where
    *               gen_appealTransaction / gen_getAppealCharge / gen_canAppeal all return -32601
@@ -48,6 +58,7 @@ const NETWORKS: Record<NetworkId, NetworkConfig> = {
     explorerTxUrl: (h) => `https://explorer-studio.genlayer.com/tx/${h}`,
     explorerAddressUrl: (a) => `https://explorer-studio.genlayer.com/address/${a}`,
     creditsEoaPayouts: false,
+    requiresEscrowFunds: false,
     appealSupport: "absent",
   },
   "testnet-bradbury": {
@@ -64,6 +75,9 @@ const NETWORKS: Record<NetworkId, NetworkConfig> = {
     // payout or an appeal that has not actually been observed. Flip these only after watching a
     // worker balance rise, or a real appeal succeed, on Bradbury.
     creditsEoaPayouts: false,
+    // gasPrice is 0 and a 0-balance account escrowed 420 GEN successfully (verified 2026-10-07).
+    // Bradbury is a real testnet: not gasless, and deploying or posting needs a funded account.
+    requiresEscrowFunds: true,
     // Contracts are deployed and answer eth_call (verified 2026-10-07), but no appeal has been
     // driven end-to-end because there is no funded Bradbury account to deploy with yet.
     appealSupport: "present",
@@ -76,6 +90,7 @@ const NETWORKS: Record<NetworkId, NetworkConfig> = {
     explorerTxUrl: (h) => `http://127.0.0.1:4000/tx/${h}`,
     explorerAddressUrl: (a) => `http://127.0.0.1:4000/address/${a}`,
     creditsEoaPayouts: true,
+    requiresEscrowFunds: false,
     appealSupport: "working",
   },
 };

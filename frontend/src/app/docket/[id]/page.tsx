@@ -125,7 +125,13 @@ export default async function DocketPage({ params }: { params: Promise<{ id: str
           </p>
         </div>
       ) : (
-        <DocketActions docketId={docketId} status={docket.status} deadlinePassed={deadlinePassed} />
+        <DocketActions
+          docketId={docketId}
+          status={docket.status}
+          deadlinePassed={deadlinePassed}
+          client={docket.client}
+          worker={docket.worker}
+        />
       )}
 
       <p className="muted mono contract-note">
