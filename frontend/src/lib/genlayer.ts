@@ -9,6 +9,7 @@
 import { createClient } from "genlayer-js";
 import { localnet, studionet, testnetBradbury } from "genlayer-js/chains";
 import * as genlayerJs from "genlayer-js";
+import { encodeFunctionData } from "viem";
 
 /**
  * Shape of the SDK's calldata helpers, declared loosely because `CalldataAddress` is not exported
@@ -248,15 +249,15 @@ export async function scanAllDocketsCached(
 }
 
 /**
- * Encode a contract call the way the protocol expects it in an EVM transaction.
+ * Encode a contract call into the serialized form that rides inside `addTransaction`.
  *
- * A GenLayer write is not a direct call to the contract: it is an EVM transaction to the chain's
- * consensus main contract whose `data` is the RLP-serialized contract calldata. Mirrors what
- * genlayer-js does internally in `writeContract` — `[encode(makeCalldataObject(...)), leaderOnly]`
- * passed through `serialize` — so the SDK remains the single source of truth for the encoding.
+ * This produces only the inner `_txData` blob. On its own it carries no contract address, so it is
+ * not broadcastable — use `encodeWriteTransaction`, which wraps this and names the Docket
+ * contract. Kept exported because the encoding itself is worth asserting directly in tests.
  *
- * Exported because the browser cannot import genlayer-js (it is deliberately server-external), so
- * the wallet path gets its payload from /api/encode instead.
+ * The SDK remains the single source of truth for the encoding: this is
+ * `[encode(makeCalldataObject(...)), leaderOnly]` passed through `serialize`, exactly what
+ * genlayer-js does internally.
  */
 export function encodeContractCall(
   functionName: string,
@@ -279,5 +280,103 @@ export function encodeContractCall(
   const encoded = cd.encode(cd.makeCalldataObject(functionName, args));
   return tx.serialize([encoded, leaderOnly]);
 }
+
+/**
+ * Build the complete, broadcastable payload for a write to the Docket contract.
+ *
+ * A GenLayer write is not a direct call to the deployed contract. Every write is an EVM transaction
+ * whose `to` is the chain's consensus main contract, and the real destination travels inside the
+ * calldata as `addTransaction(_sender, _recipient, ...)`. The `_recipient` field is what actually
+ * identifies the contract being called.
+ *
+ * Emitting only the inner calldata was a real bug: the payload then carried no contract address at
+ * all, so it could not complete the Docket lifecycle and read identically to a call against any
+ * other contract. This function wraps the calldata so the Docket address is in the payload.
+ *
+ * Mirrors genlayer-js's internal `_encodeAddTransactionData`, including its choice between the
+ * five-argument and six-argument (`_validUntil`) forms based on the deployed ABI, so this cannot
+ * drift from the chain it targets. The recipient is always `CONTRACT_ADDRESS` from config and is
+ * never caller-supplied, so this cannot be pointed at an arbitrary contract.
+ */
+export function encodeWriteTransaction(params: {
+  from: `0x${string}`;
+  functionName: string;
+  args: unknown[];
+  leaderOnly?: boolean;
+}): { to: `0x${string}`; data: `0x${string}` } {
+  const { from, functionName, args, leaderOnly = false } = params;
+  const chain =
+    network.id === "studionet"
+      ? studionet
+      : network.id === "testnet-bradbury"
+        ? testnetBradbury
+        : localnet;
+
+  const consensusAddress = chain.consensusMainContract?.address as `0x${string}` | undefined;
+  if (!consensusAddress) {
+    throw new Error(`Chain "${chain.name}" has no consensus main contract configured.`);
+  }
+
+  const addTransactionInputs = (
+    chain.consensusMainContract?.abi as { name?: string; inputs?: unknown[] }[] | undefined
+  )?.find((fn) => fn.name === "addTransaction")?.inputs;
+
+  const base = [
+    from,
+    CONTRACT_ADDRESS,
+    BigInt(chain.defaultNumberOfInitialValidators),
+    BigInt(chain.defaultConsensusMaxRotations),
+    encodeContractCall(functionName, args, leaderOnly) as `0x${string}`,
+  ] as const;
+
+  const data =
+    Array.isArray(addTransactionInputs) && addTransactionInputs.length >= 6
+      ? encodeFunctionData({
+          abi: ADD_TRANSACTION_ABI_V6,
+          functionName: "addTransaction",
+          args: [...base, BigInt(Math.floor(Date.now() / 1000) + 3600)],
+        })
+      : encodeFunctionData({
+          abi: ADD_TRANSACTION_ABI_V5,
+          functionName: "addTransaction",
+          args: [...base],
+        });
+
+  return { to: consensusAddress, data };
+}
+
+/** `addTransaction` ABI shapes, matching genlayer-js's ADD_TRANSACTION_ABI_V5/V6. */
+const ADD_TRANSACTION_ABI_V5 = [
+  {
+    type: "function",
+    name: "addTransaction",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "_sender", type: "address" },
+      { name: "_recipient", type: "address" },
+      { name: "_numOfInitialValidators", type: "uint256" },
+      { name: "_maxRotations", type: "uint256" },
+      { name: "_txData", type: "bytes" },
+    ],
+    outputs: [],
+  },
+] as const;
+
+const ADD_TRANSACTION_ABI_V6 = [
+  {
+    type: "function",
+    name: "addTransaction",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "_sender", type: "address" },
+      { name: "_recipient", type: "address" },
+      { name: "_numOfInitialValidators", type: "uint256" },
+      { name: "_maxRotations", type: "uint256" },
+      { name: "_txData", type: "bytes" },
+      { name: "_validUntil", type: "uint256" },
+    ],
+    outputs: [],
+  },
+] as const;
 
 export type { Client };
