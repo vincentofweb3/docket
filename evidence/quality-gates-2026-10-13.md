@@ -1,5 +1,11 @@
 # Quality gates — 2026-10-13
 
+> **SUPERSEDED IN PART — read `quality-gates-2026-10-13b.md` first.**
+> The green run recorded here could **not** see a defect that was live at the time: the write
+> lifecycle was non-functional because `/api/tx` returned a numeric `status` while `tx.ts`
+> compared against name strings. These tests passed because their fixture fed the convenient string
+> shape. This file is left unmodified as the historical record; the later file is the accurate one.
+
 Full gate chain in CLAUDE.md order, run end to end. Contract source was NOT modified in this
 cycle, so `sha256(contracts/docket.py)` is unchanged and the deployed address remains valid.
 

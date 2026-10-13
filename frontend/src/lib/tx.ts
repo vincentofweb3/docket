@@ -71,6 +71,72 @@ const RESULT_REASON: Record<number, string> = {
 };
 
 /**
+ * The wire shape `/api/tx/[hash]` returns.
+ *
+ * `status` is a NAME because that is what this module compares against; `result` is a NUMBER
+ * because {@link evaluateFinalized} compares against numeric codes. Both are load-bearing — see
+ * normaliseTxStatus for why the status has to be converted rather than passed through.
+ */
+export type TxWire = { status: string | null; result: number | null };
+
+/**
+ * Convert a GenLayer transaction's `status` to its name, the form this module compares against.
+ *
+ * `client.getTransaction()` returns `status` as a NUMBER — verified live on Studionet, where a
+ * finalized transaction reports `status: 7` — and exposes the readable form separately as
+ * `statusName`, which the SDK derives itself via `transactionsStatusNumberToName`
+ * (genlayer-js dist/index.js:1502-1503). Its own code does `Number(transaction.status)`
+ * (dist/index.js:742 and :812).
+ *
+ * This exists as a shared, testable function rather than inline logic in the route handler because
+ * getting it wrong is silent and total: a number reaching `status === TX_STATUS.FINALIZED` makes
+ * every comparison false, so a write that succeeded on chain is reported to the user as a
+ * 15-minute timeout. That bug shipped once already, and a test that stubbed the convenient string
+ * shape rather than the real wire shape could not see it.
+ *
+ * `statusName` is preferred because it is authoritative, including on Localnet where the SDK
+ * rewrites the name (dist/index.js:1316-1319). The numeric fallback exists for a response that
+ * carries `status` without `statusName`.
+ */
+export function normaliseTxStatus(tx: {
+  status?: number | string | null;
+  statusName?: string | null;
+}): TxStatus | null {
+  const name =
+    typeof tx.statusName === "string" && tx.statusName.length > 0
+      ? tx.statusName
+      : typeof tx.status === "string"
+        ? tx.status
+        : typeof tx.status === "number"
+          ? TX_STATUS_NUMBER_TO_NAME[tx.status]
+          : undefined;
+  if (name === undefined) return null;
+  // Unknown names (a future protocol status, or Localnet's ACTIVATED) are passed through as-is:
+  // callers treat them as "not terminal" and keep polling, which is the safe failure mode. The
+  // cast is deliberate and bounded — it is not hiding a number/string mismatch, since both
+  // branches above have already produced a string.
+  return name as TxStatus;
+}
+
+/** Protocol status number to name, from genlayer-js `transactionsStatusNumberToName`. */
+export const TX_STATUS_NUMBER_TO_NAME: Record<number, TxStatus> = {
+  0: "UNINITIALIZED",
+  1: "PENDING",
+  2: "PROPOSING",
+  3: "COMMITTING",
+  4: "REVEALING",
+  5: "ACCEPTED",
+  6: "UNDETERMINED",
+  7: "FINALIZED",
+  8: "CANCELED",
+  9: "APPEAL_REVEALING",
+  10: "APPEAL_COMMITTING",
+  11: "READY_TO_FINALIZE",
+  12: "VALIDATORS_TIMEOUT",
+  13: "LEADER_TIMEOUT",
+};
+
+/**
  * Whether a FINALIZED transaction actually executed its contract call.
  *
  * `status === FINALIZED` alone is not success. FINALIZED is a statement about finality, not about
@@ -213,17 +279,18 @@ export async function runWrite(opts: {
     // Status is read server-side: the SDK never ships to the browser, and the RPC rate limit is
     // shared rather than per-visitor. `result` is read alongside `status` because FINALIZED alone
     // does not mean the contract call succeeded — see evaluateFinalized.
-    let tx: { status?: string; result?: number | null } | null = null;
+    let tx: TxWire | null = null;
     try {
       const res = await fetch(`/api/tx/${hash}`);
-      tx = res.ok
-        ? ((await res.json()) as { status?: string; result?: number | null })
-        : null;
+      tx = res.ok ? ((await res.json()) as TxWire) : null;
     } catch {
       tx = null;
     }
 
-    const status = tx?.status as TxStatus | undefined;
+    // The endpoint normalises status to a name; normaliseTxStatus is applied again here as a
+    // defensive measure so a number can never reach a `status === TX_STATUS.X` comparison even if
+    // the route regresses. This exact mismatch shipped once and silently broke every write path.
+    const status = tx?.status ? normaliseTxStatus({ status: tx.status }) : null;
     if (status && status !== lastStatus) {
       lastStatus = status;
       onPhase({ kind: "tracking", hash, status, since: started });
