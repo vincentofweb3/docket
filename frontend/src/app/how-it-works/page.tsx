@@ -110,8 +110,8 @@ export default function HowItWorksPage() {
             Write about HTTP{"\n"}- Should be good quality{"\n"}- Reasonable length
           </p>
           <p className="hint muted">
-            The second version cannot be checked. Validators will rule on taste, and the docket
-            becomes a coin flip between the two of you.
+            The second version cannot be checked. Validators would have to rule on taste, which
+            leaves an unresolvable disagreement between the two of you rather than a finding.
           </p>
         </div>
       </section>

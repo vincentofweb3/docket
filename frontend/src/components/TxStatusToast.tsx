@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { LIFECYCLE_STAGES, TX_STATUS, explorerTxUrl, type TxPhase, type TxStatus } from "@/lib/tx";
+import { network } from "@/lib/config";
 import { ERROR_COPY, unknownErrorCopy } from "@/lib/docket";
 
 /**
@@ -151,7 +152,11 @@ function stageTitle(status: TxStatus) {
 
 function stageDetail(status: TxStatus) {
   if (status === TX_STATUS.ACCEPTED || status === TX_STATUS.READY_TO_FINALIZE) {
-    return "Validators agreed. The result becomes final when the appeal window closes — it can still be appealed until then.";
+    // Only mention the appeal window where the network actually has one. On Studionet the appeal
+    // RPCs are all absent (-32601), so promising a window that cannot be used is a false claim.
+    return network.appealSupport === "absent"
+      ? "Validators agreed. The result becomes final once the network finalizes it."
+      : "Validators agreed. The result becomes final when the appeal window closes — it can still be appealed until then.";
   }
   if (status === TX_STATUS.VALIDATORS_TIMEOUT) {
     return "The committee didn't act in time. The protocol automatically retries with a fresh committee; nothing is required from you.";

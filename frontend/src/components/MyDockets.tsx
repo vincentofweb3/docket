@@ -4,7 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useWallet } from "@/lib/wallet-context";
 import { scanNonceHeaders } from "@/lib/scan-cache";
-import { STATUS_LABEL, docketRef, formatGen, relativeDeadline, type Docket } from "@/lib/docket";
+import { STATUS, STATUS_LABEL, docketRef, formatGen, relativeDeadline, type Docket } from "@/lib/docket";
+import { CHIP_CLASS } from "@/lib/status-chip";
 
 /** Docket as it arrives over JSON, with BigInt fields as decimal strings. */
 type WireDocket = Omit<Docket, "amount" | "deadline" | "created_at" | "resolved_at"> & {
@@ -66,7 +67,17 @@ export function MyDockets() {
   }, [account]);
 
   const visible = useMemo(() => {
-    const ACTIVE = new Set([0, 1, 2, 3, 4]);
+    // Built from STATUS rather than a literal list, so contract-parity.test.ts can assert this
+    // set matches the contract's status enum. A re-literalised `[0,1,2,3,4]` is invisible to that
+    // test and silently drifts when a status is added.
+    const ACTIVE = new Set<number>([
+      STATUS.OPEN,
+      STATUS.CLAIMED,
+      STATUS.SUBMITTED,
+      STATUS.ADJUDICATING,
+      STATUS.RESOLVED,
+      STATUS.ACCEPTED_FAST_PATH,
+    ]);
     return rows.filter(
       (r) => r.role === tab && (filter === "all" || ACTIVE.has(r.docket.status)),
     );
@@ -166,8 +177,11 @@ export function MyDockets() {
               <p className="row-title">{d.sow_text}</p>
               <p className="row-sub">{STATUS_LABEL[d.status] ?? "Unknown"}</p>
             </div>
-            <div className={`chip ${d.status === 0 ? "chip-open" : "chip-claimed"}`}>
-              {STATUS_LABEL[d.status]}
+            {/* Per-status chip colours, matching StatusChip, instead of collapsing every
+                non-open status into one "claimed" style that misrepresents adjudicating,
+                resolved, closed and expired dockets. */}
+            <div className={`chip ${CHIP_CLASS[d.status] ?? "chip-closed"}`}>
+              {STATUS_LABEL[d.status] ?? "Unknown"}
             </div>
             <div className="amount">{formatGen(d.amount)}</div>
             <div className="deadline">{relativeDeadline(d.deadline)}</div>

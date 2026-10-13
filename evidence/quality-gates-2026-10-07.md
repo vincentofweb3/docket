@@ -51,5 +51,17 @@ Studionet validators supply their own LLM providers. No operator key is required
 
 ## Not claimed
 
-No public GitHub repository, no frontend demo, no Bradbury deployment. The Builder submission
-still requires a repository URL and a frontend demo link.
+> Correction (2026-10-13): this section was accurate on 2026-10-07 but is now superseded on two of
+> its three points. Both were false when re-read, not merely out of date.
+
+No Bradbury deployment. The Builder submission still requires a frontend demo link.
+
+**Now claimed (were "not claimed" above):**
+- Public GitHub repository: https://github.com/vincentofweb3/docket — live and public.
+- Frontend demo: https://docket-main.vercel.app — live, reading and writing the deployed contract.
+
+**Still not claimed, and unchanged:**
+- No Bradbury deployment.
+- The browser-wallet write path is NOT independently verified end-to-end. No evidence file exists
+  for an injected-wallet signature. Writes verified so far went through genlayer-js's local-account
+  path (server-side signer) and unit tests over the encoder.

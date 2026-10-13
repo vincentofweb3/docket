@@ -23,7 +23,49 @@ GenLayer documents three baseline strategies. None fits `dispute_deliverable()` 
   wave through a leader's fabricated verdict without ever fetching the evidence itself.
   Ruled out as the primary mechanism, kept as a secondary sanity check (see below).
 
-## Docket's approach: a custom leader/validator pair (`gl.vm.run_nondet`)
+## Docket's approach: a custom leader/validator pair (`gl.vm.run_nondet_unsafe`)
+
+### Security note: the validator runs unsandboxed
+
+This deserves stating plainly, because "trustless validator adjudication" is the entire pitch.
+
+In the pinned stdlib (`11rhn002...`), `genlayer/gl/vm.py` exports exactly two nondet entry points:
+`run_nondet_unsafe` and `run_nondet`. The naming is counter-intuitive and worth being precise about:
+
+- **`run_nondet_unsafe`** — the validator function runs **outside** a sandbox. Leader/validator
+  errors are not caught and normalized.
+- **`run_nondet`** — runs the validator **in a sandbox** and normalizes validator errors via
+  `compare_user_errors` / `compare_vm_errors`. Its own docstring says it "provides safer error
+  handling compared to `run_nondet_unsafe` by running the validator in a sandbox".
+
+There is **no `run_nondet_default` in this pinned stdlib** — that name does not appear anywhere in
+the bundle. (It exists in some newer documentation, which is likely the source of the confusion.)
+
+`contracts/docket.py:209-213` selects:
+
+```python
+if _V3_SDK:
+    verdict_result = gl.vm.run_nondet(leader_fn, validator_fn)        # sandboxed, but unreachable
+else:
+    verdict_result = gl.vm.run_nondet_unsafe(leader_fn, validator_fn) # THE EXECUTING BRANCH
+```
+
+So the deployed contract takes the **unsandboxed** variant, and the sandboxed `run_nondet` call is
+dead code behind a probe that is `False` under the pinned runner.
+
+**Security consequence, stated honestly:** validator code here is trusted. A validator that raises an
+uncaught error is handled by the contract's own `except gl.vm.UserError` clause (which converts
+`EXTERNAL_UNREACHABLE_EVIDENCE` into a `reject` verdict with score 0), but a validator raising a
+non-`UserError` exception is not handled there. The mitigation is that every fetch is wrapped in that
+`UserError` path, so a fetch failure is converted rather than propagated — but this is a real
+difference from the sandboxed variant and not something to paper over.
+
+**Not changed here.** Switching to the sandboxed `run_nondet` would mean changing the contract
+source, which changes `sha256(contracts/docket.py)` and invalidates the deployed address, the
+byte-identical-code claim in the evidence files, and the entire verified deployment. That is a
+redeploy decision with its own verification cost, not a documentation fix. It is recorded here as a
+known limitation and a recommended follow-up, and `run_nondet` is the correct target for a future
+major version once the v3 probe actually resolves `True`.
 
 Both the leader and every validator independently:
 
@@ -87,7 +129,7 @@ whole object. This is one flat leader/validator pair; it does not nest nondeterm
 ## What happens after consensus (deterministic code, outside the nondet block)
 
 ```python
-verdict_result = gl.vm.run_nondet(leader_fn, validator_fn)
+verdict_result = gl.vm.run_nondet_unsafe(leader_fn, validator_fn)  # the branch that executes
 # --- everything below this line is deterministic, runs once, after consensus ---
 docket = self.dockets[docket_id]
 docket.verdict = VERDICT_MAP[verdict_result["verdict"]]

@@ -101,13 +101,29 @@ export const ACTIVE_NETWORK: NetworkId =
 export const network = NETWORKS[ACTIVE_NETWORK];
 
 /**
+ * Every network's config, exposed for tests.
+ *
+ * The capability flags are the assertions' subject: tests/network-flags.test.ts pins what this
+ * repo has verified per network. Previously only the active network was reachable, so nothing
+ * could check the flags that decide what the UI tells people.
+ */
+export const NETWORKS_FOR_TEST = NETWORKS;
+
+/**
  * Deployed Docket contract on the active network. Overridable so the same build can point at
  * a freshly deployed address without editing source.
  */
 export const CONTRACT_ADDRESS = (process.env.NEXT_PUBLIC_DOCKET_CONTRACT_ADDRESS ??
   "0xb1a3778a3B11E0eD000bB24DF06108caDfd7729B") as `0x${string}`;
 
-/** Cap on evidence URLs the UI will let someone attach, mirroring the contract's own bound. */
+/**
+ * Cap on evidence URLs the UI will let someone attach.
+ *
+ * This is a UX guard, NOT a mirror of a contract bound: contracts/docket.py only requires the
+ * evidence list to be non-empty with each entry starting `https`. There is no contract-side limit,
+ * so this may be lower than what the chain would accept. Lowering it is safe; the contract is the
+ * authority on what it accepts.
+ */
 export const MAX_EVIDENCE_URLS = 10;
 
 /** GEN has 18 decimals, matching the chain's native currency definition. */

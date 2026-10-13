@@ -9,6 +9,10 @@ import { network } from "@/lib/config";
  * the money has not landed in a wallet on this network.
  */
 export function NetworkLimits() {
+  // Only warn where the limitation actually applies. On localnet the transfer does credit the
+  // recipient, so printing "the payout has not reached a wallet" there would be false.
+  if (network.creditsEoaPayouts) return null;
+
   return (
     <div className="capability-note">
       <strong>Escrow accounting is final - the payout has not reached a wallet on {network.label}</strong>

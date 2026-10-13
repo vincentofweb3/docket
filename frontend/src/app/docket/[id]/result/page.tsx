@@ -148,7 +148,18 @@ export default async function ResultPage({ params }: { params: Promise<{ id: str
 
       {docket.evidence.length > 0 ? (
         <div className="panel">
-          <h2>Evidence validators fetched</h2>
+          <h2>Evidence submitted</h2>
+          {/* Not "evidence validators fetched": the on-chain state records only that these URLs
+              were submitted. Whether each one was retrievable is not recorded, and a failed fetch
+              is converted into a low verdict rather than surfaced (contracts/docket.py). Claiming
+              a fetch happened would assert something the state does not support. */}
+          <p className="hint muted">
+            {expired
+              ? "These are the URLs attached to the docket before it expired."
+              : "These are the URLs the worker submitted. The verdict above was reached by validator " +
+                "consensus over the acceptance criteria and this evidence; the network does not record " +
+                "whether each URL was successfully retrieved."}
+          </p>
           <ul className="evidence-list">
             {docket.evidence.map((u) => (
               <li key={u}>
@@ -161,7 +172,11 @@ export default async function ResultPage({ params }: { params: Promise<{ id: str
         </div>
       ) : null}
 
-      {payout > 0n ? <NetworkLimits /> : null}
+      {/* Rendered whenever value left the contract, not only when the worker was paid. The refund
+          leg is an emitted transfer too, so on a network that does not credit EOA payouts the
+          refund is exactly as un-landed as the payout — printing "refunded" with no disclaimer
+          would overstate what happened. NetworkLimits itself returns null where payouts do credit. */}
+      {docket.amount > 0n ? <NetworkLimits /> : null}
 
       <p className="muted">
         <Link href={`/docket/${docketId}`}>Back to the docket</Link> ·{" "}

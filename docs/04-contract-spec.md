@@ -4,11 +4,31 @@ This is the authoritative spec for `contracts/docket.py`. Anything the skeleton 
 contradicts this file is a bug in the skeleton, not a spec change — update this file first
 if the design needs to change, then the code.
 
-> **SDK note:** the contract uses the v0.3 API surface: `import genlayer as gl`,
-> `gl.contract.Contract`, `gl.storage.allow`, `gl.storage.DynArray`/`TreeMap`,
-> `gl.vm.get_timestamp()`, `gl.vm.run_nondet()`, and `gl.chain.Account.emit_transfer()`.
+> **SDK note — what actually executes.** The contract carries a dual-branch probe at
+> `contracts/docket.py:4-9` that tries `import genlayer as gl; from genlayer.types import *` and
+> falls back to `from genlayer import *`. Under the pinned runner (genvm v0.3.0-rc7, stdlib
+> `11rhn002yfajawsz7fai6mykznbxkxs6l91iskj5cm82c92qhy3v`) **`_V3_SDK` is `False`**, verified by
+> inspecting the extracted bundle: that stdlib has no `genlayer/types` module, so the first import
+> raises `ModuleNotFoundError` and the legacy branch is taken.
+>
+> The deployed, linted and tested contract therefore runs the **legacy** API surface:
+> `from genlayer import *`, `allow_storage`, `gl.Contract`, `gl.message_raw["datetime"]` for the
+> current time, `gl.vm.run_nondet_unsafe` for adjudication, and `gl.chain.Account.emit_transfer`.
+>
+> **The v0.3 branch is untested forward-compatibility, not the code that runs.** Nothing in this
+> repository has executed it, and one call in it is known to be unavailable: `gl.vm.get_timestamp()`
+> is documented in the live SDK reference
+> (`https://sdk.genlayer.com/main/_static/ai/api.txt`) but is **absent from the pinned stdlib** —
+> `genlayer/gl/vm.py` exports only `spawn_sandbox`, `run_nondet_unsafe`, `run_nondet`,
+> `unpack_result`, `Return`, `VMError`, `UserError`, `Result`. So `_now_unix()` on the v3 branch
+> would raise. Treat the v3 branch as aspirational scaffolding that must not be described as the
+> executing API.
 
 ## Storage
+
+> The decorator is written as `@((gl.storage.allow) if _V3_SDK else allow_storage)` in the source.
+> The block below shows the legacy form (`@allow_storage`) because that is the branch that executes
+> under the pinned runner.
 
 ```python
 @allow_storage

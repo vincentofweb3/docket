@@ -52,9 +52,15 @@ The contract source used for the recorded gate evidence has SHA-256:
 105934edbc32b324c94cc74d8da8c533fa93505c98ed4d24079a087c3ed9a0fe
 ```
 
-The workspace has no usable Git history (`.git` is an empty directory), so source hashes and
-dated raw logs are the available audit identity. Recompute the hash before relying on older
-evidence after any source change.
+The audit identity is **commit-based**. The repository is a public Git repo with full history on
+`origin/master` (https://github.com/vincentofweb3/docket); each claim below is pinned to a commit
+SHA, and `sha256(contracts/docket.py)` must still match the value above at any commit whose
+recorded evidence is being relied on. Recompute the hash before relying on older evidence after any
+source change.
+
+> Correction (2026-10-13): an earlier revision of this file claimed `.git` was an empty directory and
+> that no Git history existed. That was false and is removed. The claim contradicted this file's own
+> Current Status table 40 lines above it.
 
 ## Work Completed
 
@@ -102,9 +108,11 @@ receipt envelopes whose consensus result could not be read.
 1. **Localnet provider credential:** GLSim reached `https://api.openai.com/v1/chat/completions`
    and received HTTP 401 for the real-evidence dispute and appeal cases. The contract correctly
    surfaced `LLM_ERROR_MALFORMED_VERDICT`; this is not evidence that those contract cases pass.
-2. **Studionet network:** `studio.genlayer.com` has failed repeated DNS/TLS checks. No usable
-   Studionet contract address, deployed-address schema, explorer link, or public lifecycle
-   transaction has been verified.
+2. **~~Studionet network: blocked.~~ RESOLVED — this blocker no longer exists and the entry
+   contradicted this file's own Current Status table.** Studionet is deployed and fully verified:
+   contract `0xb1a3778a3B11E0eD000bB24DF06108caDfd7729B`, schema/code/read calls recorded, and nine
+   finalized public transactions including two complete dispute-adjudication lifecycles. The
+   TLS/DNS failure was an earlier, transient condition. See `evidence/studionet-*.txt`.
 3. The earlier transaction hash retained in `evidence/studionet-blocker.txt` is debugging
    evidence only. It must not be presented as a successful Docket deployment.
 4. Localnet/GLSim is simulator evidence, not public GenLayer submission evidence.

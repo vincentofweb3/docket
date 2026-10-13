@@ -1,15 +1,5 @@
-import { STATUS, STATUS_LABEL } from "@/lib/docket";
-
-const CHIP_CLASS: Record<number, string> = {
-  [STATUS.OPEN]: "chip-open",
-  [STATUS.CLAIMED]: "chip-claimed",
-  [STATUS.SUBMITTED]: "chip-submitted",
-  [STATUS.ADJUDICATING]: "chip-adjudicating",
-  [STATUS.RESOLVED]: "chip-adjudicating",
-  [STATUS.CLOSED]: "chip-closed",
-  [STATUS.EXPIRED]: "chip-expired",
-  [STATUS.ACCEPTED_FAST_PATH]: "chip-closed",
-};
+import { STATUS_LABEL } from "@/lib/docket";
+import { CHIP_CLASS } from "@/lib/status-chip";
 
 export function StatusChip({ status }: { status: number }) {
   return (

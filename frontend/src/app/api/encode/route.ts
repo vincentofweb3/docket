@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-import { studionet } from "genlayer-js/chains";
 import { getClient, encodeWriteTransaction } from "@/lib/genlayer";
-import { CONTRACT_ADDRESS } from "@/lib/config";
+import { CONTRACT_ADDRESS, network } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
@@ -95,7 +94,10 @@ export async function POST(req: Request) {
       data,
       gas: gas.toString(),
       value: `0x${valueWei.toString(16)}`,
-      chainId: studionet.id,
+      // From config, not hardcoded: genlayer.ts picks the chain from the same config, so a
+      // bradbury/localnet build would otherwise advertise Studionet's id alongside another
+      // network's consensus contract.
+      chainId: network.chainId,
       nonce,
       // Echoed so a caller can assert the payload targets the deployed contract.
       recipient: CONTRACT_ADDRESS,

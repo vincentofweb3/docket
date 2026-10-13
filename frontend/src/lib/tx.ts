@@ -32,6 +32,76 @@ export const TX_STATUS = {
 export type TxStatus = (typeof TX_STATUS)[keyof typeof TX_STATUS];
 
 /**
+ * Transaction result codes, from the protocol's own `TransactionResult` enum
+ * (genlayer-js `transactionResultNumberToName`, chunk-EY35NPSE.js).
+ *
+ * These are consensus outcomes, distinct from {@link TX_STATUS}. A transaction can be FINALIZED and
+ * still have failed: the network reached finality on a transaction whose contract execution did not
+ * succeed.
+ */
+export const TX_RESULT = {
+  IDLE: 0,
+  AGREE: 1,
+  DISAGREE: 2,
+  TIMEOUT: 3,
+  DETERMINISTIC_VIOLATION: 4,
+  /** Execution did not reach a majority, so the call did not take effect. */
+  NO_MAJORITY: 5,
+  MAJORITY_AGREE: 6,
+  MAJORITY_DISAGREE: 7,
+} as const;
+
+export type TxResultCode = (typeof TX_RESULT)[keyof typeof TX_RESULT];
+
+/** Result codes where the contract call actually took effect. */
+const SUCCEEDED_RESULTS: ReadonlySet<number> = new Set([
+  TX_RESULT.AGREE,
+  TX_RESULT.DISAGREE,
+  TX_RESULT.MAJORITY_AGREE,
+  TX_RESULT.MAJORITY_DISAGREE,
+]);
+
+/** Human-readable reasons for the codes that mean the call did not take effect. */
+const RESULT_REASON: Record<number, string> = {
+  [TX_RESULT.NO_MAJORITY]:
+    "the transaction finalized without a majority, so the contract call did not take effect",
+  [TX_RESULT.TIMEOUT]: "validators timed out on this transaction, so it did not take effect",
+  [TX_RESULT.DETERMINISTIC_VIOLATION]:
+    "the transaction violated deterministic rules and was rejected",
+};
+
+/**
+ * Whether a FINALIZED transaction actually executed its contract call.
+ *
+ * `status === FINALIZED` alone is not success. FINALIZED is a statement about finality, not about
+ * the call succeeding: this repo already documents a payout child tx
+ * (0xa919c47c6872ed1c778cc1752e1c3cd2078d348bb0702cb0a05c6efc50fdde1d) that reached status 7
+ * FINALIZED with result 5 NO_MAJORITY — and reading only `status` reported that as a success.
+ *
+ * Gas estimation cannot catch this class of failure either: /api/encode estimates against the
+ * CONSENSUS main contract (genlayer.ts), not against Docket, so a Docket-level revert such as
+ * EXPECTED_ZERO_VALUE passes estimation and fails at execution. The receipt is the only place the
+ * real outcome is knowable, so it is checked here.
+ *
+ * Returns null when the result has not been reported yet, which is not a failure and not a success.
+ */
+export function evaluateFinalized(result: number | null | undefined): {
+  ok: boolean;
+  reason: string | null;
+} {
+  if (result === null || result === undefined) {
+    return { ok: false, reason: null };
+  }
+  if (SUCCEEDED_RESULTS.has(result)) return { ok: true, reason: null };
+  return {
+    ok: false,
+    reason:
+      RESULT_REASON[result] ??
+      `the transaction finalized with result code ${result}, so the contract call did not take effect`,
+  };
+}
+
+/**
  * Human-facing lifecycle stages, mapped from the protocol statuses. `detail` is what the
  * person should be told is happening right now.
  */
@@ -58,13 +128,21 @@ export const LIFECYCLE_STAGES: {
   {
     key: TX_STATUS.ACCEPTED,
     label: "Accepted",
-    detail: "The committee agreed. The result now sits in the appeal window before becoming final.",
+    // Appeal-window copy is conditional: Studionet exposes no appeal RPCs at all, so promising a
+    // window there would describe a capability the network does not have.
+    detail:
+      network.appealSupport === "absent"
+        ? "The committee agreed. The network will now finalize this result."
+        : "The committee agreed. The result now sits in the appeal window before becoming final.",
     done: [TX_STATUS.PENDING, TX_STATUS.PROPOSING, TX_STATUS.COMMITTING, TX_STATUS.REVEALING],
   },
   {
     key: TX_STATUS.FINALIZED,
     label: "Finalized",
-    detail: "Final and no longer appealable. The escrow movement below reflects this outcome.",
+    detail:
+      network.appealSupport === "absent"
+        ? "Final. The escrow movement below reflects this outcome."
+        : "Final and no longer appealable. The escrow movement below reflects this outcome.",
     done: [
       TX_STATUS.PENDING,
       TX_STATUS.PROPOSING,
@@ -133,11 +211,14 @@ export async function runWrite(opts: {
 
   while (Date.now() - started < timeoutMs) {
     // Status is read server-side: the SDK never ships to the browser, and the RPC rate limit is
-    // shared rather than per-visitor.
-    let tx: { status?: string } | null = null;
+    // shared rather than per-visitor. `result` is read alongside `status` because FINALIZED alone
+    // does not mean the contract call succeeded — see evaluateFinalized.
+    let tx: { status?: string; result?: number | null } | null = null;
     try {
       const res = await fetch(`/api/tx/${hash}`);
-      tx = res.ok ? ((await res.json()) as { status?: string }) : null;
+      tx = res.ok
+        ? ((await res.json()) as { status?: string; result?: number | null })
+        : null;
     } catch {
       tx = null;
     }
@@ -149,6 +230,18 @@ export async function runWrite(opts: {
     }
 
     if (status === TX_STATUS.FINALIZED) {
+      // Finality is not success. Only report ok:true when the consensus result shows the contract
+      // call actually executed; otherwise surface the failure and the real reason, so the caller
+      // does not invalidate its scan cache or navigate away as though a docket had been written.
+      const outcome = evaluateFinalized(tx?.result);
+      if (!outcome.ok) {
+        const message = outcome.reason
+          ? `The transaction was finalized but failed: ${outcome.reason}.`
+          : "The transaction was finalized but the network reported no result, so it cannot be " +
+            "confirmed as having taken effect.";
+        onPhase({ kind: "failed", code: null, message });
+        return { ok: false, hash, reason: message, code: null };
+      }
       onPhase({ kind: "finalized", hash });
       return { ok: true, hash };
     }

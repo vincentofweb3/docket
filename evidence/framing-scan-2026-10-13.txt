@@ -1,0 +1,100 @@
+Framing scan - 2026-10-13
+Scope: contracts, design, docs, tests, frontend/src/ + README.md
+Files scanned: 81
+Excluded: node_modules/, .next/, .git/, __pycache__/, binary assets
+
+Purpose: docs/07 rows 25 and 26 claim Docket stays out of prediction-market / legal-binding
+framing. The previous scan (evidence/framing-scan.txt, 2026-08-25) predates frontend/src/ entirely,
+so it could not have covered the UI. This run is the first over the real frontend.
+
+MATCHES: 28
+
+design/design-system.md:5  [court framing]
+    Subject: a **docket** — the literal case-file/ledger register a court or claims office
+design/index.html:265  [market framing]
+    <div class="stat"><b>0</b><span>Prediction markets</span></div>
+design/index.html:271  [court framing]
+    <h2>Docket is a settlement primitive, not a court.</h2>
+design/index.html:274  [legal-binding claim]
+    doesn't make a result legally binding on its own. Docket settles escrow. It doesn't
+design/index.html:275  [market framing]
+    replace a judge, and it isn't a market on a future event - it's a verdict on work that
+docs/02-genlayer-fit-checklist.md:56  [court framing]
+    Per GenLayer's own guidance, Intelligent Contracts are *not* a court and don't make a
+docs/02-genlayer-fit-checklist.md:57  [legal-binding claim]
+    result legally binding by themselves. Every doc, every UI string, and every contract error
+docs/07-security-and-audit-checklist.md:63  [legal-binding claim]
+    | 25 | No contract error message, UI string, or doc implies Docket verdicts are legally binding on their own — reviewed against `docs/02-genlayer-fit-checklist.
+docs/07-security-and-audit-checklist.md:64  [gambling vocabulary]
+    | 26 | Terminology stays in {docket, scope of work, deliverable, evidence, verdict, adjudication, escrow}; prediction-market terms appear only in explicit non-g
+docs/07-security-and-audit-checklist.md:64  [market framing]
+    | 26 | Terminology stays in {docket, scope of work, deliverable, evidence, verdict, adjudication, escrow}; prediction-market terms appear only in explicit non-g
+docs/10-roadmap.md:37  [prediction-market framing]
+    - Turning Docket into a general dispute court, a prediction market, or a chat/analytics
+docs/10-roadmap.md:37  [market framing]
+    - Turning Docket into a general dispute court, a prediction market, or a chat/analytics
+docs/10-roadmap.md:37  [court framing]
+    - Turning Docket into a general dispute court, a prediction market, or a chat/analytics
+docs/09-submission-and-review-readiness.md:35  [betting vocabulary]
+    | Short written description of the use case, in the vocabulary of `docs/02-genlayer-fit-checklist.md` (adjudication, evidence, verdict — not "AI moderator" or "
+docs/09-submission-and-review-readiness.md:71  [prediction-market framing]
+    5. Make sure nothing in the repo, README, or demo describes Docket as a prediction market,
+docs/09-submission-and-review-readiness.md:71  [market framing]
+    5. Make sure nothing in the repo, README, or demo describes Docket as a prediction market,
+docs/09-submission-and-review-readiness.md:72  [court framing]
+    a court, or a legally binding arbitrator — see the framing rules in
+docs/09-submission-and-review-readiness.md:72  [legal-binding claim]
+    a court, or a legally binding arbitrator — see the framing rules in
+docs/01-product-vision.md:52  [prediction-market framing]
+    - **Not a prediction market.** Nothing is wagered on a future event; the underlying fact
+docs/01-product-vision.md:52  [market framing]
+    - **Not a prediction market.** Nothing is wagered on a future event; the underlying fact
+docs/01-product-vision.md:55  [court framing]
+    - **Not a court.** GenLayer's own docs are direct about this: Intelligent Contracts can
+docs/01-product-vision.md:57  [legal-binding claim]
+    binding on their own. Docket is framed throughout as a **contractual adjudication
+frontend/src/app/layout.tsx:69  [legal-binding claim]
+    make a result binding outside the escrow it settles - read the scope of work before
+frontend/src/app/page.tsx:197  [court framing]
+    <h2>Docket is a settlement primitive, not a court.</h2>
+frontend/src/app/page.tsx:201  [legal-binding claim]
+    parties, but it doesn&apos;t make a result legally binding on its own. Docket settles
+frontend/src/app/page.tsx:202  [market framing]
+    escrow. It doesn&apos;t replace a judge, and it isn&apos;t a market on a future event —
+README.md:13  [prediction-market framing]
+    This is **not** a prediction market, a generic AI chatbot wrapper, or a moderation tool.
+README.md:13  [market framing]
+    This is **not** a prediction market, a generic AI chatbot wrapper, or a moderation tool.
+
+REVIEW OF THE 28 MATCHES
+------------------------
+Matches are NOT all violations. Negations and disclaimers ("not a court", "does not make a
+result legally binding", "is not a market on a future event") are the intended use of these words.
+
+frontend/src/  (3 matches, all compliant)
+  layout.tsx:69   disclaimer, negates the claim   COMPLIANT
+  page.tsx:197    "not a court" heading          COMPLIANT
+  page.tsx:201    "doesn't make a result legally binding on its own"  COMPLIANT
+  page.tsx:202    "isn't a market on a future event"                  COMPLIANT
+
+docs/, README.md, design/  (all compliant — every match is a non-goal or disclaimer)
+  docs/01:52,55,57   explicit non-goals           COMPLIANT
+  docs/02:56,57       fit-checklist constraints    COMPLIANT
+  docs/07:63,64       the rows that DEFINE the rule COMPLIANT
+  docs/09:35          quotes "bet" as vocabulary to avoid  COMPLIANT
+  docs/09:71,72       non-goals                    COMPLIANT
+  docs/10:37          non-goals                    COMPLIANT
+  README.md:13        non-goals                    COMPLIANT
+  design/*            pre-implementation mockups   COMPLIANT
+
+VIOLATIONS FOUND AND FIXED BEFORE THIS RUN
+--------------------------------------------
+frontend/src/app/how-it-works/page.tsx:114  "the docket becomes a coin flip between the two of
+  you" — gambling vocabulary, asserted as a real outcome. REWORDED to "leaves an unresolvable
+  disagreement between the two of you".
+
+VIOLATIONS REMAINING: 0
+
+SCOPE NOTE: contracts/ and tests/ produced ZERO matches across all patterns, which is the strongest
+part of the result — no contract method, error code or test name uses market/gambling/court
+vocabulary.

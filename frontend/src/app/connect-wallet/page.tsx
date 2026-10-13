@@ -19,6 +19,15 @@ export default function ConnectWalletPage() {
     return f ? `${whole}.${f} GEN` : `${whole} GEN`;
   };
 
+  // Where the network simulates value transfers the balance is irrelevant to escrowing, so the
+  // answer is "yes" regardless of it. Where funds are genuinely required, the balance decides.
+  const canPostEscrow =
+    account == null
+      ? null
+      : network.requiresEscrowFunds
+        ? balance != null && balance > 0n
+        : true;
+
   return (
     <div className="shell shell-narrow">
       <div className="eyebrow">Account</div>
@@ -81,8 +90,11 @@ export default function ConnectWalletPage() {
             </div>
             <div className="item">
               <span className="label">Can post an escrow?</span>
-              <span className={`value ${balance == null || balance === 0n ? "bad" : "ok"}`}>
-                {balance == null ? "—" : balance === 0n ? "no — 0 GEN" : "yes"}
+              {/* Gated on the network flag, not on the balance. Where the chain simulates value
+                  transfers, a 0 GEN account demonstrably escrowed 420 GEN (verified 2026-10-07), so
+                  answering "no" here would tell people the chain refuses what it accepts. */}
+              <span className={`value ${canPostEscrow === null ? "" : canPostEscrow ? "ok" : "bad"}`}>
+                {canPostEscrow === null ? "—" : canPostEscrow ? "yes" : `no — ${fmt(balance ?? 0n)}`}
               </span>
             </div>
           </div>
@@ -111,14 +123,26 @@ export default function ConnectWalletPage() {
       <div className="panel">
         <h2>About {network.label}</h2>
         <p className="muted">
-          This build reads and writes against {network.label}, GenLayer&apos;s public test network.
-          It is gasless: transactions cost no GEN, though escrowed GEN can still be posted as
-          stake.
+          This build reads and writes against {network.label}, GenLayer&apos;s{" "}
+          {network.id === "studionet" ? "public test network" : "network"}.
+          {network.requiresEscrowFunds
+            ? " It is not gasless: transactions cost GEN, and posting a docket escrows real funds."
+            : " It is gasless: transactions cost no GEN, though escrowed GEN can still be posted as" +
+              " stake."}
         </p>
+        {/* Capability claims are driven from the network flags rather than asserted for one chain,
+            because they differ per network and the repo already records the Studionet ones. */}
         <p className="muted">
-          Network capability differs by chain. On {network.label} an emitted escrow payout does not
-          credit a recipient wallet, and appeals are unavailable — both are network limitations,
-          recorded with evidence in the project repository.
+          Network capability differs by chain. On {network.label}
+          {network.creditsEoaPayouts
+            ? " an emitted escrow payout credits the recipient wallet."
+            : " an emitted escrow payout does not credit a recipient wallet."}
+          {network.appealSupport === "absent"
+            ? " Appeals are unavailable on this network."
+            : network.appealSupport === "present"
+              ? " Appeal contracts are deployed here, but no appeal has been driven end-to-end."
+              : " Appeals work here."}{" "}
+          These are network limitations, recorded with evidence in the project repository.
         </p>
       </div>
     </div>

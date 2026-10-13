@@ -157,3 +157,76 @@ describe("write payload targets the Docket contract", () => {
     expect(bare.toLowerCase()).not.toContain(CONTRACT_ADDRESS.toLowerCase().slice(2));
   });
 });
+/**
+ * Consensus parameters and the ABI variant, pinned by decoding the payload.
+ *
+ * These three were mutants that produced zero failures before: nothing asserted the v5/v6
+ * selection, the `leaderOnly` flag, or the validator/rotation counts. Each is a real on-chain
+ * input, not a cosmetic default — getting any of them wrong produces a payload that reverts or
+ * adjudicates under the wrong committee.
+ */
+describe("write payload consensus parameters", () => {
+  const decode = (data: `0x${string}`) =>
+    decodeFunctionData({ abi: ADD_TRANSACTION_ABI as never, data }).args as unknown as [
+      `0x${string}`,
+      `0x${string}`,
+      bigint,
+      bigint,
+      `0x${string}`,
+      bigint | undefined,
+    ];
+
+  it("selects the five-argument addTransaction that Studionet's ABI exposes", () => {
+    const { data } = encodeWriteTransaction({
+      from: SENDER,
+      functionName: "claim_docket",
+      args: [4],
+    });
+    // Studionet's consensusMainContract ABI declares 5 inputs, so a 6-arg payload would revert.
+    const studionetInputCount = (
+      studionet.consensusMainContract?.abi as { name?: string; inputs?: unknown[] }[]
+    ).find((fn) => fn.name === "addTransaction")?.inputs?.length;
+    expect(studionetInputCount).toBe(5);
+
+    const args = decode(data);
+    // A 6th argument (_validUntil) must be absent.
+    expect(args[5]).toBeUndefined();
+    expect(args.slice(0, 5)).toHaveLength(5);
+  });
+
+  it("pins the initial validator count and max rotations to the chain config", () => {
+    const { data } = encodeWriteTransaction({
+      from: SENDER,
+      functionName: "claim_docket",
+      args: [4],
+    });
+    const [, , numValidators, maxRotations] = decode(data);
+    expect(numValidators).toBe(BigInt(studionet.defaultNumberOfInitialValidators));
+    expect(maxRotations).toBe(BigInt(studionet.defaultConsensusMaxRotations));
+    // Sanity: these are the documented Studionet values, not two equal constants swapped.
+    expect(numValidators).toBe(5n);
+    expect(maxRotations).toBe(3n);
+  });
+
+  it("keeps leaderOnly false so the leader executes", () => {
+    const { data } = encodeWriteTransaction({
+      from: SENDER,
+      functionName: "create_docket",
+      args: ["s", "c", 8000, 1800000000],
+    });
+    const txData = decode(data)[4];
+    // serialize([<calldata>, leaderOnly]) — leaderOnly is the trailing boolean after the
+    // calldata blob. It must decode to false, not true.
+    const trailing = txData.slice(-2);
+    expect(trailing).toBe("00");
+  });
+
+  it("exposes encodeContractCall's leaderOnly argument rather than forcing it", () => {
+    // The default path and an explicit true must differ, proving the flag is threaded through.
+    const asFalse = encodeContractCall("claim_docket", [4], false);
+    const asTrue = encodeContractCall("claim_docket", [4], true);
+    expect(asFalse).not.toBe(asTrue);
+    expect(asFalse.endsWith("00")).toBe(true);
+    expect(asTrue.endsWith("01")).toBe(true);
+  });
+});

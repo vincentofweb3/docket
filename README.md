@@ -64,16 +64,35 @@ docket/
 │   ├── reputation.html                — read-only reputation profile
 │   ├── states.html                    — empty & error state reference
 │   └── components.html                — transaction-status component reference
+├── assets/
+│   └── docket-logo.png                — 1024px submission logo (navy/cream/gold)
 ├── contracts/
-│   └── docket.py                      — Intelligent Contract skeleton (Python, GenVM)
+│   └── docket.py                      — the Intelligent Contract (Python, GenVM), the whole product
 ├── tests/
-│   ├── direct/test_docket_direct.py   — fast in-memory unit tests (mocked LLM/web)
-│   └── integration/test_docket_integration.py — full consensus tests (gltest)
-├── frontend/
-│   └── README.md                      — genlayer-js integration plan + package skeleton
+│   ├── direct/test_docket_direct.py   — 29 in-VM unit tests (genlayer-test 0.29.2 gltest_direct)
+│   └── integration/                   — Studionet consensus tests (gltest)
+├── evidence/                          — 42 dated gate artifacts: lint JSON, raw test output,
+│                                        Studionet receipts, fund traces, framing scans
+├── frontend/                          — Next.js 16 App Router UI (deployed to Vercel)
+│   ├── src/app/                       — 12 routes: register, docket/[id], submit, result,
+│   │                                    new, my-dockets, reputation, how-it-works, appeal-guide,
+│   │                                    connect-wallet, plus api/{encode,tx,dockets}
+│   ├── src/components/                — 16 components (DocketActions, StatusChip, TxStatusToast,
+│   │                                    NetworkLimits, MyDockets, SubmitDeliverableForm, …)
+│   ├── src/lib/                       — genlayer client + encoder, tx lifecycle state machine,
+│   │                                    wallet EIP-1193 + write path, chain-state, scan-cache
+│   ├── tests/                         — 60 vitest tests: contract-parity, responsive guard,
+│   │                                    write-targeting, tx-lifecycle, network-flags
+│   └── vercel.json                    — Vercel build config (root dir must be `frontend`)
 └── scripts/
-    └── quality_gates.sh               — lint → direct tests → integration tests, in order
+    ├── quality_gates.sh               — lint → direct tests → integration, in order
+    └── deploy/                        — deploy.mjs, seed-demo.mjs, verify.mjs, docket-lib.mjs
 ```
+
+> Correction (2026-10-13): an earlier revision described `contracts/docket.py` as a "skeleton" and
+> `frontend/` as a "package skeleton". Both were wrong by a wide margin — the contract is complete
+> and deployed, and `frontend/` is a working ~40-file application that builds and reads the live
+> contract.
 
 ### Status
 
@@ -81,9 +100,29 @@ docket/
 ([explorer](https://explorer-studio.genlayer.com/address/0xb1a3778a3B11E0eD000bB24DF06108caDfd7729B)).
 Deployed code is byte-identical to `contracts/docket.py`. Lint passes, 29/29 direct tests pass,
 and the Studionet integration suite is **5 passed, 1 skipped, exit 0** against real validator
-consensus. Two complete public lifecycles are on record: one settled by client acceptance, one
-disputed and adjudicated by AI validator consensus to `reject` / score 10 with three specific
-unmet criteria. All nine transaction hashes and their explorer links are listed in
+consensus.
+
+### Dockets on chain (ids 0–7; `get_docket(8)` does not exist)
+
+| id | Status | Amount | What it is |
+|---|---|---|---|
+| 0 | CLOSED | 0 GEN | First dispute lifecycle — `full` verdict, AI adjudication agreed |
+| 1 | CLOSED | 0 GEN | Dispute lifecycle → **`reject`, score 10**, three unmet criteria recorded |
+| 2 | CLOSED | 0 GEN | Appeal-flow probe (finalized; Studionet exposes no appeal RPCs) |
+| 3 | CLOSED | 0 GEN | Fund-trace probe establishing that emitted payouts do not credit EOAs |
+| 4 | OPEN | 420 GEN | Demo docket — Farcaster frame |
+| 5 | OPEN | 1,150 GEN | Demo docket — HTTP/1.1 implementation guide |
+| 6 | OPEN | 300 GEN | Demo docket — Optimism diagrams |
+| 7 | OPEN | 1 GEN | Write-targeting verification docket (created 2026-10-12) |
+
+**Dockets 0–3 are deliberate, documented test fixtures, not demo content.** They are finalized and
+cannot be deleted from chain state, so they remain visible in the public register. Each one
+corresponds to a specific finding recorded in `evidence/`: #0 and #1 are the two complete
+adjudication lifecycles, #2 probed appeals, #3 established the EOA-payout limitation that
+`evidence/integration-studionet-2026-10-07.txt` and the `_eoa_credit_supported` NOTICE gate depend
+on. They carry a 0 GEN escrow, so they cannot be mistaken for live paid work.
+
+Transaction hashes and explorer links are in
 [`evidence/studionet-deployment-2026-10-07.txt`](evidence/studionet-deployment-2026-10-07.txt).
 
 Consolidated gate status and every open issue:

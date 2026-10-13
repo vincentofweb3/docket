@@ -17,6 +17,8 @@ rows once checked, so a reviewer can see what was verified and how.
 | 6 | No method allows a status transition backward (e.g. `RESOLVED → SUBMITTED`) — enforced by explicit status checks at the top of every state-changing method, not just implied by call order. | EVIDENCED — guards at `contracts/docket.py:116,130,153,173,249`; wrong-status direct tests |
 | 7 | Re-entrancy: GenVM message transfers are emitted after state effects; fast-path and dispute paths set `ACCEPTED_FAST_PATH`/`RESOLVED` before transfers, and expiry sets `EXPIRED` before its transfer. | EVIDENCED — state-before-transfer ordering at `contracts/docket.py:158-168,234-239,255-257` |
 
+| 8b | **Validator sandboxing.** The deployed contract adjudicates via `gl.vm.run_nondet_unsafe`, which runs the validator function *outside* a sandbox. The sandboxed variant `gl.vm.run_nondet` exists in the pinned stdlib but is unreachable behind a probe that is `False`. There is no `run_nondet_default` in this stdlib. | KNOWN LIMITATION — not fixed. Mitigation: every evidence fetch is wrapped so failures raise `UserError(EXTERNAL_UNREACHABLE_EVIDENCE)`, which the contract converts to a `reject`/score-0 verdict rather than propagating (contracts/docket.py:215-222). Full rationale and the redeploy trade-off in docs/05. |
+
 ## Non-determinism / consensus integrity
 
 | # | Check | Status |
@@ -35,7 +37,7 @@ rows once checked, so a reviewer can see what was verified and how.
 | 14 | The prompt explicitly instructs the model to treat any instruction-like text found inside evidence content as data, not as a command. | EVIDENCED — explicit instruction at `contracts/docket.py:335-337` |
 | 15 | The requested `response_format`/schema is fixed in the prompt template and never derived from, or overridable by, evidence content. | EVIDENCED — fixed shape and `response_format="json"` at `contracts/docket.py:349-353` |
 | 16 | Evidence content length is capped deterministically (by character count, computed in ordinary Python before the nondet block or at its very start) so the prompt can't be blown out or the real criteria buried by a long adversarial page. | EVIDENCED — `MAX_EVIDENCE_CHARS_PER_ITEM=6000`; slice at `contracts/docket.py:402` |
-| 17 | This checklist was cross-checked against GenLayer's own published prompt-injection guidance at `/developers/intelligent-contracts/security-and-best-practices/prompt-injection` — re-fetch and compare before finalizing, since this is exactly the kind of page whose guidance could have changed. | EVIDENCED — live docs re-fetched 2026-08-25; [guidance note](/home/vincent/projects/docket/evidence/security-guidance.txt) |
+| 17 | This checklist was cross-checked against GenLayer's own published prompt-injection guidance at `/developers/intelligent-contracts/security-and-best-practices/prompt-injection` — re-fetch and compare before finalizing, since this is exactly the kind of page whose guidance could have changed. | STALE — live docs were re-fetched 2026-08-25, which is now seven weeks old. Re-fetch before relying on this row; the captured note is [security-guidance.txt](/home/vincent/projects/docket/evidence/security-guidance.txt) and has not been revalidated since. |
 
 ## Storage & typing
 
@@ -43,7 +45,7 @@ rows once checked, so a reviewer can see what was verified and how.
 |---|---|---|
 | 18 | No raw Python `dict` or `list` used for persistent state — only `TreeMap`, `DynArray`, and `@gl.storage.allow` dataclasses, per `docs/04-contract-spec.md`. | EVIDENCED — storage declarations at `contracts/docket.py:35-67`; `TestExpiryAndTyping::test_storage_records_have_explicit_collection_types` |
 | 19 | All money fields use a sized/arbitrary-precision integer type (`bigint` or a confirmed sized type), never plain Python `int`, for anything that persists. | EVIDENCED — `Docket.amount: bigint` at line 43; [schema](/home/vincent/projects/docket/evidence/studionet-schema.json) |
-| 20 | The contract uses `bigint` for persisted GEN amounts and lifetime `score_sum`; all v0.3 API markers in `contracts/docket.py` have been resolved. | EVIDENCED — lines 43/61; `rg '# VERIFY:' contracts/docket.py` has no matches; lint clean |
+| 20 | The contract uses `bigint` for persisted GEN amounts and lifetime `score_sum`. | PARTIAL — the typed-storage claim is EVIDENCED (lines 43/61, lint clean, no `# VERIFY:` markers). The former claim that "all v0.3 API markers have been resolved" is RETRACTED: `_V3_SDK` is `False` under the pinned runner, so the v0.3 branch never executes and is untested forward-compatibility. Worse, `gl.vm.get_timestamp()` (used by the v3 branch of `_now_unix`) is absent from the pinned stdlib and would raise. See docs/04 SDK note and docs/05 sandbox note. |
 | 21 | Every `@gl.storage.allow` dataclass has explicit, fully-specified generic types (no bare `list`/`dict` inside a dataclass field either). | EVIDENCED — `DynArray[str]`, `TreeMap[u32,Docket]`, `TreeMap[Address,ReputationRecord]`; storage typing direct test |
 
 ## Access control
@@ -58,16 +60,16 @@ rows once checked, so a reviewer can see what was verified and how.
 
 | # | Check | Status |
 |---|---|---|
-| 25 | No contract error message, UI string, or doc implies Docket verdicts are legally binding on their own — reviewed against `docs/02-genlayer-fit-checklist.md` §Framing discipline. | EVIDENCED — [framing scan](/home/vincent/projects/docket/evidence/framing-scan.txt); UI explicitly disclaims legal effect |
-| 26 | Terminology stays in {docket, scope of work, deliverable, evidence, verdict, adjudication, escrow}; prediction-market terms appear only in explicit non-goal/disclaimer copy. | EVIDENCED — [framing scan](/home/vincent/projects/docket/evidence/framing-scan.txt); no contract API/error uses prediction-market vocabulary |
+| 25 | No contract error message, UI string, or doc implies Docket verdicts are legally binding on their own — reviewed against `docs/02-genlayer-fit-checklist.md` §Framing discipline. | EVIDENCED — [framing scan](/home/vincent/projects/docket/evidence/framing-scan-2026-10-13.txt), re-run 2026-10-13 over contracts/, design/, README.md, docs/, tests/ and frontend/src/ after the UI existed; UI explicitly disclaims legal effect |
+| 26 | Terminology stays in {docket, scope of work, deliverable, evidence, verdict, adjudication, escrow}; prediction-market terms appear only in explicit non-goal/disclaimer copy. | EVIDENCED — [framing scan](/home/vincent/projects/docket/evidence/framing-scan-2026-10-13.txt), re-run 2026-10-13 and scoped to the real frontend for the first time; one violation was found and fixed (`coin flip` in how-it-works, now "an unresolvable disagreement"). No contract API/error uses prediction-market vocabulary. |
 
 ## Deployment hygiene
 
 | # | Check | Status |
 |---|---|---|
 | 27 | Contract `Depends` header is a pinned hash, re-confirmed as current against the docs MCP immediately before each deployment, never `latest`. | EVIDENCED — live docs contain the pinned hash; [pin note](/home/vincent/projects/docket/evidence/dependency-pin.txt); lint's newer-runner warning is recorded |
-| 28 | Deployment order followed: Studionet (gasless, `0 GEN` expected) → Localnet if needed → Bradbury only once direct + integration tests are green. | PARTIAL/BLOCKED — Studionet was attempted first and remains blocked by TLS/DNS. The documented Localnet fallback now reaches assertions: 4/6 pass, while real-evidence adjudication and appeal are blocked by OpenAI HTTP 401. Bradbury/frontend were not started; [Localnet evidence](/home/vincent/projects/docket/evidence/localnet-blocker.txt) |
-| 29 | Any failed transaction is debugged in the documented order — `genlayer receipt` → `genlayer schema` → `genlayer code` → read calls — before code is changed, and that trace is kept as evidence for `docs/09-submission-and-review-readiness.md`. | PARTIAL/BLOCKED — the unverified Studionet envelope remains non-evidence because consensus/address/schema/code/read checks could not complete; [Studionet trace](/home/vincent/projects/docket/evidence/studionet-blocker.txt). Localnet receipts and server output isolate the remaining failure to provider HTTP 401, and the deployed-schema assertion passes; [full Localnet run](/home/vincent/projects/docket/evidence/localnet-integration-2026-08-27T010044Z.txt) |
+| 28 | Deployment order followed: Studionet (gasless, `0 GEN` expected) → Localnet if needed → Bradbury only once direct + integration tests are green. | SUPERSEDED / OUT OF DATE — this row describes a TLS/DNS Studionet blocker that no longer applies; Studionet is deployed and fully exercised (see the Studionet evidence files). Studionet was, as required, the first target and remains the only deployed network. The earlier Localnet/OpenAI-401 state is superseded by the deployed Studionet evidence. |
+| 29 | Any failed transaction is debugged in the documented order — `genlayer receipt` → `genlayer schema` → `genlayer code` → read calls — before code is changed, and that trace is kept as evidence for `docs/09-submission-and-review-readiness.md`. | SUPERSEDED / OUT OF DATE — this row claims the Studionet envelope could not be verified. It can: the deployment, schema, code-identity and read calls are all recorded in the Studionet evidence files, and the transaction history is on the explorer. The old blocker text predates deployment and should not be read as current. |
 
 ## Sign-off
 

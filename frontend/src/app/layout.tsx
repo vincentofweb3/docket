@@ -85,7 +85,7 @@ function Footer() {
         <Link href="/appeal-guide">Appeals</Link>
         <Link href="/connect-wallet">Connect a wallet</Link>
         <Link href={network.explorerAddressUrl(CONTRACT_ADDRESS)}>Deployed contract</Link>
-        <a href={network.explorerTxUrl(CONTRACT_ADDRESS)} target="_blank" rel="noreferrer noopener">
+        <a href={network.explorerAddressUrl(CONTRACT_ADDRESS)} target="_blank" rel="noreferrer noopener">
           Explorer
         </a>
       </nav>
