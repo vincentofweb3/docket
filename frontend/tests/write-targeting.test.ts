@@ -13,6 +13,7 @@
  */
 import { decodeFunctionData } from "viem";
 import { describe, expect, it } from "vitest";
+import { localnet, studionet, testnetBradbury } from "genlayer-js/chains";
 import { encodeWriteTransaction, encodeContractCall } from "../src/lib/genlayer";
 import { CONTRACT_ADDRESS, network } from "../src/lib/config";
 
@@ -67,15 +68,26 @@ const ADD_TRANSACTION_ABI = [
 ] as const;
 
 describe("write payload targets the Docket contract", () => {
-  it.each(WRITABLE)("$method encodes a recipient of $CONTRACT_ADDRESS", ({ method, args }) => {
+  // The title names the contract literally: $CONTRACT_ADDRESS interpolates to `undefined` here
+  // because vitest only substitutes values it can resolve, and a test name reading "undefined"
+  // looks like a broken assertion to a reviewer.
+  it.each(WRITABLE)("$method targets the deployed Docket contract", ({ method, args }) => {
     const { to, data } = encodeWriteTransaction({
       from: SENDER,
       functionName: method,
       args,
     });
 
-    // The EVM destination of any GenLayer write is the chain's consensus main contract.
-    const consensus = network.rpcUrl ? expect(to).toMatch(/^0x[0-9a-fA-F]{40}$/) : undefined;
+    // The EVM destination of any GenLayer write is the chain's consensus main contract, not the
+    // Docket contract: `_recipient` inside the calldata is what identifies Docket.
+    expect(to).toBe(
+      network.id === "studionet"
+        ? studionet.consensusMainContract?.address
+        : network.id === "testnet-bradbury"
+          ? testnetBradbury.consensusMainContract?.address
+          : localnet.consensusMainContract?.address,
+    );
+    expect(to).not.toBe(CONTRACT_ADDRESS);
 
     // Decoded, not grepped: the recipient must be the deployed Docket contract.
     const decoded = decodeFunctionData({ abi: ADD_TRANSACTION_ABI as never, data });
@@ -93,7 +105,6 @@ describe("write payload targets the Docket contract", () => {
     expect(recipient.toLowerCase()).toBe(CONTRACT_ADDRESS.toLowerCase());
     // The inner calldata must be carried, not dropped.
     expect(txData).toMatch(/^0x[0-9a-fA-F]+$/);
-    expect(consensus).toBeDefined();
   });
 
   it("names the sender, so the transaction identifies who is acting", () => {
